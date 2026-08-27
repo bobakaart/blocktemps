@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rise Custom Block Library</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --gallery-bg:#f4f6f4;
+    --panel-bg:#ffffff;
+    --border:#e3e5e1;
+    --border-strong:#d1d6cf;
+    --ink:#16241c;
+    --muted:#69756e;
+    --muted-2:#8b948a;
+    --green:#37775a;
+    --green-dark:#2a5c46;
+    --green-light:#e8f2ec;
+    --radius:16px;
+    --radius-sm:10px;
+    --radius-pill:999px;
+    --ease:cubic-bezier(.4,0,.2,1);
+    --shadow:0 1px 2px rgba(20,30,25,.04), 0 6px 18px rgba(20,30,25,.06);
+    --shadow-hover:0 4px 10px rgba(20,30,25,.07), 0 18px 32px rgba(20,30,25,.10);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--gallery-bg); color:var(--ink);
+    font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+    font-size:16px;
+  }
+  :focus-visible{outline:2px solid var(--green); outline-offset:2px;}
+
+  header{
+    position:sticky; top:0; z-index:40; background:var(--panel-bg);
+    border-bottom:1px solid var(--border); padding:16px 24px;
+  }
+  .header-row{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .brand{display:flex; align-items:center; gap:14px;}
+  .brand-mark{
+    width:38px; height:38px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(155deg, var(--green) 0%, var(--green-dark) 100%);
+    box-shadow:0 2px 6px rgba(42,92,70,.35);
+  }
+  .brand h1{font-size:19px; font-weight:800; margin:0; letter-spacing:-.01em;}
+  .brand-tagline{font-size:13px; color:var(--muted); display:block; margin-top:2px;}
+  .toolbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .device-toggle{display:flex; background:var(--gallery-bg); border:1px solid var(--border); border-radius:12px; padding:4px; gap:4px;}
+  .device-toggle button{
+    border:0; background:transparent; padding:10px 16px; font-size:13px; font-weight:700;
+    border-radius:9px; cursor:pointer; color:var(--muted); font-family:inherit; min-height:44px;
+    transition:background .15s var(--ease), color .15s var(--ease);
+  }
+  .device-toggle button.active{background:var(--green); color:#fff; box-shadow:0 2px 6px rgba(42,92,70,.25);}
+  .theme-btn{
+    border:1px solid var(--border); background:#fff; padding:10px 18px; border-radius:12px;
+    font-size:13px; font-weight:700; cursor:pointer; color:var(--ink); font-family:inherit; min-height:44px;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:border-color .15s var(--ease), color .15s var(--ease);
+  }
+  .theme-btn:hover{border-color:var(--green); color:var(--green);}
+
+  #theme-panel{
+    display:none; background:var(--panel-bg); border-bottom:1px solid var(--border);
+    padding:24px;
+  }
+  #theme-panel.open{display:block;}
+  .theme-section{max-width:1100px; margin-bottom:22px;}
+  .theme-section:last-child{margin-bottom:0;}
+  .theme-section-title{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--muted-2); margin:0 0 12px;}
+  .theme-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:16px;}
+  .theme-field label{display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:6px;}
+  .theme-field input{width:100%; border:1px solid var(--border); border-radius:9px; padding:11px 12px; font-size:14px; font-family:inherit; min-height:44px; transition:border-color .15s var(--ease);}
+  .theme-field input:hover{border-color:var(--border-strong);}
+  #t-custom-a, #t-custom-b{width:100%;}
+  .theme-field input[type=color]{padding:3px; height:44px; cursor:pointer;}
+  .theme-actions{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;}
+  .theme-actions button{border:1px solid var(--border); background:#fff; padding:11px 18px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; min-height:44px; transition:border-color .15s var(--ease), background .15s var(--ease);}
+  .theme-actions button:hover{border-color:var(--border-strong);}
+  .theme-actions button.primary{background:var(--green); color:#fff; border-color:var(--green);}
+  .theme-actions button.primary:hover{background:var(--green-dark); border-color:var(--green-dark);}
+  .icon-picker{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .icon-swatch{width:48px; height:48px; padding:0; border-radius:11px; cursor:pointer; overflow:hidden; background:none; border:2px solid var(--border); transition:border-color .15s var(--ease), transform .1s var(--ease);}
+  .icon-swatch:hover{border-color:var(--border-strong); transform:translateY(-1px);}
+  .icon-swatch.active{border-color:var(--green); box-shadow:0 0 0 2px var(--green-light);}
+
+  .filters{
+    display:flex; gap:8px; padding:14px 24px; flex-wrap:wrap; align-items:center;
+    border-bottom:1px solid var(--border); background:var(--panel-bg);
+  }
+  .filters .fgroup{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--border); background:#fff; padding:9px 16px; border-radius:var(--radius-pill);
+    font-size:13px; font-weight:700; cursor:pointer; color:var(--muted); font-family:inherit; min-height:40px;
+    transition:border-color .15s var(--ease), background .15s var(--ease), color .15s var(--ease);
+  }
+  .chip:hover{border-color:var(--border-strong); color:var(--ink);}
+  .chip.active{background:var(--green); border-color:var(--green); color:#fff;}
+  .filters .sep{width:1px; align-self:stretch; background:var(--border); margin:0 4px;}
+  .img-toggle{
+    display:inline-flex; align-items:center; gap:9px; margin-left:auto; border:0; background:none;
+    cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; color:var(--muted); padding:8px 4px;
+  }
+  .img-toggle:hover{color:var(--ink);}
+  .img-toggle .switch{
+    width:36px; height:21px; border-radius:11px; background:var(--border-strong); position:relative; transition:background .15s var(--ease); flex-shrink:0;
+  }
+  .img-toggle .switch::after{
+    content:''; position:absolute; top:2px; left:2px; width:17px; height:17px; border-radius:50%; background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .15s var(--ease);
+  }
+  .img-toggle.on .switch, .width-toggle.on .switch{background:var(--green);}
+  .img-toggle.on .switch::after, .width-toggle.on .switch::after{transform:translateX(15px);}
+
+  main{padding:24px;}
+  .count{font-size:13px; color:var(--muted); margin-bottom:16px; font-weight:600;}
+  .grid{
+    display:flex; flex-direction:column; align-items:center; gap:22px;
+  }
+  .card{
+    width:100%;
+    background:var(--panel-bg); border:1px solid var(--border); border-radius:var(--radius);
+    overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow);
+    transition:box-shadow .2s var(--ease), transform .2s var(--ease), max-width .2s var(--ease);
+  }
+  .card:hover{box-shadow:var(--shadow-hover); transform:translateY(-2px);}
+  .card-head{padding:16px 16px 12px; border-bottom:1px solid var(--border);}
+  .card-head-top{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:10px;}
+  .card-title{font-size:15px; font-weight:800; margin:0; letter-spacing:-.01em;}
+  .width-toggle{
+    display:inline-flex; align-items:center; gap:8px; border:0; background:none; flex-shrink:0;
+    cursor:pointer; font-family:inherit; font-size:12px; font-weight:700; color:var(--muted); padding:2px;
+  }
+  .width-toggle:hover{color:var(--ink);}
+  .width-toggle .switch{
+    width:32px; height:19px; border-radius:10px; background:var(--border-strong); position:relative; transition:background .15s var(--ease); flex-shrink:0;
+  }
+  .width-toggle .switch::after{
+    content:''; position:absolute; top:2px; left:2px; width:15px; height:15px; border-radius:50%; background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .15s var(--ease);
+  }
+  .card-tags{display:flex; gap:6px; flex-wrap:wrap;}
+  .tag{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; background:var(--green-light); color:var(--green-dark); padding:3px 9px; border-radius:10px;}
+  .tag.img{background:#e6eef7; color:#2f5e8f;}
+  .tag.status-verified{background:#1f7a4d; color:#fff;}
+  .tag.status-untested{background:#f0efe8; color:#948d7c; border:1px dashed var(--border-strong);}
+  .card-preview{background:#eef0ee;}
+  .card-preview iframe{width:100%; height:200px; border:0; display:block; background:#fff; transition:height .2s var(--ease);}
+  .card-foot{padding:12px 16px 16px;}
+  .copy-btn{
+    border:1px solid var(--green); background:#fff; color:var(--green); font-weight:800; font-size:14px;
+    padding:13px 16px; border-radius:11px; cursor:pointer; font-family:inherit; width:100%; min-height:48px;
+    transition:background .15s var(--ease), color .15s var(--ease);
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .copy-btn:hover{background:var(--green); color:#fff;}
+  .copy-btn.copied{background:var(--green); color:#fff; border-color:var(--green);}
+
+  .empty-state{width:100%; text-align:center; padding:70px 20px; color:var(--muted);}
+  .empty-state strong{display:block; font-size:15px; color:var(--ink); margin-bottom:4px; font-weight:800;}
+
+  footer{padding:28px 20px 60px; font-size:12px; color:var(--muted); text-align:center;}
+
+  @media (max-width:480px){
+    .brand h1{font-size:17px;}
+    header{padding:14px 16px;}
+    .filters{padding:12px 16px;}
+    main{padding:16px;}
+    .grid{gap:16px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg width="19" height="19" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 20 C75 30 78 60 50 84 C22 60 25 30 50 20 Z" fill="#fff"/>
+          <line x1="50" y1="26" x2="50" y2="78" stroke="#2a5c46" stroke-width="3"/>
+        </svg>
+      </span>
+      <div>
+        <h1>Rise Custom Block Library</h1>
+        <span class="brand-tagline">Copy source, paste into an HTML Embed block in Rise</span>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="device-toggle">
+        <button id="dev-mobile" class="active" onclick="setDevice('mobile')">Mobile 390</button>
+        <button id="dev-desktop" onclick="setDevice('desktop')">Desktop 920</button>
+      </div>
+      <button class="theme-btn" onclick="toggleThemePanel()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        Theme settings
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="theme-panel">
+  <div class="theme-section">
+    <p class="theme-section-title">Typography</p>
+    <div class="theme-grid">
+      <div class="theme-field">
+        <label>Font family</label>
+        <input type="text" id="t-font" value="'Inter', sans-serif" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Heading size</label>
+        <input type="text" id="t-h1" value="22px" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Tagline size</label>
+        <input type="text" id="t-tagline" value="12px" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Body size</label>
+        <input type="text" id="t-body" value="16px" oninput="onThemeChange()">
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-section">
+    <p class="theme-section-title">Colors</p>
+    <div class="theme-grid">
+      <div class="theme-field">
+        <label>Primary color</label>
+        <input type="color" id="t-primary" value="#37775a" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Primary tint (bg)</label>
+        <input type="color" id="t-primary-light" value="#e8f2ec" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Text color</label>
+        <input type="color" id="t-text" value="#1a2e24" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Icon color</label>
+        <input type="color" id="t-icon-color" value="#37775a" oninput="onThemeChange()">
+      </div>
+      <div class="theme-field">
+        <label>Icon background</label>
+        <input type="color" id="t-icon-bg" value="#e8f2ec" oninput="onThemeChange()">
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-section">
+    <p class="theme-section-title">Icons</p>
+    <div class="theme-field">
+      <label>Primary icon (Icon A &mdash; "before" / single-state slots)</label>
+      <div class="icon-picker" id="picker-a"></div>
+      <input type="text" id="t-custom-a" placeholder="Paste a custom image URL&hellip;" oninput="onCustomUrlChange('A')" style="display:none;margin-top:10px;">
+    </div>
+    <div class="theme-field" style="margin-top:16px;">
+      <label>Secondary icon (Icon B &mdash; "after" / alternate-state slots)</label>
+      <div class="icon-picker" id="picker-b"></div>
+      <input type="text" id="t-custom-b" placeholder="Paste a custom image URL&hellip;" oninput="onCustomUrlChange('B')" style="display:none;margin-top:10px;">
+    </div>
+  </div>
+
+  <div class="theme-actions">
+    <button class="primary" onclick="downloadThemeJson()">Download theme.json</button>
+    <button onclick="resetTheme()">Reset to defaults</button>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="fgroup" id="cat-filters"></div>
+  <div class="sep"></div>
+  <button class="img-toggle" id="img-filter" onclick="toggleImgFilter()">
+    <span class="switch"></span>
+    Hide icon-illustrated blocks
+  </button>
+</div>
+
+<main>
+  <div class="count" id="result-count"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>Rise Custom Block Library &middot; personal reference tool</footer>
+
+<!-- ============================================================
+     BLOCK SOURCE TEMPLATES
+     Each <template> holds a fully self-contained block: inline
+     CSS + JS, no external deps. Every block starts its script with
+     a TEXT object holding every user-facing string in one place,
+     so translation never requires touching markup or logic.
+     Tokens like __COLOR_PRIMARY__ get swapped for live theme
+     values before preview/copy. __ICON_A__ / __ICON_B__ get
+     swapped for the selected flat-icon SVG.
+     ============================================================ -->
+
+<template id="src-slider-compare">
+<div class="cmp-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .cmp-slider{position:relative;width:100%;height:280px;overflow:hidden;border-radius:16px;cursor:ew-resize;user-select:none;box-shadow:0 4px 16px rgba(0,0,0,.12);touch-action:none;}
+  .cmp-after,.cmp-before-wrap{position:absolute;inset:0;}
+  .cmp-before-wrap{width:50%;overflow:hidden;}
+  .cmp-before-inner{position:absolute;top:0;left:0;width:480px;height:280px;}
+  .cmp-handle{position:absolute;top:0;left:50%;width:4px;height:100%;background:#fff;transform:translateX(-50%);box-shadow:0 0 8px rgba(0,0,0,.3);}
+  .cmp-grab{position:absolute;top:50%;left:50%;width:48px;height:48px;transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;}
+  .cmp-badge{position:absolute;bottom:14px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;}
+  .cmp-badge.before{left:14px;} .cmp-badge.after{right:14px;}
+</style>
+<div class="cmp-slider">
+  <div class="cmp-after">__ICON_B__</div>
+  <div class="cmp-before-wrap"><div class="cmp-before-inner">__ICON_A__</div></div>
+  <div class="cmp-handle">
+    <div class="cmp-grab">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="__COLOR_PRIMARY__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,5 4,12 9,19"/><polyline points="15,5 20,12 15,19"/></svg>
+    </div>
+  </div>
+  <span class="cmp-badge before" data-t="labelBefore"></span>
+  <span class="cmp-badge after" data-t="labelAfter"></span>
+</div>
+</div>
+<script>
+var TEXT = { labelBefore:"Before", labelAfter:"After" };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('[data-t=labelBefore]').textContent = TEXT.labelBefore;
+  root.querySelector('[data-t=labelAfter]').textContent = TEXT.labelAfter;
+  var el=root.querySelector('.cmp-slider');
+  var wrap=root.querySelector('.cmp-before-wrap');
+  var handle=root.querySelector('.cmp-handle');
+  var dragging=false;
+  function setPos(clientX){
+    var r=el.getBoundingClientRect();
+    var pct=Math.min(Math.max((clientX-r.left)/r.width,0.02),0.98);
+    wrap.style.width=(pct*100)+"%";
+    handle.style.left=(pct*100)+"%";
+  }
+  el.addEventListener('pointerdown',function(e){dragging=true;setPos(e.clientX);});
+  window.addEventListener('pointermove',function(e){if(dragging)setPos(e.clientX);});
+  window.addEventListener('pointerup',function(){dragging=false;});
+})();
+</script>
+</template>
+
+<template id="src-tap-toggle">
+<div class="tt-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .tt-stage{position:relative;height:240px;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .tt-icon-a,.tt-icon-b{position:absolute;inset:0;}
+  .tt-label{position:absolute;bottom:14px;left:14px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;}
+  .tt-btn{margin-top:14px;width:100%;min-height:52px;border:2px solid __COLOR_PRIMARY__;background:#fff;color:__COLOR_PRIMARY__;font-weight:800;font-size:15px;border-radius:12px;cursor:pointer;font-family:inherit;}
+  .tt-btn:active{background:__COLOR_PRIMARY_LIGHT__;}
+</style>
+<div class="tt-stage">
+  <div class="tt-icon-a">__ICON_A__</div>
+  <div class="tt-icon-b" style="display:none;">__ICON_B__</div>
+  <span class="tt-label" data-t="stateA"></span>
+</div>
+<button class="tt-btn" data-t="button"></button>
+</div>
+<script>
+var TEXT = { stateA:"State A", stateB:"State B", button:"Tap to compare" };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  var a=root.querySelector('.tt-icon-a'), b=root.querySelector('.tt-icon-b');
+  var label=root.querySelector('.tt-label');
+  var btn=root.querySelector('.tt-btn');
+  btn.textContent = TEXT.button;
+  label.textContent = TEXT.stateA;
+  var showingA=true;
+  btn.addEventListener('click',function(){
+    showingA=!showingA;
+    a.style.display = showingA ? 'block' : 'none';
+    b.style.display = showingA ? 'none' : 'block';
+    label.textContent = showingA ? TEXT.stateA : TEXT.stateB;
+  });
+})();
+</script>
+</template>
+
+<template id="src-overlay-fade">
+<div class="of-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .of-stage{position:relative;height:240px;border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.12);user-select:none;-webkit-user-select:none;touch-action:none;}
+  .of-a,.of-top{position:absolute;inset:0;}
+  .of-top{transition:opacity .25s ease;}
+  .of-hint{position:absolute;bottom:14px;left:14px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;pointer-events:none;}
+</style>
+<div class="of-stage">
+  <div class="of-a">__ICON_A__</div>
+  <div class="of-top">__ICON_B__</div>
+  <span class="of-hint" data-t="hint"></span>
+</div>
+</div>
+<script>
+var TEXT = { hint:"Press & hold to compare" };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.of-hint').textContent = TEXT.hint;
+  var stage=root.querySelector('.of-stage');
+  var top=root.querySelector('.of-top');
+  function reveal(){ top.style.opacity='0'; }
+  function cover(){ top.style.opacity='1'; }
+  stage.addEventListener('pointerdown', reveal);
+  stage.addEventListener('pointerup', cover);
+  stage.addEventListener('pointerleave', cover);
+  stage.addEventListener('pointercancel', cover);
+})();
+</script>
+</template>
+
+<template id="src-hotspot-id">
+<div class="hs-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .hs-stage{position:relative;height:260px;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .hs-dot{position:absolute;width:38px;height:38px;border-radius:50%;background:__COLOR_PRIMARY__;border:4px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);transform:translate(-50%,-50%);}
+  .hs-dot::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid __COLOR_PRIMARY__;opacity:.5;animation:hs-pulse 1.8s ease-out infinite;}
+  @keyframes hs-pulse{0%{transform:scale(.8);opacity:.6;}100%{transform:scale(1.6);opacity:0;}}
+  .hs-callout{margin-top:14px;padding:14px 16px;background:__COLOR_PRIMARY_LIGHT__;border-radius:12px;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;min-height:24px;line-height:1.5;}
+</style>
+<div class="hs-stage">
+  <div style="position:absolute;inset:0;">__ICON_A__</div>
+  <button class="hs-dot" data-i="0" style="top:30%;left:25%;"></button>
+  <button class="hs-dot" data-i="1" style="top:55%;left:60%;"></button>
+  <button class="hs-dot" data-i="2" style="top:75%;left:35%;"></button>
+</div>
+<div class="hs-callout" data-t="callout"></div>
+</div>
+<script>
+var TEXT = {
+  callout: "Tap a marker to identify a hazard point.",
+  notes: [
+    "Cracked branch union \u2014 check for included bark before climbing near this point.",
+    "Damaged bark \u2014 possible pest entry site, flag for inspection.",
+    "Root flare buried \u2014 note for soil correction recommendation."
+  ]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  var out=root.querySelector('.hs-callout');
+  out.textContent = TEXT.callout;
+  root.querySelectorAll('.hs-dot').forEach(function(d){
+    d.addEventListener('click',function(){ out.textContent = TEXT.notes[d.dataset.i]; });
+  });
+})();
+</script>
+</template>
+
+<template id="src-zoom-inspect">
+<div class="zi-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .zi-frame{height:260px;border-radius:16px;overflow:hidden;cursor:zoom-in;position:relative;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .zi-img{width:100%;height:100%;transform:scale(1);transition:transform .35s ease;transform-origin:30% 30%;}
+  .zi-badge{position:absolute;bottom:14px;right:14px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;pointer-events:none;}
+  .zi-caption{font-size:13px;color:#69756e;margin:10px 0 0;}
+</style>
+<div class="zi-frame">
+  <div class="zi-img">__ICON_A__</div>
+  <span class="zi-badge" data-t="badge"></span>
+</div>
+<p class="zi-caption" data-t="caption"></p>
+</div>
+<script>
+var TEXT = { badge:"Tap to zoom", caption:"Tap the image to zoom into the detail area, tap again to reset." };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.zi-badge').textContent = TEXT.badge;
+  root.querySelector('.zi-caption').textContent = TEXT.caption;
+  var img=root.querySelector('.zi-img');
+  var zoomed=false;
+  root.querySelector('.zi-frame').addEventListener('click',function(){
+    zoomed=!zoomed;
+    img.style.transform = zoomed ? "scale(2.4)" : "scale(1)";
+  });
+})();
+</script>
+</template>
+
+<template id="src-sort-bins">
+<div class="sb-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .sb-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .sb-instruction{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:0;}
+  .sb-score{font-size:13px;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;margin-left:10px;}
+  .sb-items{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .sb-item{display:flex;align-items:center;gap:8px;border:2px solid #dcdfda;background:#fff;padding:12px 16px;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;min-height:48px;transition:all .15s ease;}
+  .sb-item.selected{border-color:__COLOR_PRIMARY__;box-shadow:0 0 0 3px __COLOR_PRIMARY_LIGHT__;}
+  .sb-item.correct{border-color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;color:__COLOR_PRIMARY__;cursor:default;}
+  .sb-item.wrong{border-color:#c0554a;background:#fbeae7;color:#a03a2e;cursor:default;}
+  .sb-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;}
+  .sb-icon.ok{background:__COLOR_PRIMARY__;}
+  .sb-icon.no{background:#c0554a;}
+  .sb-bins{display:flex;gap:12px;}
+  .sb-bin{flex:1;min-height:120px;border:2px dashed #cfd3cd;border-radius:14px;padding:12px;}
+  .sb-bin-head{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;}
+  .sb-bin.good .sb-bin-head{color:__COLOR_PRIMARY__;}
+  .sb-bin.bad .sb-bin-head{color:#a05a1f;}
+  .sb-reset{margin-top:14px;width:100%;min-height:48px;border:2px solid #dcdfda;background:#fff;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;display:none;}
+</style>
+<div class="sb-top">
+  <p class="sb-instruction" data-t="instruction"></p>
+  <span class="sb-score"></span>
+</div>
+<div class="sb-items"></div>
+<div class="sb-bins">
+  <div class="sb-bin good"><div class="sb-bin-head" data-t="binGood"></div></div>
+  <div class="sb-bin bad"><div class="sb-bin-head" data-t="binBad"></div></div>
+</div>
+<button class="sb-reset" data-t="reset"></button>
+</div>
+<script>
+var TEXT = {
+  instruction: "Tap an item, then tap the correct bin.",
+  scoreTemplate: "{n} / {total} sorted",
+  binGood: "Correct technique",
+  binBad: "Incorrect technique",
+  reset: "Reset",
+  items: [
+    {label:"Clean 45\u00b0 cut", correct:"good"},
+    {label:"Flush cut", correct:"bad"},
+    {label:"Cut outside collar", correct:"good"},
+    {label:"Stub left behind", correct:"bad"}
+  ]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('[data-t=instruction]').textContent = TEXT.instruction;
+  root.querySelector('[data-t=binGood]').textContent = TEXT.binGood;
+  root.querySelector('[data-t=binBad]').textContent = TEXT.binBad;
+  var resetBtn = root.querySelector('.sb-reset');
+  resetBtn.textContent = TEXT.reset;
+  var itemsWrap = root.querySelector('.sb-items');
+  var scoreEl = root.querySelector('.sb-score');
+  var binGood = root.querySelector('.sb-bin.good');
+  var binBad = root.querySelector('.sb-bin.bad');
+  var selected=null, sortedCount=0;
+
+  function updateScore(){
+    scoreEl.textContent = TEXT.scoreTemplate.replace('{n}', sortedCount).replace('{total}', TEXT.items.length);
+    resetBtn.style.display = sortedCount===TEXT.items.length ? 'block' : 'none';
+  }
+
+  function build(){
+    itemsWrap.innerHTML='';
+    sortedCount=0;
+    TEXT.items.forEach(function(it, idx){
+      var chip=document.createElement('button');
+      chip.className='sb-item';
+      chip.textContent=it.label;
+      chip.dataset.correct=it.correct;
+      chip.dataset.idx=idx;
+      chip.addEventListener('click',function(){
+        root.querySelectorAll('.sb-item').forEach(function(x){x.classList.remove('selected');});
+        selected=chip; chip.classList.add('selected');
+      });
+      itemsWrap.appendChild(chip);
+    });
+    updateScore();
+  }
+
+  [binGood, binBad].forEach(function(bin){
+    bin.addEventListener('click',function(){
+      if(!selected) return;
+      var binType = bin.classList.contains('good') ? 'good' : 'bad';
+      var ok = selected.dataset.correct === binType;
+      selected.classList.remove('selected');
+      selected.classList.add(ok ? 'correct' : 'wrong');
+      var icon=document.createElement('span');
+      icon.className='sb-icon ' + (ok ? 'ok' : 'no');
+      icon.textContent = ok ? '\u2713' : '\u2715';
+      selected.appendChild(icon);
+      selected.style.pointerEvents='none';
+      sortedCount++;
+      bin.appendChild(selected);
+      selected=null;
+      updateScore();
+    });
+  });
+
+  resetBtn.addEventListener('click', build);
+  build();
+})();
+</script>
+</template>
+
+<template id="src-scroll-timeline">
+<div class="stl-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .stl-row{display:flex;gap:16px;opacity:0;transform:translateY(18px);transition:all .5s ease;margin-bottom:22px;}
+  .stl-row:last-child{margin-bottom:0;}
+  .stl-dot{width:40px;height:40px;border-radius:50%;background:__COLOR_PRIMARY__;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+  .stl-label{font-size:11px;font-weight:800;color:__COLOR_PRIMARY__;text-transform:uppercase;letter-spacing:.04em;}
+  .stl-body{margin:3px 0 0;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.55;}
+</style>
+<div class="stl-row"><div class="stl-dot">1</div><div><div class="stl-label" data-t="label0"></div><p class="stl-body" data-t="body0"></p></div></div>
+<div class="stl-row"><div class="stl-dot">2</div><div><div class="stl-label" data-t="label1"></div><p class="stl-body" data-t="body1"></p></div></div>
+<div class="stl-row"><div class="stl-dot">3</div><div><div class="stl-label" data-t="label2"></div><p class="stl-body" data-t="body2"></p></div></div>
+</div>
+<script>
+var TEXT = {
+  label0:"Step one", body0:"Assess the site and confirm access before equipment arrives.",
+  label1:"Step two", body1:"Set up the exclusion zone and confirm PPE for the crew.",
+  label2:"Step three", body2:"Begin work and log progress on the job ticket."
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  Object.keys(TEXT).forEach(function(k){ root.querySelector('[data-t='+k+']').textContent = TEXT[k]; });
+  var rows=root.querySelectorAll('.stl-row');
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){en.target.style.opacity=1; en.target.style.transform='translateY(0)';}
+    });
+  },{threshold:.3});
+  rows.forEach(function(r){obs.observe(r);});
+})();
+</script>
+</template>
+
+<template id="src-step-accordion">
+<div class="sa-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .sa-step{border:1px solid #e3e5e1;border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:opacity .3s ease;}
+  .sa-head{width:100%;text-align:left;background:__COLOR_PRIMARY_LIGHT__;border:0;padding:16px;font-weight:800;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;cursor:pointer;font-family:inherit;min-height:56px;display:flex;align-items:center;gap:10px;}
+  .sa-step.locked .sa-head{background:#f2f3f1;color:#9aa39c;}
+  .sa-check{width:22px;height:22px;border-radius:50%;background:__COLOR_PRIMARY__;color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;visibility:hidden;}
+  .sa-step.done .sa-check{visibility:visible;}
+  .sa-body{padding:14px 16px 18px;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.55;}
+  .sa-done-btn{margin-top:12px;background:__COLOR_PRIMARY__;color:#fff;border:0;padding:12px 18px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px;}
+</style>
+<div class="sa-step" data-n="0">
+  <button class="sa-head"><span class="sa-check">&#10003;</span><span data-t="title0"></span></button>
+  <div class="sa-body">
+    <span data-t="body0"></span><br>
+    <button class="sa-done-btn" data-t="doneBtn"></button>
+  </div>
+</div>
+<div class="sa-step locked" data-n="1">
+  <button class="sa-head"><span class="sa-check">&#10003;</span><span data-t="title1"></span></button>
+  <div class="sa-body" data-t="body1"></div>
+</div>
+</div>
+<script>
+var TEXT = {
+  title0:"Step 1 \u00b7 Inspect equipment", body0:"Check chainsaw chain tension and fuel mix before starting.",
+  title1:"Step 2 \u00b7 Confirm exclusion zone", body1:"Set cones and confirm bystanders are clear before cutting.",
+  doneBtn:"Mark done & unlock next"
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelectorAll('[data-t]').forEach(function(el){
+    var key=el.getAttribute('data-t');
+    if(TEXT[key]!==undefined) el.textContent = TEXT[key];
+  });
+  var steps=root.querySelectorAll('.sa-step');
+  steps.forEach(function(s){
+    var head=s.querySelector('.sa-head'), body=s.querySelector('.sa-body');
+    body.style.display='none';
+    head.addEventListener('click',function(){
+      if(s.classList.contains('locked')) return;
+      body.style.display = body.style.display==='none' ? 'block' : 'none';
+    });
+  });
+  var done=root.querySelector('.sa-done-btn');
+  done.addEventListener('click',function(){
+    steps[0].classList.add('done');
+    steps[1].classList.remove('locked');
+    steps[1].style.opacity=1;
+  });
+})();
+</script>
+</template>
+
+<template id="src-drag-reorder">
+<div class="dr-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .dr-instruction{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:0 0 12px;}
+  .dr-item{display:flex;align-items:center;gap:10px;border:1px solid #e3e5e1;border-radius:12px;padding:12px 14px;margin-bottom:8px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .dr-item span.dr-text{flex:1;font-size:14px;font-weight:600;}
+  .dr-btn{border:1px solid #dcdfda;background:#fff;border-radius:10px;width:44px;height:44px;cursor:pointer;font-size:16px;color:__COLOR_PRIMARY__;font-weight:800;}
+</style>
+<p class="dr-instruction" data-t="instruction"></p>
+<div class="dr-list"></div>
+</div>
+<script>
+var TEXT = {
+  instruction: "Use the arrows to put the steps in the correct order.",
+  items: ["Inspect the site", "Set up rigging", "Make the cut"]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.dr-instruction').textContent = TEXT.instruction;
+  var list=root.querySelector('.dr-list');
+  TEXT.items.forEach(function(label){
+    var item=document.createElement('div');
+    item.className='dr-item';
+    item.innerHTML='<span class="dr-text"></span><button class="dr-btn dr-up">&uarr;</button><button class="dr-btn dr-down">&darr;</button>';
+    item.querySelector('.dr-text').textContent=label;
+    list.appendChild(item);
+  });
+  list.querySelectorAll('.dr-up').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var item=btn.closest('.dr-item');
+      var prev=item.previousElementSibling;
+      if(prev) item.parentNode.insertBefore(item,prev);
+    });
+  });
+  list.querySelectorAll('.dr-down').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var item=btn.closest('.dr-item');
+      var next=item.nextElementSibling;
+      if(next) item.parentNode.insertBefore(next,item);
+    });
+  });
+})();
+</script>
+</template>
+
+<template id="src-scenario-flip">
+<div class="sf-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;perspective:1000px;">
+<style>
+  .sf-card{position:relative;width:100%;max-width:360px;margin:0 auto;height:230px;transform-style:preserve-3d;transition:transform .5s;cursor:pointer;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .sf-front,.sf-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:20px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:__BODY_SIZE__;}
+  .sf-front{background:__COLOR_PRIMARY__;color:#fff;font-weight:700;}
+  .sf-back{background:#fff;border:2px solid __COLOR_PRIMARY__;color:__COLOR_TEXT__;transform:rotateY(180deg);}
+  .sf-hint{text-align:center;font-size:12px;color:#69756e;margin-top:10px;font-weight:600;}
+</style>
+<div class="sf-card">
+  <div class="sf-front" data-t="front"></div>
+  <div class="sf-back" data-t="back"></div>
+</div>
+<p class="sf-hint" data-t="hint"></p>
+</div>
+<script>
+var TEXT = {
+  front: "A client asks you to top a mature oak. What do you say?",
+  back: "Explain that topping harms tree health and offer a structural pruning alternative instead.",
+  hint: "Tap the card to flip"
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.sf-front').textContent = TEXT.front;
+  root.querySelector('.sf-back').textContent = TEXT.back;
+  root.querySelector('.sf-hint').textContent = TEXT.hint;
+  var card=root.querySelector('.sf-card');
+  var flipped=false;
+  card.addEventListener('click',function(){
+    flipped=!flipped;
+    card.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+  });
+})();
+</script>
+</template>
+
+<template id="src-risk-slider">
+<div class="rs-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .rs-scale{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:#69756e;text-transform:uppercase;letter-spacing:.03em;}
+  .rs-range{width:100%;margin:14px 0;height:8px;border-radius:4px;background:#e3e5e1;-webkit-appearance:none;appearance:none;}
+  .rs-range::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:__COLOR_PRIMARY__;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;}
+  .rs-range::-moz-range-thumb{width:32px;height:32px;border:0;border-radius:50%;background:__COLOR_PRIMARY__;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;}
+  .rs-out{text-align:center;font-weight:800;font-size:__H1_SIZE__;}
+  .rs-desc{text-align:center;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:6px 0 0;}
+</style>
+<div class="rs-scale"><span data-t="lowLabel"></span><span data-t="medLabel"></span><span data-t="highLabel"></span></div>
+<input class="rs-range" type="range" min="0" max="100" value="30">
+<div class="rs-out"></div>
+<p class="rs-desc"></p>
+</div>
+<script>
+var TEXT = {
+  lowLabel:"Low", medLabel:"Medium", highLabel:"High",
+  levels: [
+    {max:34, title:"LOW RISK", color:"__COLOR_PRIMARY__", desc:"Minor hazard, standard precautions apply."},
+    {max:67, title:"MEDIUM RISK", color:"#c98a1f", desc:"Notable hazard, brief the crew before starting."},
+    {max:101, title:"HIGH RISK", color:"#c0554a", desc:"Stop and escalate to a supervisor before proceeding."}
+  ]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('[data-t=lowLabel]').textContent = TEXT.lowLabel;
+  root.querySelector('[data-t=medLabel]').textContent = TEXT.medLabel;
+  root.querySelector('[data-t=highLabel]').textContent = TEXT.highLabel;
+  var out=root.querySelector('.rs-out'), desc=root.querySelector('.rs-desc'), range=root.querySelector('.rs-range');
+  function update(v){
+    var level = TEXT.levels.find(function(l){ return v < l.max; }) || TEXT.levels[TEXT.levels.length-1];
+    out.textContent = level.title;
+    out.style.color = level.color;
+    desc.textContent = level.desc;
+  }
+  range.addEventListener('input', function(e){ update(Number(e.target.value)); });
+  update(Number(range.value));
+})();
+</script>
+</template>
+
+<template id="src-choice-branch">
+<div class="cb-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .cb-q{font-size:__BODY_SIZE__;font-weight:700;color:__COLOR_TEXT__;margin:0 0 12px;}
+  .cb-opts{display:flex;flex-direction:column;gap:10px;}
+  .cb-opt{text-align:left;border:2px solid #dcdfda;background:#fff;padding:14px 16px;border-radius:12px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;min-height:52px;}
+  .cb-opt:disabled{cursor:default;opacity:.6;}
+  .cb-opt.right{border-color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;}
+  .cb-opt.wrong{border-color:#c0554a;background:#fbeae7;}
+  .cb-out{display:none;margin-top:12px;padding:14px 16px;border-radius:12px;font-size:__BODY_SIZE__;line-height:1.5;}
+  .cb-out-head{font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+  .cb-icon{width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cb-retry{margin-top:10px;background:#fff;border:2px solid #dcdfda;border-radius:10px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;min-height:44px;}
+</style>
+<p class="cb-q" data-t="question"></p>
+<div class="cb-opts"></div>
+<div class="cb-out">
+  <div class="cb-out-head"><span class="cb-icon"></span><span class="cb-out-title"></span></div>
+  <span class="cb-out-body"></span>
+  <div><button class="cb-retry" data-t="retry"></button></div>
+</div>
+</div>
+<script>
+var TEXT = {
+  question: "You spot a downed line near a job site. What's your first move?",
+  retry: "Try again",
+  correctTitle: "Correct",
+  incorrectTitle: "Not quite",
+  options: [
+    {label:"Move it out of the way yourself", ok:false, feedback:"Never touch a downed line. Clear the area and report it immediately, even if it looks dead."},
+    {label:"Stop work, clear the area, call it in", ok:true, feedback:"Treat every downed line as live, clear the area, and report it immediately."}
+  ]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.cb-q').textContent = TEXT.question;
+  root.querySelector('.cb-retry').textContent = TEXT.retry;
+  var opts=root.querySelector('.cb-opts');
+  var out=root.querySelector('.cb-out');
+  var outHead=root.querySelector('.cb-out-title');
+  var outBody=root.querySelector('.cb-out-body');
+  var outIcon=root.querySelector('.cb-icon');
+  var retry=root.querySelector('.cb-retry');
+
+  function build(){
+    opts.innerHTML='';
+    out.style.display='none';
+    TEXT.options.forEach(function(o){
+      var b=document.createElement('button');
+      b.className='cb-opt';
+      b.textContent=o.label;
+      b.addEventListener('click',function(){
+        root.querySelectorAll('.cb-opt').forEach(function(x){ x.disabled=true; });
+        b.classList.add(o.ok ? 'right' : 'wrong');
+        outIcon.style.background = o.ok ? '__COLOR_PRIMARY__' : '#c0554a';
+        outIcon.textContent = o.ok ? '\u2713' : '\u2715';
+        outHead.textContent = o.ok ? TEXT.correctTitle : TEXT.incorrectTitle;
+        outBody.textContent = o.feedback;
+        out.style.display='block';
+      });
+      opts.appendChild(b);
+    });
+  }
+  retry.addEventListener('click', build);
+  build();
+})();
+</script>
+</template>
+
+<template id="src-layered-section">
+<div class="ls-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .ls-layer{width:100%;text-align:left;border:0;color:#fff;padding:16px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;min-height:56px;margin-bottom:5px;transition:transform .15s ease;}
+  .ls-layer.active{transform:scale(1.02);box-shadow:0 3px 10px rgba(0,0,0,.2);}
+  .ls-detail{margin-top:10px;padding:14px 16px;background:__COLOR_PRIMARY_LIGHT__;border-radius:12px;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;min-height:24px;line-height:1.5;}
+</style>
+<div class="ls-layer" data-i="0" style="background:__COLOR_PRIMARY__;" data-t="layer0"></div>
+<div class="ls-layer" data-i="1" style="background:#5c8f74;" data-t="layer1"></div>
+<div class="ls-layer" data-i="2" style="background:#7a6a4f;" data-t="layer2"></div>
+<div class="ls-layer" data-i="3" style="background:#4a4436;" data-t="layer3"></div>
+<div class="ls-detail" data-t="prompt"></div>
+</div>
+<script>
+var TEXT = {
+  layer0:"Mulch layer", layer1:"Topsoil", layer2:"Root zone", layer3:"Subsoil",
+  prompt:"Tap a layer to see what's happening there.",
+  notes:[
+    "2-3 inches ideal, keep it off the trunk flare.",
+    "Where most fine feeder roots live and take up water.",
+    "Structural roots anchor the tree and extend well past the canopy.",
+    "Compacted subsoil restricts root growth and drainage."
+  ]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelectorAll('.ls-layer').forEach(function(l){
+    l.textContent = TEXT['layer'+l.dataset.i];
+  });
+  var out=root.querySelector('.ls-detail');
+  out.textContent = TEXT.prompt;
+  root.querySelectorAll('.ls-layer').forEach(function(l){
+    l.addEventListener('click',function(){
+      root.querySelectorAll('.ls-layer').forEach(function(x){x.classList.remove('active');});
+      l.classList.add('active');
+      out.textContent = TEXT.notes[l.dataset.i];
+    });
+  });
+})();
+</script>
+</template>
+
+<template id="src-label-pin">
+<div class="lp-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .lp-stage{position:relative;height:220px;border:1px solid #e3e5e1;border-radius:14px;background:#f7f8f6;}
+  .lp-zone{position:absolute;border:3px dashed #c3c8c1;border-radius:12px;font-size:12px;color:#8b948a;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700;text-align:center;padding:6px;}
+  .lp-zone.correct{border-style:solid;border-color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;color:__COLOR_PRIMARY__;}
+  .lp-zone.wrong{border-style:solid;border-color:#c0554a;background:#fbeae7;color:#a03a2e;}
+  .lp-labels{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .lp-label{border:2px solid __COLOR_PRIMARY__;color:__COLOR_PRIMARY__;background:#fff;padding:12px 18px;border-radius:24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;min-height:48px;}
+  .lp-label.selected{background:__COLOR_PRIMARY__;color:#fff;}
+  .lp-label.placed{display:none;}
+  .lp-instruction{font-size:13px;color:#69756e;margin:0 0 10px;}
+</style>
+<p class="lp-instruction" data-t="instruction"></p>
+<div class="lp-stage">
+  <div class="lp-zone" data-name="crown" style="top:8%;left:28%;width:44%;height:32%;"></div>
+  <div class="lp-zone" data-name="trunk" style="top:74%;left:35%;width:30%;height:18%;"></div>
+</div>
+<div class="lp-labels">
+  <button class="lp-label" data-name="crown"></button>
+  <button class="lp-label" data-name="trunk"></button>
+</div>
+</div>
+<script>
+var TEXT = { instruction:"Tap a label, then tap the zone it belongs to.", crown:"Crown", trunk:"Trunk", dropHint:"Tap here" };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.lp-instruction').textContent = TEXT.instruction;
+  root.querySelectorAll('.lp-label').forEach(function(l){ l.textContent = TEXT[l.dataset.name]; });
+  root.querySelectorAll('.lp-zone').forEach(function(z){ z.textContent = TEXT.dropHint; });
+
+  var selected=null;
+  root.querySelectorAll('.lp-label').forEach(function(l){
+    l.addEventListener('click',function(){
+      root.querySelectorAll('.lp-label').forEach(function(x){x.classList.remove('selected');});
+      selected=l; l.classList.add('selected');
+    });
+  });
+  root.querySelectorAll('.lp-zone').forEach(function(z){
+    z.addEventListener('click',function(){
+      if(!selected || z.classList.contains('correct')) return;
+      var ok = selected.dataset.name === z.dataset.name;
+      z.classList.add(ok ? 'correct' : 'wrong');
+      z.textContent = (ok ? '\u2713 ' : '\u2715 ') + TEXT[selected.dataset.name];
+      if(ok){ selected.classList.add('placed'); }
+      selected.classList.remove('selected');
+      selected=null;
+    });
+  });
+})();
+</script>
+</template>
+
+<template id="src-animated-counter">
+<div class="ac-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;text-align:center;">
+<style>
+  .ac-num{font-size:52px;font-weight:800;color:__COLOR_PRIMARY__;line-height:1;}
+  .ac-caption{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;font-weight:700;margin-top:6px;}
+</style>
+<div class="ac-num">0</div>
+<div class="ac-caption" data-t="caption"></div>
+</div>
+<script>
+var TEXT = { caption:"Safety awards earned in 15 years", target:15 };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.ac-caption').textContent = TEXT.caption;
+  var el=root.querySelector('.ac-num');
+  var started=false;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting && !started){
+        started=true;
+        var start=null;
+        function step(ts){
+          if(!start) start=ts;
+          var p=Math.min((ts-start)/900,1);
+          el.textContent=Math.round(p*TEXT.target);
+          if(p<1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+    });
+  },{threshold:.5});
+  obs.observe(el);
+})();
+</script>
+</template>
+
+<template id="src-expanding-stat">
+<div class="es-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .es-card{max-width:360px;margin:0 auto;border:1px solid #e3e5e1;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);background:#fff;}
+  .es-head{width:100%;display:flex;justify-content:space-between;align-items:center;background:#fff;border:0;padding:18px;cursor:pointer;font-family:inherit;min-height:64px;gap:10px;}
+  .es-num{font-size:30px;font-weight:800;color:__COLOR_PRIMARY__;}
+  .es-sub{font-size:12px;color:__COLOR_TEXT__;font-weight:700;flex:1;text-align:left;}
+  .es-chevron{transition:transform .25s;font-size:18px;color:__COLOR_PRIMARY__;}
+  .es-body{max-height:0;overflow:hidden;transition:max-height .3s ease;background:__COLOR_PRIMARY_LIGHT__;}
+  .es-body p{margin:0;padding:14px 18px;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.5;}
+</style>
+<div class="es-card">
+<button class="es-head">
+  <span class="es-num" data-t="num"></span>
+  <span class="es-sub" data-t="sub"></span>
+  <span class="es-chevron">&#9660;</span>
+</button>
+<div class="es-body"><p data-t="body"></p></div>
+</div>
+</div>
+<script>
+var TEXT = { num:"#1", sub:"in residential arboriculture", body:"Ranked #1 in residential arboriculture services and #7 in the US landscaping sector overall, per the 2025 industry report." };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = TEXT[el.getAttribute('data-t')]; });
+  var body=root.querySelector('.es-body'), chev=root.querySelector('.es-chevron');
+  var open=false;
+  root.querySelector('.es-head').addEventListener('click',function(){
+    open=!open;
+    body.style.maxHeight = open ? '200px' : '0';
+    chev.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+  });
+})();
+</script>
+</template>
+
+<template id="src-progress-ring">
+<div class="pr-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;text-align:center;">
+<style>
+  .pr-caption{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;font-weight:700;margin-top:6px;}
+</style>
+<svg width="150" height="150" viewBox="0 0 140 140">
+  <circle cx="70" cy="70" r="60" fill="none" stroke="#e5e7e3" stroke-width="12"></circle>
+  <circle class="pr-circle" cx="70" cy="70" r="60" fill="none" stroke="__COLOR_PRIMARY__" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377" transform="rotate(-90 70 70)"></circle>
+  <text x="70" y="78" text-anchor="middle" font-size="24" font-weight="800" fill="__COLOR_TEXT__" class="pr-text">0%</text>
+</svg>
+<div class="pr-caption" data-t="caption"></div>
+</div>
+<script>
+var TEXT = { caption:"Module complete", target:0.82 };
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.pr-caption').textContent = TEXT.caption;
+  var circle=root.querySelector('.pr-circle'), text=root.querySelector('.pr-text');
+  var started=false;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting && !started){
+        started=true;
+        var start=null;
+        function step(ts){
+          if(!start) start=ts;
+          var p=Math.min((ts-start)/900,1);
+          var val=p*TEXT.target;
+          circle.style.strokeDashoffset = 377 - (377*val);
+          text.textContent = Math.round(val*100)+'%';
+          if(p<1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+    });
+  },{threshold:.5});
+  obs.observe(root.querySelector('svg'));
+})();
+</script>
+</template>
+
+<template id="src-glossary-tooltip">
+<div class="gt-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.8;position:relative;">
+<style>
+  .gt-term{border:0;background:__COLOR_PRIMARY_LIGHT__;border-bottom:2px solid __COLOR_PRIMARY__;color:__COLOR_PRIMARY__;font-weight:800;cursor:pointer;padding:4px 8px;font-size:inherit;font-family:inherit;border-radius:6px;min-height:36px;}
+  .gt-pop{display:none;position:absolute;top:100%;left:0;margin-top:8px;background:__COLOR_TEXT__;color:#fff;padding:14px 16px;border-radius:12px;font-size:14px;max-width:280px;z-index:10;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.25);}
+</style>
+<span data-t="before"></span> <button class="gt-term" data-t="term"></button> <span data-t="after"></span>
+<div class="gt-pop" data-t="definition"></div>
+</div>
+<script>
+var TEXT = {
+  before:"Always check for",
+  term:"included bark",
+  after:"before making a structural pruning cut near a branch union.",
+  definition:"Bark that grows inward between two branches instead of outward, creating a weak, crack-prone union."
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = TEXT[el.getAttribute('data-t')]; });
+  var pop=root.querySelector('.gt-pop');
+  root.querySelector('.gt-term').addEventListener('click',function(e){
+    e.stopPropagation();
+    pop.style.display = pop.style.display==='none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', function(){ pop.style.display='none'; });
+})();
+</script>
+</template>
+
+<template id="src-flip-card-grid">
+<div class="fg-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .fg-grid{max-width:460px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;perspective:800px;}
+  .fg-card{position:relative;height:130px;transform-style:preserve-3d;transition:transform .45s;cursor:pointer;}
+  .fg-front,.fg-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .fg-front{background:__COLOR_PRIMARY__;color:#fff;font-weight:800;font-size:14px;}
+  .fg-back{background:#fff;border:2px solid __COLOR_PRIMARY__;transform:rotateY(180deg);font-size:12px;color:__COLOR_TEXT__;}
+</style>
+<div class="fg-grid">
+<div class="fg-card"><div class="fg-front" data-t="term0"></div><div class="fg-back" data-t="def0"></div></div>
+<div class="fg-card"><div class="fg-front" data-t="term1"></div><div class="fg-back" data-t="def1"></div></div>
+</div>
+</div>
+<script>
+var TEXT = {
+  term0:"Cambium", def0:"The thin growth layer just under the bark where new wood and bark cells form.",
+  term1:"Root Flare", def1:"The point where the trunk widens into the roots \u2014 it should stay visible above grade, never buried in mulch."
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = TEXT[el.getAttribute('data-t')]; });
+  root.querySelectorAll('.fg-card').forEach(function(c){
+    var flipped=false;
+    c.addEventListener('click',function(){
+      flipped=!flipped;
+      c.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    });
+  });
+})();
+</script>
+</template>
+
+<template id="src-quote-reveal">
+<div class="qr-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;text-align:center;">
+<style>
+  .qr-btn{border:2px solid __COLOR_PRIMARY__;background:#fff;color:__COLOR_PRIMARY__;padding:13px 20px;border-radius:24px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;min-height:48px;}
+  .qr-quote{opacity:0;max-height:0;overflow:hidden;transition:all .4s ease;margin-top:14px;border-left:4px solid __COLOR_PRIMARY__;padding-left:14px;text-align:left;}
+  .qr-quote p{font-style:italic;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:0;line-height:1.55;}
+  .qr-attrib{font-size:12px;color:#69756e;margin-top:8px;font-weight:700;}
+</style>
+<button class="qr-btn" data-t="button"></button>
+<div class="qr-quote">
+  <p data-t="quote"></p>
+  <div class="qr-attrib" data-t="attribution"></div>
+</div>
+</div>
+<script>
+var TEXT = {
+  button:"Read a field note",
+  quote:"Every job starts with a walk around the tree. Ten minutes of looking up saves an hour of trouble later.",
+  attribution:"\u2014 Field Note, Crew Leader"
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = TEXT[el.getAttribute('data-t')]; });
+  var q=root.querySelector('.qr-quote');
+  var open=false;
+  root.querySelector('.qr-btn').addEventListener('click',function(){
+    open=!open;
+    q.style.opacity = open ? 1 : 0;
+    q.style.maxHeight = open ? '220px' : '0';
+  });
+})();
+</script>
+</template>
+
+<template id="src-match-pairs">
+<div class="mp-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;">
+<style>
+  .mp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;}
+  .mp-instruction{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:0;}
+  .mp-score{font-size:13px;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;}
+  .mp-cols{display:flex;gap:12px;}
+  .mp-col{flex:1;display:flex;flex-direction:column;gap:8px;}
+  .mp-item{border:2px solid #dcdfda;background:#fff;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;min-height:52px;display:flex;align-items:center;text-align:left;transition:all .15s ease;}
+  .mp-item.selected{border-color:__COLOR_PRIMARY__;box-shadow:0 0 0 3px __COLOR_PRIMARY_LIGHT__;}
+  .mp-item.matched{border-color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;color:__COLOR_PRIMARY__;cursor:default;}
+  .mp-item.shake{animation:mp-shake .3s ease; border-color:#c0554a; background:#fbeae7;}
+  @keyframes mp-shake{25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+  .mp-reset{margin-top:14px;width:100%;min-height:48px;border:2px solid #dcdfda;background:#fff;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;display:none;}
+</style>
+<div class="mp-top">
+  <p class="mp-instruction" data-t="instruction"></p>
+  <span class="mp-score"></span>
+</div>
+<div class="mp-cols">
+  <div class="mp-col mp-col-left"></div>
+  <div class="mp-col mp-col-right"></div>
+</div>
+<button class="mp-reset" data-t="reset"></button>
+</div>
+<script>
+var TEXT = {
+  instruction: "Tap a role, then tap its matching description.",
+  scoreTemplate: "{n} / {total} matched",
+  reset: "Reset",
+  pairs: [
+    {left:"Sales Arborist", right:"Scopes and sells the work"},
+    {left:"Crew Leader", right:"Performs the tree care in the field"},
+    {left:"Consulting Arborist", right:"Provides expert assessments and reports"},
+    {left:"Office Coordinator", right:"Handles office scheduling and billing"}
+  ]
+};
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  root.querySelector('.mp-instruction').textContent = TEXT.instruction;
+  var resetBtn=root.querySelector('.mp-reset');
+  resetBtn.textContent = TEXT.reset;
+  var colLeft=root.querySelector('.mp-col-left');
+  var colRight=root.querySelector('.mp-col-right');
+  var scoreEl=root.querySelector('.mp-score');
+  var selectedLeft=null, matchedCount=0;
+
+  function shuffle(arr){
+    var a=arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  function updateScore(){
+    scoreEl.textContent = TEXT.scoreTemplate.replace('{n}', matchedCount).replace('{total}', TEXT.pairs.length);
+    resetBtn.style.display = matchedCount===TEXT.pairs.length ? 'block' : 'none';
+  }
+
+  function build(){
+    colLeft.innerHTML=''; colRight.innerHTML='';
+    selectedLeft=null; matchedCount=0;
+    var rightShuffled = shuffle(TEXT.pairs);
+
+    TEXT.pairs.forEach(function(p){
+      var b=document.createElement('button');
+      b.className='mp-item'; b.textContent=p.left; b.dataset.left=p.left;
+      b.addEventListener('click',function(){
+        if(b.classList.contains('matched')) return;
+        colLeft.querySelectorAll('.mp-item').forEach(function(x){x.classList.remove('selected');});
+        selectedLeft=b; b.classList.add('selected');
+      });
+      colLeft.appendChild(b);
+    });
+
+    rightShuffled.forEach(function(p){
+      var b=document.createElement('button');
+      b.className='mp-item'; b.textContent=p.right; b.dataset.left=p.left;
+      b.addEventListener('click',function(){
+        if(!selectedLeft || b.classList.contains('matched')) return;
+        var ok = selectedLeft.dataset.left === b.dataset.left;
+        if(ok){
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('matched');
+          b.classList.add('matched');
+          matchedCount++;
+          updateScore();
+          selectedLeft=null;
+        }else{
+          b.classList.add('shake');
+          selectedLeft.classList.add('shake');
+          setTimeout(function(){
+            b.classList.remove('shake');
+            selectedLeft.classList.remove('shake','selected');
+            selectedLeft=null;
+          },300);
+        }
+      });
+      colRight.appendChild(b);
+    });
+    updateScore();
+  }
+
+  resetBtn.addEventListener('click', build);
+  build();
+})();
+</script>
+</template>
+
+<!-- ============================================================
+     GALLERY ENGINE
+     ============================================================ -->
+<script>
+const BLOCKS = [
+  {id:'slider-compare', name:'Before / After Slider', cat:'compare', img:true, desc:'Drag to reveal a diseased vs healthy comparison.', maxWidth:480, verified:false},
+  {id:'tap-toggle', name:'Tap Toggle Compare', cat:'compare', img:true, desc:'Tap to swap between two states of a photo.', maxWidth:420, verified:false},
+  {id:'overlay-fade', name:'Press & Hold Compare', cat:'compare', img:true, desc:'Press and hold anywhere on the image to reveal the other state.', maxWidth:420, verified:false},
+  {id:'hotspot-id', name:'Hotspot Identification', cat:'diagnostic', img:true, desc:'Tap markers on a photo to reveal callouts.', maxWidth:420, verified:false},
+  {id:'zoom-inspect', name:'Zoom & Inspect', cat:'diagnostic', img:true, desc:'Tap to zoom into a detail area of a photo.', maxWidth:420, verified:false},
+  {id:'sort-bins', name:'Correct / Incorrect Sort', cat:'diagnostic', img:false, desc:'Tap an item, then tap the correct bin. Live score + reset.', maxWidth:460, verified:false},
+  {id:'scroll-timeline', name:'Scroll Reveal Timeline', cat:'process', img:false, desc:'Steps fade in as the learner scrolls.', maxWidth:460, verified:false},
+  {id:'step-accordion', name:'Progressive Step Unlock', cat:'process', img:false, desc:'Next step unlocks after marking the current one done.', maxWidth:460, verified:false},
+  {id:'drag-reorder', name:'Reorder Steps', cat:'process', img:false, desc:'Arrow buttons to put steps in correct order.', maxWidth:420, verified:false},
+  {id:'scenario-flip', name:'Scenario Card Flip', cat:'decision', img:false, desc:'Tap to flip from scenario to consequence.', maxWidth:360, verified:false},
+  {id:'risk-slider', name:'Risk Level Slider', cat:'decision', img:false, desc:'Drag a marker to see risk level and guidance.', maxWidth:400, verified:false},
+  {id:'choice-branch', name:'Choice Branch Tap', cat:'decision', img:false, desc:'Pick an option, get clear right/wrong feedback with a retry.', maxWidth:420, verified:false},
+  {id:'match-pairs', name:'Match Pairs', cat:'match', img:false, desc:'Tap a term, then tap its match. Live score + reset.', maxWidth:460, verified:false},
+  {id:'layered-section', name:'Layered Cross-Section', cat:'spatial', img:false, desc:'Tap a layer to reveal what is happening there.', maxWidth:420, verified:false},
+  {id:'label-pin', name:'Tap-to-Place Label', cat:'spatial', img:false, desc:'Tap a label, then tap the correct diagram zone.', maxWidth:400, verified:false},
+  {id:'animated-counter', name:'Animated Counter', cat:'data', img:false, desc:'Number counts up on scroll into view.', maxWidth:300, verified:false},
+  {id:'expanding-stat', name:'Expanding Stat Card', cat:'data', img:false, desc:'Tap a stat to reveal the story behind it.', maxWidth:360, verified:false},
+  {id:'progress-ring', name:'Progress Ring', cat:'data', img:false, desc:'Circular progress animates in on scroll.', maxWidth:220, verified:false},
+  {id:'glossary-tooltip', name:'Tap-to-Define Term', cat:'micro', img:false, desc:'Inline term reveals a plain-language definition.', maxWidth:420, verified:false},
+  {id:'flip-card-grid', name:'Flip Card Grid', cat:'micro', img:false, desc:'Grid of term / definition flip cards.', maxWidth:460, verified:false},
+  {id:'quote-reveal', name:'Field Note Reveal', cat:'micro', img:false, desc:'Tap to reveal a quote or field note.', maxWidth:420, verified:false},
+];
+
+const CATEGORIES = [
+  {id:'all', label:'All'},
+  {id:'compare', label:'Compare / Reveal'},
+  {id:'diagnostic', label:'Diagnostic / ID'},
+  {id:'process', label:'Process / Sequence'},
+  {id:'decision', label:'Decision / Scenario'},
+  {id:'match', label:'Match / Pair'},
+  {id:'spatial', label:'Spatial / Structural'},
+  {id:'data', label:'Data / Stat'},
+  {id:'micro', label:'Micro-interaction'},
+];
+
+let THEME = {
+  fontFamily: "'Inter', sans-serif",
+  colorPrimary: "#37775a",
+  colorPrimaryLight: "#e8f2ec",
+  colorText: "#1a2e24",
+  h1Size: "22px",
+  taglineSize: "12px",
+  bodySize: "16px",
+  iconColor: "#37775a",
+  iconBg: "#e8f2ec",
+  iconA: "tree-round",
+  iconB: "tree-bare",
+  customImageAUrl: "",
+  customImageBUrl: ""
+};
+
+const ICONS = [
+  {id:'tree-round', name:'Round Canopy Tree', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><rect x="46" y="55" width="8" height="28" rx="2" fill="'+fill+'"/><circle cx="50" cy="42" r="26" fill="'+fill+'"/></svg>'},
+  {id:'tree-pine', name:'Pine Tree', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><rect x="46" y="70" width="8" height="14" rx="2" fill="'+fill+'"/><polygon points="50,18 68,42 32,42" fill="'+fill+'"/><polygon points="50,32 71,58 29,58" fill="'+fill+'"/><polygon points="50,48 74,76 26,76" fill="'+fill+'"/></svg>'},
+  {id:'tree-bare', name:'Bare Winter Tree', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><line x1="50" y1="82" x2="50" y2="40" stroke="'+fill+'" stroke-width="5" stroke-linecap="round"/><line x1="50" y1="60" x2="32" y2="42" stroke="'+fill+'" stroke-width="4" stroke-linecap="round"/><line x1="50" y1="55" x2="68" y2="38" stroke="'+fill+'" stroke-width="4" stroke-linecap="round"/><line x1="50" y1="46" x2="38" y2="24" stroke="'+fill+'" stroke-width="3.5" stroke-linecap="round"/><line x1="50" y1="46" x2="62" y2="22" stroke="'+fill+'" stroke-width="3.5" stroke-linecap="round"/></svg>'},
+  {id:'tree-autumn', name:'Autumn Tree', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><rect x="46" y="58" width="8" height="26" rx="2" fill="'+fill+'"/><circle cx="38" cy="40" r="16" fill="'+fill+'"/><circle cx="60" cy="36" r="18" fill="'+fill+'"/><circle cx="50" cy="52" r="14" fill="'+fill+'"/></svg>'},
+  {id:'leaf-simple', name:'Simple Leaf', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><path d="M50 20 C75 30 78 60 50 84 C22 60 25 30 50 20 Z" fill="'+fill+'"/><line x1="50" y1="26" x2="50" y2="78" stroke="'+bg+'" stroke-width="2.5"/></svg>'},
+  {id:'leaf-maple', name:'Maple Leaf', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><path d="M50 16 L58 34 L74 26 L66 44 L82 48 L64 56 L70 74 L52 64 L50 84 L48 64 L30 74 L36 56 L18 48 L34 44 L26 26 L42 34 Z" fill="'+fill+'"/></svg>'},
+  {id:'leaf-veined', name:'Veined Leaf', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><path d="M50 18 C78 26 80 58 50 86 C20 58 22 26 50 18 Z" fill="'+fill+'"/><line x1="50" y1="24" x2="50" y2="80" stroke="'+bg+'" stroke-width="2"/><line x1="50" y1="38" x2="38" y2="30" stroke="'+bg+'" stroke-width="1.5"/><line x1="50" y1="38" x2="62" y2="30" stroke="'+bg+'" stroke-width="1.5"/><line x1="50" y1="52" x2="34" y2="44" stroke="'+bg+'" stroke-width="1.5"/><line x1="50" y1="52" x2="66" y2="44" stroke="'+bg+'" stroke-width="1.5"/><line x1="50" y1="66" x2="38" y2="60" stroke="'+bg+'" stroke-width="1.5"/><line x1="50" y1="66" x2="62" y2="60" stroke="'+bg+'" stroke-width="1.5"/></svg>'},
+  {id:'leaf-cluster', name:'Leaf Cluster', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><ellipse cx="38" cy="46" rx="14" ry="22" transform="rotate(-25 38 46)" fill="'+fill+'"/><ellipse cx="62" cy="46" rx="14" ry="22" transform="rotate(25 62 46)" fill="'+fill+'"/><ellipse cx="50" cy="58" rx="15" ry="24" fill="'+fill+'"/></svg>'},
+  {id:'branch-leafy', name:'Leafy Branch', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><line x1="18" y1="80" x2="82" y2="24" stroke="'+fill+'" stroke-width="4" stroke-linecap="round"/><ellipse cx="34" cy="62" rx="8" ry="13" transform="rotate(-40 34 62)" fill="'+fill+'"/><ellipse cx="50" cy="46" rx="8" ry="13" transform="rotate(-40 50 46)" fill="'+fill+'"/><ellipse cx="66" cy="30" rx="8" ry="13" transform="rotate(-40 66 30)" fill="'+fill+'"/></svg>'},
+  {id:'stump', name:'Tree Stump', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><rect x="38" y="52" width="24" height="26" rx="2" fill="'+fill+'"/><ellipse cx="50" cy="52" rx="26" ry="14" fill="'+fill+'"/><ellipse cx="50" cy="52" rx="18" ry="9.5" fill="'+bg+'"/><ellipse cx="50" cy="52" rx="10" ry="5" fill="'+fill+'"/></svg>'},
+  {id:'roots', name:'Root System', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><rect x="46" y="16" width="8" height="26" rx="2" fill="'+fill+'"/><line x1="50" y1="42" x2="50" y2="58" stroke="'+fill+'" stroke-width="5" stroke-linecap="round"/><line x1="50" y1="50" x2="28" y2="72" stroke="'+fill+'" stroke-width="4" stroke-linecap="round"/><line x1="50" y1="54" x2="72" y2="76" stroke="'+fill+'" stroke-width="4" stroke-linecap="round"/><line x1="50" y1="58" x2="38" y2="84" stroke="'+fill+'" stroke-width="3" stroke-linecap="round"/><line x1="50" y1="58" x2="62" y2="84" stroke="'+fill+'" stroke-width="3" stroke-linecap="round"/></svg>'},
+  {id:'seedling', name:'Seedling', render:(fill,bg)=>'<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/><line x1="50" y1="82" x2="50" y2="48" stroke="'+fill+'" stroke-width="4" stroke-linecap="round"/><path d="M50 56 C38 52 32 38 34 28 C46 32 52 44 50 56 Z" fill="'+fill+'"/><path d="M50 62 C62 58 68 44 66 34 C54 38 48 50 50 62 Z" fill="'+fill+'"/><ellipse cx="50" cy="84" rx="22" ry="5" fill="'+fill+'" opacity="0.25"/></svg>'},
+];
+
+function getIconSvg(iconId){
+  const icon = ICONS.find(i=>i.id===iconId) || ICONS[0];
+  return icon.render(THEME.iconColor, THEME.iconBg);
+}
+
+function getSlotMarkup(slot){
+  const iconId = slot==='A' ? THEME.iconA : THEME.iconB;
+  if(iconId === 'custom'){
+    const url = slot==='A' ? THEME.customImageAUrl : THEME.customImageBUrl;
+    if(url){
+      return '<img src="'+url+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
+    }
+    return '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:'+THEME.iconBg+';color:'+THEME.iconColor+';font-size:12px;font-weight:700;text-align:center;padding:14px;line-height:1.4;">Add an image URL in Theme settings</div>';
+  }
+  return getIconSvg(iconId);
+}
+
+let activeCat = 'all';
+let hideImg = false;
+let fullWidth = {};
+
+function substitute(raw, block){
+  const maxWidth = fullWidth[block.id] ? 'none' : (block.maxWidth + 'px');
+  return raw
+    .replaceAll('__ICON_A__', getSlotMarkup('A'))
+    .replaceAll('__ICON_B__', getSlotMarkup('B'))
+    .replaceAll('__FONT_FAMILY__', THEME.fontFamily)
+    .replaceAll('__COLOR_PRIMARY_LIGHT__', THEME.colorPrimaryLight)
+    .replaceAll('__COLOR_PRIMARY__', THEME.colorPrimary)
+    .replaceAll('__COLOR_TEXT__', THEME.colorText)
+    .replaceAll('__H1_SIZE__', THEME.h1Size)
+    .replaceAll('__TAGLINE_SIZE__', THEME.taglineSize)
+    .replaceAll('__BODY_SIZE__', THEME.bodySize)
+    .replaceAll('__MAX_WIDTH__', maxWidth);
+}
+
+function getSource(blockId){
+  const tpl = document.getElementById('src-'+blockId);
+  const div = document.createElement('div');
+  div.appendChild(tpl.content.cloneNode(true));
+  return div.innerHTML.trim();
+}
+
+function buildIframeDoc(html){
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:18px;background:#fff;}</style></head><body>'+html+'</body></html>';
+}
+
+function renderCatFilters(){
+  const wrap = document.getElementById('cat-filters');
+  wrap.innerHTML = '';
+  CATEGORIES.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (c.id===activeCat ? ' active' : '');
+    b.textContent = c.label;
+    b.onclick = ()=>{ activeCat = c.id; renderCatFilters(); renderGrid(); };
+    wrap.appendChild(b);
+  });
+}
+
+function toggleImgFilter(){
+  hideImg = !hideImg;
+  document.getElementById('img-filter').classList.toggle('on', hideImg);
+  renderGrid();
+}
+
+const MIN_PREVIEW_H = 140;
+
+function attachAutoHeight(iframe){
+  function resize(){
+    let doc;
+    try{ doc = iframe.contentDocument; }catch(e){ return; }
+    if(!doc || !doc.body) return;
+    const h = doc.documentElement.scrollHeight;
+    iframe.style.height = Math.max(h, MIN_PREVIEW_H) + 'px';
+  }
+  iframe._resize = resize;
+  iframe.addEventListener('load', ()=>{
+    resize();
+    try{
+      const ro = new ResizeObserver(resize);
+      ro.observe(iframe.contentDocument.body);
+    }catch(e){}
+  });
+}
+
+const DEVICE_WIDTHS = { mobile: 390, desktop: 920 };
+let deviceMode = 'mobile';
+
+function buildCard(b){
+  const raw = getSource(b.id);
+  const rendered = substitute(raw, b);
+  const isFull = !!fullWidth[b.id];
+  const deviceW = DEVICE_WIDTHS[deviceMode];
+  const targetW = isFull ? deviceW : Math.min(b.maxWidth, deviceW);
+
+  const card = document.createElement('div');
+  card.className = 'card' + (isFull ? ' is-full-width' : '');
+  card.style.maxWidth = targetW + 'px';
+
+  const catLabel = CATEGORIES.find(c=>c.id===b.cat).label;
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="card-head-top">
+        <p class="card-title">${b.name}</p>
+        <button class="width-toggle${isFull ? ' on' : ''}" title="Preview and copy this block without its own max-width">
+          <span class="switch"></span> Full width
+        </button>
+      </div>
+      <div class="card-tags">
+        <span class="tag">${catLabel}</span>
+        ${b.img ? '<span class="tag img">Icon illustrated</span>' : ''}
+        <span class="tag status-${b.verified ? 'verified' : 'untested'}">${b.verified ? '&check; Verified in Rise' : 'Untested'}</span>
+      </div>
+    </div>
+    <div class="card-preview"></div>
+    <div class="card-foot">
+      <button class="copy-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">Copy code</span>
+      </button>
+    </div>
+  `;
+
+  card.querySelector('.width-toggle').addEventListener('click', ()=>{
+    fullWidth[b.id] = !fullWidth[b.id];
+    card.replaceWith(buildCard(b));
+  });
+
+  const previewWrap = card.querySelector('.card-preview');
+  const iframe = document.createElement('iframe');
+  attachAutoHeight(iframe);
+  previewWrap.appendChild(iframe);
+  iframe.srcdoc = buildIframeDoc(rendered);
+
+  const copyBtn = card.querySelector('.copy-btn');
+  const copyLabel = copyBtn.querySelector('.copy-label');
+  copyBtn.addEventListener('click', ()=>{
+    navigator.clipboard.writeText(rendered).then(()=>{
+      copyLabel.textContent = 'Copied!';
+      copyBtn.classList.add('copied');
+      setTimeout(()=>{ copyLabel.textContent='Copy code'; copyBtn.classList.remove('copied'); }, 1500);
+    });
+  });
+
+  return card;
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const list = BLOCKS.filter(b => (activeCat==='all' || b.cat===activeCat) && (!hideImg || !b.img));
+  document.getElementById('result-count').textContent = list.length + ' block' + (list.length===1?'':'s');
+
+  if(list.length === 0){
+    grid.innerHTML = '<div class="empty-state"><strong>No blocks match these filters</strong>Try a different category or turn off "Hide icon-illustrated blocks".</div>';
+    return;
+  }
+
+  list.forEach(b=>{ grid.appendChild(buildCard(b)); });
+}
+
+function setDevice(mode){
+  deviceMode = mode;
+  document.getElementById('dev-mobile').classList.toggle('active', mode==='mobile');
+  document.getElementById('dev-desktop').classList.toggle('active', mode==='desktop');
+  renderGrid();
+}
+
+function toggleThemePanel(){
+  document.getElementById('theme-panel').classList.toggle('open');
+}
+
+function renderIconPicker(containerId, selectedId, onSelect){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  ICONS.forEach(icon=>{
+    const btn = document.createElement('button');
+    btn.className = 'icon-swatch' + (icon.id===selectedId ? ' active' : '');
+    btn.title = icon.name;
+    btn.innerHTML = icon.render(THEME.iconColor, THEME.iconBg);
+    btn.onclick = ()=> onSelect(icon.id);
+    el.appendChild(btn);
+  });
+  const customBtn = document.createElement('button');
+  customBtn.className = 'icon-swatch' + (selectedId==='custom' ? ' active' : '');
+  customBtn.title = 'Custom image URL';
+  customBtn.style.display='flex'; customBtn.style.alignItems='center'; customBtn.style.justifyContent='center';
+  customBtn.style.background = THEME.iconBg;
+  customBtn.innerHTML = '<svg width="60%" height="60%" viewBox="0 0 24 24" fill="none" stroke="'+THEME.iconColor+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+  customBtn.onclick = ()=> onSelect('custom');
+  el.appendChild(customBtn);
+}
+
+function onCustomUrlChange(slot){
+  if(slot==='A') THEME.customImageAUrl = document.getElementById('t-custom-a').value.trim();
+  else THEME.customImageBUrl = document.getElementById('t-custom-b').value.trim();
+  renderGrid();
+}
+
+function renderIconPickers(){
+  renderIconPicker('picker-a', THEME.iconA, (id)=>{ THEME.iconA=id; renderIconPickers(); renderGrid(); });
+  renderIconPicker('picker-b', THEME.iconB, (id)=>{ THEME.iconB=id; renderIconPickers(); renderGrid(); });
+  const inputA = document.getElementById('t-custom-a');
+  const inputB = document.getElementById('t-custom-b');
+  inputA.style.display = THEME.iconA==='custom' ? 'block' : 'none';
+  inputB.style.display = THEME.iconB==='custom' ? 'block' : 'none';
+  inputA.value = THEME.customImageAUrl;
+  inputB.value = THEME.customImageBUrl;
+}
+
+function onThemeChange(){
+  THEME.fontFamily = document.getElementById('t-font').value;
+  THEME.colorPrimary = document.getElementById('t-primary').value;
+  THEME.colorPrimaryLight = document.getElementById('t-primary-light').value;
+  THEME.colorText = document.getElementById('t-text').value;
+  THEME.h1Size = document.getElementById('t-h1').value;
+  THEME.taglineSize = document.getElementById('t-tagline').value;
+  THEME.bodySize = document.getElementById('t-body').value;
+  THEME.iconColor = document.getElementById('t-icon-color').value;
+  THEME.iconBg = document.getElementById('t-icon-bg').value;
+  renderIconPickers();
+  renderGrid();
+}
+
+function resetTheme(){
+  document.getElementById('t-font').value = "'Inter', sans-serif";
+  document.getElementById('t-primary').value = "#37775a";
+  document.getElementById('t-primary-light').value = "#e8f2ec";
+  document.getElementById('t-text').value = "#1a2e24";
+  document.getElementById('t-h1').value = "22px";
+  document.getElementById('t-tagline').value = "12px";
+  document.getElementById('t-body').value = "16px";
+  document.getElementById('t-icon-color').value = "#37775a";
+  document.getElementById('t-icon-bg').value = "#e8f2ec";
+  THEME.iconA = 'tree-round';
+  THEME.iconB = 'tree-bare';
+  THEME.customImageAUrl = '';
+  THEME.customImageBUrl = '';
+  onThemeChange();
+}
+
+function downloadThemeJson(){
+  const blob = new Blob([JSON.stringify(THEME, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'theme.json';
+  a.click();
+}
+
+renderCatFilters();
+renderIconPickers();
+renderGrid();
+</script>
+
+</body>
+</html>
