@@ -9070,14 +9070,26 @@ function toggleImgFilter(){
 }
 
 const MIN_PREVIEW_H = 140;
+// Instruction Banner is just the one-line callout on its own (~75px), far
+// under the shared 140px floor above -- that floor exists so blocks with
+// little content don't look like a sliver next to taller ones, but here it
+// only padded the card with blank iframe space below the box. Give this
+// block a much smaller floor instead of lowering MIN_PREVIEW_H for everyone.
+const MIN_PREVIEW_H_OVERRIDES = { 'instruction-banner': 40 };
 
-function attachAutoHeight(iframe){
+function attachAutoHeight(iframe, minH){
+  const floor = (typeof minH === 'number') ? minH : MIN_PREVIEW_H;
   function resize(){
     let doc;
     try{ doc = iframe.contentDocument; }catch(e){ return; }
     if(!doc || !doc.body) return;
-    const h = doc.documentElement.scrollHeight;
-    iframe.style.height = Math.max(h, MIN_PREVIEW_H) + 'px';
+    // doc.body.scrollHeight, not doc.documentElement's: the root element's
+    // scrollHeight is spec'd to never read below the iframe's own current
+    // rendered height, so short content could never shrink the iframe back
+    // down once it had been tall -- body has no such floor and reports the
+    // real content extent.
+    const h = doc.body.scrollHeight;
+    iframe.style.height = Math.max(h, floor) + 'px';
   }
   iframe._resize = resize;
   iframe.addEventListener('load', ()=>{
@@ -9540,7 +9552,7 @@ function buildCard(b){
   const previewWrap = card.querySelector('.card-preview');
   const iframe = document.createElement('iframe');
   iframe.setAttribute('scrolling', 'no');
-  attachAutoHeight(iframe);
+  attachAutoHeight(iframe, MIN_PREVIEW_H_OVERRIDES[b.id]);
   previewWrap.appendChild(iframe);
   iframe.srcdoc = buildIframeDoc(rendered);
 
