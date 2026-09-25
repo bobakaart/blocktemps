@@ -170,7 +170,7 @@ translation instructions — open a block below to find those.
   .pv-text-sample{color:var(--pv-text); font-size:13px; font-weight:600;}
   .pv-correct-sample{background:var(--pv-correct); color:#fff; padding:6px 12px; border-radius:10px; font-weight:700;}
   .pv-wrong-sample{color:var(--pv-wrong); font-size:13px; font-weight:700;}
-  .pv-note{background:var(--pv-instruction); color:#fff; padding:8px 12px; border-radius:9px; font-weight:400;}
+  .pv-note{background:var(--pv-instruction); color:var(--pv-instruction-text); padding:8px 12px; border-radius:9px; font-weight:400;}
   .pv-icon-glyph{color:var(--pv-icon-color); display:flex;}
   .pv-icon-bg-swatch{width:30px; height:30px; border-radius:8px; background:var(--pv-icon-bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--pv-icon-color);}
   .pv-block-bg-swatch{background:var(--pv-block-bg); color:var(--pv-text); padding:8px 14px; border-radius:9px; border:1px solid var(--border); font-weight:600;}
@@ -532,12 +532,24 @@ translation instructions — open a block below to find those.
       </div>
       <div class="theme-color-row">
         <div class="theme-color-main">
-          <input type="color" id="t-instruction" value="#855932" oninput="onThemeChange()">
+          <input type="color" id="t-instruction" value="#e8f2ec" oninput="onThemeChange()">
           <label>Instruction box color</label>
         </div>
         <div class="theme-color-examples">
           <span class="pv-example pv-note" title="Instruction banner background">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Tap each item&hellip;
+          </span>
+        </div>
+      </div>
+      <div class="theme-color-row">
+        <div class="theme-color-main">
+          <input type="color" id="t-instruction-text" value="#186e61" oninput="onThemeChange()">
+          <label>Instruction box text color</label>
+        </div>
+        <div class="theme-color-examples">
+          <span class="pv-example pv-note" title="Instruction banner text/icon color">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             Tap each item&hellip;
           </span>
         </div>
@@ -658,7 +670,7 @@ translation instructions — open a block below to find those.
       <div class="theme-field-group">
         <div class="theme-field">
           <label>After instruction box</label>
-          <input type="text" id="t-gap-instr" value="14px" oninput="onThemeChange()">
+          <input type="text" id="t-gap-instr" value="25px" oninput="onThemeChange()">
         </div>
         <div class="theme-field">
           <label>After question/prompt</label>
@@ -695,6 +707,52 @@ translation instructions — open a block below to find those.
           <li><b>Above action button</b> — highlighted above "Check"</li>
         </ul>
         <div class="tf-preview-slot" data-preview="spacing-section-btn-group"></div>
+      </div>
+    </div>
+    <div class="theme-field-row">
+      <div class="theme-field-group">
+        <div class="theme-field">
+          <label>Card padding</label>
+          <input type="text" id="t-card-pad" value="clamp(16px, 5vw, 28px)" oninput="onThemeChange()">
+        </div>
+      </div>
+      <div class="tf-preview-col">
+        <ul class="tf-preview-hint-list">
+          <li>The space inside the white "Card" surface behind a quiz/interaction block's content, when that block's Card toggle is on — shared across all 13 blocks that have one</li>
+        </ul>
+        <div class="tf-preview-slot" data-preview="card-pad-demo"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-section" data-section="instruction-box">
+    <button type="button" class="theme-section-title" onclick="toggleThemeSection('instruction-box')">Instruction boxes<span class="theme-section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span></button>
+    <p class="theme-section-hint">Shared by the instruction banner on every block (its color lives in the Colors section above) — the padding inside it, and a one-time "look here" animation that plays once when the banner loads and settles, rather than looping, so it catches the eye without nagging anyone still reading. Turn it off entirely if it's not wanted — a block's own "done" celebration animation always takes over regardless of this setting.</p>
+    <div class="theme-field-row">
+      <div class="theme-field-group">
+        <div class="theme-field">
+          <label>Padding</label>
+          <input type="text" id="t-instr-pad" value="15px 15px" oninput="onThemeChange()">
+        </div>
+        <div class="theme-field">
+          <label>Animation</label>
+          <select id="t-instr-anim-style" onchange="onThemeChange()">
+            <option value="border" selected>Breathing border</option>
+            <option value="pulse">Pulse ring</option>
+            <option value="shimmer">Shimmer sweep</option>
+          </select>
+        </div>
+        <div class="theme-field">
+          <label>Play animation</label>
+          <button type="button" class="mini-toggle on" id="t-instr-anim-toggle" onclick="toggleInstrAnim()">On</button>
+        </div>
+      </div>
+      <div class="tf-preview-col">
+        <ul class="tf-preview-hint-list">
+          <li>All three apply to the instruction banner on every block at once</li>
+          <li>Reload the preview below (edit any field) to replay the animation — it's one-shot, same as it'll be in the real block</li>
+        </ul>
+        <div class="tf-preview-slot" data-preview="instruction-box-demo"></div>
       </div>
     </div>
   </div>
@@ -802,7 +860,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="cmp-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .cmp-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .cmp-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .cmp-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .cmp-slider{position:relative;width:100%;height:280px;overflow:hidden;border-radius:__BLOCK_RADIUS__;cursor:ew-resize;user-select:none;box-shadow:__BLOCK_SHADOW__;background:__PANEL_BG__;touch-action:none;}
   .cmp-after,.cmp-before-wrap{position:absolute;inset:0;}
@@ -816,7 +874,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .cmp-badge{position:absolute;bottom:14px;background:rgba(0,0,0,.55);color:#fff;font-size:__BADGE_SIZE__;font-weight:700;padding:6px 12px;border-radius:20px;}
   .cmp-badge.before{left:14px;} .cmp-badge.after{right:14px;}
 </style>
-<div class="cmp-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="cmp-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="cmp-slider">
   <div class="cmp-after">__ICON_B__</div>
   <div class="cmp-before-wrap"><div class="cmp-before-inner">__ICON_A__</div></div>
@@ -908,7 +966,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="tt-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .tt-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .tt-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .tt-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .tt-stage{position:relative;height:240px;border-radius:__BLOCK_RADIUS__;overflow:hidden;box-shadow:__BLOCK_SHADOW__;background:__PANEL_BG__;}
   .tt-icon-a,.tt-icon-b{position:absolute;inset:0;opacity:0;transition:opacity .3s ease;}
@@ -920,7 +978,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
     .tt-icon-a,.tt-icon-b{transition:none;}
   }
 </style>
-<div class="tt-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="tt-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="tt-stage">
   <div class="tt-icon-a tt-shown">__ICON_A__</div>
   <div class="tt-icon-b">__ICON_B__</div>
@@ -977,13 +1035,13 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="of-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .of-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .of-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .of-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .of-stage{position:relative;height:240px;border-radius:__BLOCK_RADIUS__;overflow:hidden;cursor:pointer;box-shadow:__BLOCK_SHADOW__;background:__PANEL_BG__;user-select:none;-webkit-user-select:none;touch-action:none;}
   .of-a,.of-top{position:absolute;inset:0;}
   .of-top{transition:opacity .25s ease;}
 </style>
-<div class="of-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="of-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="of-stage">
   <div class="of-a">__ICON_A__</div>
   <div class="of-top">__ICON_B__</div>
@@ -1034,7 +1092,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="hs-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .hs-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .hs-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .hs-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .hs-stage{position:relative;height:260px;border-radius:__BLOCK_RADIUS__;overflow:hidden;box-shadow:__BLOCK_SHADOW__;background:__PANEL_BG__;}
   .hs-dot{position:absolute;width:38px;height:38px;border-radius:50%;background:__COLOR_PRIMARY__;border:4px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);transform:translate(-50%,-50%) scale(1);transition:transform .2s ease,box-shadow .2s ease;}
@@ -1057,7 +1115,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .hs-callout.show{animation:hs-callout-in .38s cubic-bezier(.22,.68,0,1.2) forwards;}
   @keyframes hs-callout-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 </style>
-<div class="hs-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="hs-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="hs-stage">
   <div style="position:absolute;inset:0;">__ICON_A__</div>
   <button class="hs-dot" data-i="0" style="top:30%;left:25%;"><span class="hs-check"><svg class="hs-check-svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg></span></button>
@@ -1139,13 +1197,13 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="zi-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .zi-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .zi-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .zi-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .zi-frame{height:260px;border-radius:__BLOCK_RADIUS__;overflow:hidden;cursor:zoom-in;position:relative;box-shadow:__BLOCK_SHADOW__;background:__PANEL_BG__;}
   .zi-img{width:100%;height:100%;transform:scale(1);transition:transform .35s ease;transform-origin:30% 30%;}
   .zi-badge{position:absolute;bottom:14px;right:14px;background:rgba(0,0,0,.6);color:#fff;font-size:__BADGE_SIZE__;font-weight:700;padding:6px 12px;border-radius:20px;pointer-events:none;}
 </style>
-<div class="zi-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="zi-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="zi-frame">
   <div class="zi-img">__ICON_A__</div>
   <span class="zi-badge" data-t="badge"></span>
@@ -1195,13 +1253,13 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="dd-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .dd-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;transition:background .2s ease;}
+  .dd-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;transition:background .2s ease;}
   .dd-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes dd-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .dd-note.celebrate{background:__COLOR_CORRECT__;animation:dd-note-pop .4s ease;}
+  .dd-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:dd-note-pop .4s ease;}
   .dd-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;}
   .dd-score{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;}
-  .dd-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .dd-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .dd-tray{display:flex;gap:10px;flex-wrap:wrap;min-height:52px;}
   .dd-item{display:flex;align-items:center;gap:8px;border:2px solid #dcdfda;background:#fff;padding:11px 16px;border-radius:14px;font-size:__ROW_TEXT_SIZE__;font-weight:400;font-family:inherit;min-height:48px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;transition:box-shadow .15s ease,border-color .15s ease;}
   .dd-item:hover{border-color:__COLOR_SELECT__;}
@@ -1246,8 +1304,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   @keyframes dd-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
 </style>
 <div class="dd-note">
-  <svg class="dd-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="dd-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="dd-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="dd-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="dd-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="dd-top">
@@ -1549,7 +1607,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="stl-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .stl-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .stl-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .stl-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .stl-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(16px, 4vw, 24px);}
   .stl-row{display:flex;gap:16px;opacity:0;transform:translateY(18px);transition:all .5s ease;margin-bottom:22px;}
@@ -1559,7 +1617,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .stl-label{font-size:__CAPTION_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;text-transform:uppercase;letter-spacing:.04em;}
   .stl-body{margin:3px 0 0;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.55;}
 </style>
-<div class="stl-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="stl-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="stl-panel">
 <div class="stl-row"><div class="stl-dot"><span class="stl-dot-num">1</span><span class="stl-dot-icon">__LIST_ICON_0__</span></div><div><div class="stl-label" data-t="label0"></div><p class="stl-body" data-t="body0"></p></div></div>
 <div class="stl-row"><div class="stl-dot"><span class="stl-dot-num">2</span><span class="stl-dot-icon">__LIST_ICON_1__</span></div><div><div class="stl-label" data-t="label1"></div><p class="stl-body" data-t="body1"></p></div></div>
@@ -1638,7 +1696,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="sa-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .sa-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .sa-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .sa-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .sa-step{border:1px solid #e3e5e1;border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:none;background:transparent;transition:opacity .3s ease;}
   .sa-head{width:100%;text-align:left;background:__COLOR_PRIMARY_LIGHT__;border:0;padding:16px;font-weight:800;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;cursor:pointer;font-family:inherit;min-height:56px;display:flex;align-items:center;gap:10px;}
@@ -1648,7 +1706,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .sa-body{padding:14px 16px 18px;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.55;}
   .sa-done-btn{margin-top:__GAP_BTN_TOP__;background:__BTN_COLOR_PRIMARY__;color:__BTN_COLOR_PRIMARY_TEXT__;border:0;padding:__BTN_PAD__;border-radius:__BTN_RADIUS__;font-size:__BTN_FONT_SIZE__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;font-family:inherit;min-height:__BTN_MIN_H__;}
 </style>
-<div class="sa-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="sa-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="sa-list"></div>
 </div>
 <script>
@@ -1769,11 +1827,11 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="dr-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .dr-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .dr-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .dr-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes dr-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .dr-note.celebrate{background:__COLOR_CORRECT__;animation:dr-note-pop .4s ease;}
-  .dr-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .dr-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:dr-note-pop .4s ease;}
+  .dr-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   /* align-items:center (instead of stretch) is what lets each .dr-item
      size to its own content instead of the row forcing full card width —
      JS then measures every item at that natural width and reapplies the
@@ -1819,8 +1877,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   @keyframes dr-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
 </style>
 <div class="dr-note">
-  <svg class="dr-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="dr-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="dr-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="dr-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="dr-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="dr-confetti"></div>
@@ -2144,7 +2202,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="rs-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .rs-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .rs-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .rs-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .rs-scale{display:flex;justify-content:space-between;font-size:__CAPTION_SIZE__;font-weight:800;color:#69756e;text-transform:uppercase;letter-spacing:.03em;}
   .rs-range{width:100%;margin:14px 0;height:8px;border-radius:4px;background:#e3e5e1;-webkit-appearance:none;appearance:none;transition:background .2s ease;}
@@ -2156,7 +2214,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .rs-desc{text-align:center;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:6px 0 0;}
   .rs-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(16px, 4vw, 24px);}
 </style>
-<div class="rs-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="rs-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="rs-panel">
 <div class="rs-scale"><span data-t="lowLabel"></span><span data-t="medLabel"></span><span data-t="highLabel"></span></div>
 <input class="rs-range" type="range" min="0" max="100" value="30">
@@ -2223,11 +2281,11 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="cb-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .cb-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .cb-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .cb-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes cb-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .cb-note.celebrate{background:__COLOR_CORRECT__;animation:cb-note-pop .4s ease;}
-  .cb-card{margin-bottom:14px;background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .cb-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:cb-note-pop .4s ease;}
+  .cb-card{margin-bottom:14px;background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .cb-q{font-size:__QUESTION_SIZE__;font-weight:700;color:__COLOR_TEXT__;margin:0 0 __GAP_PROMPT__;}
   .cb-opts{display:flex;flex-direction:column;gap:__GAP_OPTIONS__;}
   .cb-opt{text-align:left;border:2px solid #dcdfda;background:#fff;color:__COLOR_TEXT__;padding:14px 16px;border-radius:12px;cursor:pointer;font-size:__OPTION_BTN_SIZE__;font-weight:400;font-family:inherit;min-height:52px;}
@@ -2247,8 +2305,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   @keyframes cb-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
 </style>
 <div class="cb-note">
-  <svg class="cb-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="cb-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="cb-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="cb-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="cb-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="cb-confetti"></div>
@@ -2400,7 +2458,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ac-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;text-align:center;">
 <style>
-  .ac-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ac-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ac-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .ac-num{font-size:__HERO_NUMBER_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;line-height:1;display:inline-block;}
   .ac-num.landed{animation:ac-pop .3s ease;}
@@ -2411,7 +2469,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .ac-caption{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;font-weight:700;margin-top:6px;}
   .ac-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(20px, 5vw, 28px) clamp(16px, 4vw, 24px);}
 </style>
-<div class="ac-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="ac-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="ac-panel">
 <div class="ac-num">0</div>
 <div class="ac-caption" data-t="caption"></div>
@@ -2478,7 +2536,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="es-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .es-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .es-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .es-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .es-list{display:flex;flex-direction:column;gap:__GAP_SECTION__;max-width:360px;margin:0 auto;}
   .es-card{position:relative;border:1px solid #e3e5e1;border-radius:16px;box-shadow:none;background:transparent;}
@@ -2498,7 +2556,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .es-check{position:absolute;bottom:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:__COLOR_PRIMARY__;color:#fff;font-size:__ICON_CHECK_SIZE__;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s ease;pointer-events:none;box-shadow:0 0 0 2px transparent;}
   .es-card.viewed .es-check{opacity:1;}
 </style>
-<div class="es-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="es-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="es-list"></div>
 </div>
 <script>
@@ -2584,12 +2642,12 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="pr-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;text-align:center;">
 <style>
-  .pr-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .pr-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .pr-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .pr-caption{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;font-weight:700;margin-top:6px;}
   .pr-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(16px, 4vw, 24px);display:inline-block;}
 </style>
-<div class="pr-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="pr-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="pr-panel">
 <svg width="150" height="150" viewBox="0 0 140 140">
   <circle cx="70" cy="70" r="60" fill="none" stroke="#e5e7e3" stroke-width="12"></circle>
@@ -2607,7 +2665,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 // the code uses to find the text, not something a learner sees.
 // Do not delete any commas , or brackets { } [ ].
 // ======================================================================
-var TEXT = { blockInstruction: 'Scroll down to watch progress animate in.', caption:"Module complete", target:0.82 };
+var TEXT = { blockInstruction: 'Scroll down to watch progress animate in.', caption:"Module complete", target:__PROGRESS_TARGET__ };
 // ======================================================================
 // DO NOT EDIT BELOW THIS LINE
 // ======================================================================
@@ -2648,6 +2706,180 @@ var TEXT = { blockInstruction: 'Scroll down to watch progress animate in.', capt
 </script>
 </template>
 
+<template id="src-progress-icon">
+<!--
+======================================================================
+Progress Icon
+v1.0 — BK — icon-fill variant of Progress Ring: fills the Theme
+Settings icon (Icon A) from the bottom up to a set % instead of
+animating a ring's stroke.
+======================================================================
+-->
+
+<div class="pi-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;text-align:center;">
+<style>
+  .pi-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .pi-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
+  .pi-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(16px, 4vw, 24px);display:inline-block;}
+  .pi-layout{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .pi-layout.is-beside{flex-direction:row;justify-content:center;}
+  .pi-layout.is-beside .pi-info{text-align:left;}
+  .pi-icon-wrap{position:relative;width:120px;height:120px;flex-shrink:0;}
+  .pi-icon-empty,.pi-icon-fill{position:absolute;inset:0;}
+  /* The same icon markup rendered twice: a faint always-visible copy shows
+     the full outline, and a full-strength copy on top is clipped from the
+     bottom via clip-path, so only its lowest __ICON_CHECK_SIZE__ portion
+     shows through — that clip animates upward on scroll-in, reading as a
+     rising fill. Works for any Icon A source (SVG glyph, photo, or the
+     "no custom URL yet" placeholder) since it's just clipping whatever
+     markup __ICON_A__ resolves to, not recoloring it. */
+  .pi-icon-empty{opacity:.2;}
+  .pi-icon-fill{clip-path:inset(100% 0 0 0);transition:clip-path 1s cubic-bezier(.22,.68,0,1);}
+  /* Off-screen, never shown — rasterized by the script below to measure how
+     the icon's own ink is actually distributed top-to-bottom (a tree's
+     canopy is much "heavier" than its thin trunk), so a plain height-based
+     clip doesn't visually mismatch the % it claims. Kept as a real element
+     (not display:none) since some browsers size an Image() load from a
+     serialized display:none SVG unreliably. */
+  .pi-icon-source{position:absolute;left:-9999px;top:-9999px;width:120px;height:120px;pointer-events:none;}
+  .pi-info{text-align:center;}
+  .pi-percent{font-size:28px;font-weight:800;color:__COLOR_TEXT__;line-height:1.1;}
+  .pi-caption{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;font-weight:700;margin-top:4px;}
+</style>
+<div class="pi-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="pi-panel">
+<div class="pi-layout __PI_LAYOUT_CLASS__">
+  <div class="pi-icon-wrap">
+    <div class="pi-icon-empty">__ICON_A__</div>
+    <div class="pi-icon-fill">__ICON_A__</div>
+  </div>
+  <div class="pi-info">
+    <div class="pi-percent">0%</div>
+    <div class="pi-caption" data-t="caption"></div>
+  </div>
+</div>
+</div>
+<div class="pi-icon-source" aria-hidden="true">__ICON_A_TRANSPARENT__</div>
+</div>
+<script>
+// ======================================================================
+// TRANSLATE HERE
+// Only change the text between the quote marks (" " or ' ') below.
+// Do not change the word before each colon (:) -- that is the label
+// the code uses to find the text, not something a learner sees.
+// Do not delete any commas , or brackets { } [ ].
+// ======================================================================
+var TEXT = { blockInstruction: 'Scroll down to watch the icon fill in.', caption:"Module complete", target:__PROGRESS_TARGET__ };
+// ======================================================================
+// DO NOT EDIT BELOW THIS LINE
+// ======================================================================
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  function notifyRiseHeight(){
+    var h=document.documentElement.scrollHeight;
+    if(window.parent && window.parent!==window){
+      window.parent.postMessage({type:'setHeight',height:h},'*');
+    }
+  }
+  window.addEventListener('load', notifyRiseHeight);
+  new ResizeObserver(notifyRiseHeight).observe(document.body);
+  var __bi=root.querySelector('[data-t="blockInstruction"]'); if(__bi) __bi.textContent = TEXT.blockInstruction;
+  root.querySelector('.pi-caption').textContent = TEXT.caption;
+  var fill=root.querySelector('.pi-icon-fill'), percentText=root.querySelector('.pi-percent');
+
+  // A plain height-based clip looks wrong on a non-rectangular icon: a
+  // tree's mass sits mostly in its canopy, not its thin trunk, so filling
+  // "50% of the height" from the bottom barely covers any canopy at all,
+  // while "90%" already swallows nearly the whole thing. areaProfile[y]
+  // (built below) instead maps each row to "what fraction of the icon's
+  // own ink sits at or below this row", so insetTopPercentForArea() can
+  // find the row where the target FRACTION OF INK — not of height — has
+  // been covered, matching what the % actually promises.
+  var areaProfile = null;
+  var SRC_SIZE = 100;
+
+  function buildAreaProfile(){
+    var sourceSvg = root.querySelector('.pi-icon-source svg');
+    // No inline SVG to measure (Icon A is a photo, a custom image URL, or
+    // the "add a URL" placeholder) — all of those are already a plain
+    // rectangle, where a height-based clip IS an area-accurate clip, so
+    // areaProfile stays null and insetTopPercentForArea() falls back to
+    // straight height below.
+    if(!sourceSvg) return;
+    try{
+      var xml = new XMLSerializer().serializeToString(sourceSvg);
+      var img = new Image();
+      img.onload = function(){
+        try{
+          var canvas = document.createElement('canvas');
+          canvas.width = SRC_SIZE; canvas.height = SRC_SIZE;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, SRC_SIZE, SRC_SIZE);
+          var data = ctx.getImageData(0, 0, SRC_SIZE, SRC_SIZE).data;
+          var rowInk = [];
+          for(var y=0; y<SRC_SIZE; y++){
+            var sum=0;
+            for(var x=0; x<SRC_SIZE; x++){ sum += data[(y*SRC_SIZE+x)*4+3]; }
+            rowInk.push(sum);
+          }
+          var total = rowInk.reduce(function(a,b){ return a+b; }, 0);
+          if(!total) return;
+          // profile[y] = fraction of the icon's total ink from row y down
+          // to the bottom — 1 at the top row (all of it), shrinking to
+          // just the bottom row's own sliver at the last row.
+          var profile = new Array(SRC_SIZE);
+          var running = 0;
+          for(var yy=SRC_SIZE-1; yy>=0; yy--){
+            running += rowInk[yy];
+            profile[yy] = running/total;
+          }
+          areaProfile = profile;
+        }catch(e){ /* canvas read blocked (e.g. a cross-origin custom image) — keep the height-based fallback */ }
+      };
+      img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
+    }catch(e){ /* fall back to height-based */ }
+  }
+  buildAreaProfile();
+
+  function insetTopPercentForArea(areaFrac){
+    if(areaFrac<=0) return 100;
+    if(areaFrac>=1) return 0;
+    if(!areaProfile) return (1-areaFrac)*100;
+    for(var y=0; y<SRC_SIZE; y++){
+      if(areaProfile[y] <= areaFrac){
+        if(y===0) return 0;
+        var upper=areaProfile[y-1], lower=areaProfile[y];
+        var t=(upper-areaFrac)/((upper-lower)||1);
+        return ((y-1+t)/SRC_SIZE)*100;
+      }
+    }
+    return 0;
+  }
+
+  var started=false;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting && !started){
+        started=true;
+        var start=null;
+        function step(ts){
+          if(!start) start=ts;
+          var p=Math.min((ts-start)/900,1);
+          var eased=1-Math.pow(1-p,3);
+          var val=eased*TEXT.target;
+          fill.style.clipPath = 'inset(' + insetTopPercentForArea(val) + '% 0 0 0)';
+          percentText.textContent = Math.round(val*100)+'%';
+          if(p<1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+    });
+  },{threshold:.5});
+  obs.observe(root.querySelector('.pi-icon-wrap'));
+})();
+</script>
+</template>
+
 <template id="src-glossary-tooltip">
 <!--
 ======================================================================
@@ -2658,7 +2890,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="gt-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;font-size:__BODY_SIZE__;color:__COLOR_TEXT__;line-height:1.8;position:relative;">
 <style>
-  .gt-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .gt-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .gt-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .gt-term{border:0;background:__COLOR_PRIMARY_LIGHT__;border-bottom:2px solid __COLOR_PRIMARY__;color:__COLOR_PRIMARY__;font-weight:800;cursor:pointer;padding:4px 8px;font-size:inherit;font-family:inherit;border-radius:6px;min-height:36px;}
   .gt-pop{position:absolute;top:100%;left:0;margin-top:8px;background:__COLOR_TEXT__;color:#fff;padding:14px 16px;border-radius:12px;font-size:__ROW_TEXT_SIZE__;max-width:280px;z-index:10;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s ease-out,transform .15s ease-out,visibility .15s;}
@@ -2667,7 +2899,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
     .gt-pop{transition:opacity .15s ease-out,visibility .15s;transform:none;}
   }
 </style>
-<div class="gt-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="gt-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <span data-t="before"></span> <button class="gt-term" data-t="term"></button> <span data-t="after"></span>
 <div class="gt-pop" data-t="definition"></div>
 </div>
@@ -2721,9 +2953,9 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="fg-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .fg-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .fg-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .fg-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
-  .fg-card-panel{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .fg-card-panel{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .fg-grid{max-width:460px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:14px;perspective:1000px;}
   .fg-card{position:relative;height:160px;min-height:160px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.15,.2,1);cursor:pointer;}
   .fg-card.flipped{transform:rotateY(180deg);}
@@ -2743,7 +2975,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
     .fg-feedback.show{animation:none;opacity:1;transform:none;}
   }
 </style>
-<div class="fg-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="fg-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="fg-card-panel">
   <div class="fg-grid"></div>
   <p class="fg-feedback"></p>
@@ -2919,13 +3151,13 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="mp-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .mp-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .mp-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .mp-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes mp-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .mp-note.celebrate{background:__COLOR_CORRECT__;animation:mp-note-pop .4s ease;}
+  .mp-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:mp-note-pop .4s ease;}
   .mp-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;gap:10px;}
   .mp-score{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;}
-  .mp-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .mp-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .mp-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;}
   .mp-col-head{margin:0 0 2px;padding:0 2px;font-size:__CAPTION_SIZE__;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#8b948a;}
   .mp-item{border:2px solid #dcdfda;background:#fff;border-radius:12px;padding:12px 14px;font-size:__OPTION_BTN_SIZE__;font-weight:400;cursor:pointer;font-family:inherit;min-height:52px;display:flex;align-items:center;text-align:left;transition:all .15s ease;}
@@ -2942,8 +3174,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   @keyframes mp-feedback-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 </style>
 <div class="mp-note">
-  <svg class="mp-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="mp-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="mp-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="mp-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="mp-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="mp-top">
@@ -3160,10 +3392,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ic-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .ic-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ic-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ic-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes ic-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .ic-note.celebrate{background:__COLOR_CORRECT__;animation:ic-note-pop .4s ease;}
+  .ic-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:ic-note-pop .4s ease;}
   .ic-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;gap:10px;}
   .ic-count{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;white-space:nowrap;}
   .ic-track{height:8px;border-radius:4px;background:#e3e5e1;overflow:hidden;margin-bottom:10px;}
@@ -3201,8 +3433,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
 </style>
 <div class="ic-note">
-  <svg class="ic-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="ic-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="ic-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="ic-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="ic-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="ic-top">
@@ -3354,10 +3586,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="mm-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .mm-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .mm-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .mm-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes mm-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .mm-note.celebrate{background:__COLOR_CORRECT__;animation:mm-note-pop .4s ease;}
+  .mm-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:mm-note-pop .4s ease;}
   .mm-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;gap:10px;}
   .mm-score{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;}
   .mm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:__PANEL_BG__;padding:clamp(10px, 3vw, 16px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
@@ -3387,8 +3619,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
 </style>
 <div class="mm-note">
-  <svg class="mm-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="mm-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="mm-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="mm-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="mm-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="mm-top">
@@ -3571,10 +3803,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="sw-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;text-align:center;">
 <style>
-  .sw-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;text-align:left;}
+  .sw-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;text-align:left;}
   .sw-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes sw-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .sw-note.celebrate{background:__COLOR_CORRECT__;animation:sw-note-pop .4s ease;}
+  .sw-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:sw-note-pop .4s ease;}
   .sw-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;}
   .sw-score{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;}
   .sw-confetti{position:relative;height:0;overflow:visible;}
@@ -3584,7 +3816,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .sw-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:18px solid __COLOR_TEXT__;z-index:2;transform-origin:50% 0%;}
   @keyframes sw-flick{0%{transform:translateX(-50%) rotate(0deg);}35%{transform:translateX(-50%) rotate(-18deg);}70%{transform:translateX(-50%) rotate(10deg);}100%{transform:translateX(-50%) rotate(0deg);}}
   .sw-pointer.flick{animation:sw-flick .16s ease;}
-  .sw-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .sw-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .sw-dial{position:absolute;inset:0;border-radius:50%;}
   .sw-hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:1;}
   .sw-btn{margin-top:__GAP_BTN_TOP__;min-height:__BTN_MIN_H__;padding:__BTN_PAD__;border:0;border-radius:__BTN_RADIUS__;background:__BTN_COLOR_PRIMARY__;color:__BTN_COLOR_PRIMARY_TEXT__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:__BTN_FONT_SIZE__;cursor:pointer;font-family:inherit;}
@@ -3600,8 +3832,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
 </style>
 <div class="sw-note">
-  <svg class="sw-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="sw-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="sw-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="sw-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="sw-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="sw-top">
@@ -3854,7 +4086,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="sc-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;text-align:center;">
 <style>
-  .sc-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .sc-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .sc-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .sc-stage{position:relative;height:180px;border-radius:16px;overflow:hidden;box-shadow:none;}
   .sc-reveal{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:__COLOR_PRIMARY_LIGHT__;color:__COLOR_TEXT__;font-size:__BODY_SIZE__;font-weight:700;text-align:center;line-height:1.4;}
@@ -3862,7 +4094,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .sc-reveal-btn{display:block;margin:__GAP_BTN_TOP__ auto 0;min-height:__BTN_MIN_H__;padding:__BTN_PAD__;border:2px solid __BTN_COLOR_SECONDARY_BORDER__;background:#fff;color:__BTN_COLOR_SECONDARY_TEXT__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:__BTN_FONT_SIZE__;border-radius:__BTN_RADIUS__;cursor:pointer;font-family:inherit;}
   .sc-reveal-btn:focus-visible{outline:3px solid __COLOR_PRIMARY__;outline-offset:2px;}
 </style>
-<div class="sc-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="sc-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="sc-stage">
   <div class="sc-reveal"></div>
   <canvas class="sc-canvas" role="img" aria-label="Scratch card — drag or touch to reveal, or use the button below"></canvas>
@@ -3998,11 +4230,11 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="sn-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .sn-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .sn-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .sn-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes sn-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .sn-note.celebrate{background:__COLOR_CORRECT__;animation:sn-note-pop .4s ease;}
-  .sn-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .sn-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:sn-note-pop .4s ease;}
+  .sn-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .sn-answer{min-height:52px;border:2px dashed #cfd3cd;border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px;background:transparent;}
   .sn-answer.correct{border-style:solid;border-color:__COLOR_CORRECT__;background:__COLOR_CORRECT_LIGHT__;}
   .sn-answer.wrong{border-style:solid;border-color:__COLOR_WRONG__;background:__COLOR_WRONG_LIGHT__;}
@@ -4022,8 +4254,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   @keyframes sn-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
 </style>
 <div class="sn-note">
-  <svg class="sn-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="sn-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="sn-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="sn-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="sn-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="sn-confetti"></div>
@@ -4195,11 +4427,11 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ms-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .ms-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ms-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ms-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes ms-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .ms-note.celebrate{background:__COLOR_CORRECT__;animation:ms-note-pop .4s ease;}
-  .ms-card{margin-bottom:14px;background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .ms-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:ms-note-pop .4s ease;}
+  .ms-card{margin-bottom:14px;background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .ms-q{font-size:__QUESTION_SIZE__;font-weight:700;color:__COLOR_TEXT__;margin:0 0 __GAP_PROMPT__;}
   .ms-divider{border:0;border-top:1px solid #ececea;margin:0 0 __GAP_PROMPT__;}
   .ms-opts{display:flex;flex-direction:column;gap:__GAP_OPTIONS__;}
@@ -4231,8 +4463,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
 </style>
 <div class="ms-note">
-  <svg class="ms-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="ms-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="ms-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="ms-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="ms-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="ms-confetti"></div>
@@ -4404,6 +4636,235 @@ var TEXT = {
 </script>
 </template>
 
+<template id="src-single-choice-check">
+<!--
+======================================================================
+Single Choice Knowledge Check
+v1.0 — BK — copy of Multi-Select Knowledge Check, radio-button variant
+======================================================================
+-->
+
+<div class="sq-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
+<style>
+  .sq-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .sq-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
+  @keyframes sq-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
+  .sq-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:sq-note-pop .4s ease;}
+  .sq-card{margin-bottom:14px;background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .sq-q{font-size:__QUESTION_SIZE__;font-weight:700;color:__COLOR_TEXT__;margin:0 0 __GAP_PROMPT__;}
+  .sq-divider{border:0;border-top:1px solid #ececea;margin:0 0 __GAP_PROMPT__;}
+  .sq-opts{display:flex;flex-direction:column;gap:__GAP_OPTIONS__;}
+  .sq-opt{display:flex;align-items:center;gap:12px;border:2px solid transparent;background:transparent;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:__OPTION_BTN_SIZE__;font-weight:400;font-family:inherit;min-height:52px;text-align:left;}
+  .sq-opt:not(.disabled):not(.picked):hover{background:__COLOR_SELECT_LIGHT__;}
+  .sq-opt.picked{background:__COLOR_SELECT_LIGHT__;}
+  /* Only visual difference from Multi-Select's checkbox: a fully round
+     border-radius so the indicator reads as a radio button, reinforcing
+     that this block only ever allows one pick (see the JS below, which
+     clears every other option's .picked state on each click instead of
+     toggling just the one clicked) — checkbox = several, radio = one. */
+  .sq-box{width:22px;height:22px;border-radius:50%;border:2px solid #c7cbc4;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:__ICON_CHECK_SIZE__;}
+  .sq-opt.picked .sq-box{background:__COLOR_SELECT__;border-color:__COLOR_SELECT__;}
+  .sq-opt.reveal-correct{border-color:__COLOR_SELECT__;}
+  .sq-opt.reveal-correct .sq-box{background:__COLOR_CORRECT__;border-color:__COLOR_CORRECT__;}
+  .sq-opt.reveal-missed .sq-box{background:__COLOR_CORRECT__;border-color:__COLOR_CORRECT__;}
+  .sq-opt.reveal-wrong{border-color:__COLOR_SELECT__;}
+  .sq-opt.reveal-wrong .sq-box{background:__COLOR_WRONG__;border-color:__COLOR_WRONG__;}
+  .sq-opt.disabled{cursor:default;pointer-events:none;}
+  .sq-submit{display:block;margin:__GAP_BTN_TOP__ auto 0;min-height:__BTN_MIN_H__;padding:__BTN_PAD__;border:0;border-radius:__BTN_RADIUS__;background:__BTN_COLOR_PRIMARY__;color:__BTN_COLOR_PRIMARY_TEXT__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:__BTN_FONT_SIZE__;cursor:pointer;font-family:inherit;}
+  .sq-feedback{display:none;margin-top:__GAP_SECTION__;padding:14px 16px;border-radius:12px;font-size:__FEEDBACK_SIZE__;font-weight:400;line-height:1.5;text-align:left;color:__COLOR_TEXT__;opacity:0;}
+  .sq-feedback.correct{background:__COLOR_CORRECT_LIGHT__;}
+  .sq-feedback.wrong{background:__COLOR_WRONG_LIGHT__;}
+  .sq-feedback.show{animation:sq-feedback-in .38s cubic-bezier(.22,.68,0,1.2) forwards;}
+  @keyframes sq-feedback-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  .sq-retry{display:none;align-items:center;justify-content:center;gap:8px;margin:__GAP_BTN_TOP__ auto 0;background:#fff;border:2px solid __BTN_COLOR_SECONDARY_BORDER__;border-radius:__BTN_RADIUS__;padding:__BTN_PAD__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:__BTN_FONT_SIZE__;cursor:pointer;font-family:inherit;min-height:__BTN_MIN_H__;color:__BTN_COLOR_SECONDARY_TEXT__;}
+  .sq-retry svg{flex-shrink:0;}
+  .sq-confetti{position:relative;height:0;overflow:visible;}
+  .sq-confetti span{position:absolute;top:0;width:8px;height:8px;border-radius:2px;opacity:0;}
+  @keyframes sq-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
+  @media (prefers-reduced-motion: reduce){
+    .sq-note.celebrate{animation:none;}
+    .sq-feedback.show{animation:none;opacity:1;transform:none;}
+  }
+</style>
+<div class="sq-note">
+  <svg class="sq-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="sq-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <span class="sq-note-text" data-t="blockInstruction"></span>
+</div>
+<div class="sq-confetti"></div>
+<div class="sq-card">
+  <p class="sq-q" data-t="question"></p>
+  <hr class="sq-divider">
+  <div class="sq-opts"></div>
+  <button class="sq-submit" data-t="submit"></button>
+  <p class="sq-feedback"></p>
+  <button class="sq-retry">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    <span data-t="retry"></span>
+  </button>
+</div>
+</div>
+<script>
+// ======================================================================
+// TRANSLATE HERE
+// Only change the text between the quote marks (" " or ' ') below.
+// Do not change the word before each colon (:) -- that is the label
+// the code uses to find the text, not something a learner sees.
+// Do not delete any commas , or brackets { } [ ].
+// Exactly ONE option should have correct:true -- this block only ever
+// lets the learner pick one (radio-button behavior), so a second
+// correct:true would just never be reachable.
+// ======================================================================
+var TEXT = {
+  blockInstruction: 'Select the correct answer, then submit.',
+  question: "Which of these is the clearest sign a tree may be hazardous?",
+  submit: "Submit",
+  retry: "Try Again",
+  correctFeedback: "Correct — that's the clearest warning sign.",
+  incorrectFeedback: "Not quite — the correct answer has been highlighted. Try again.",
+  options: [
+    {label:"Deep vertical crack running down the trunk", correct:true},
+    {label:"Fresh green growth on outer branches", correct:false},
+    {label:"Leaves changing color in autumn", correct:false},
+    {label:"A slight lean that has always been there", correct:false}
+  ]
+};
+// ======================================================================
+// DO NOT EDIT BELOW THIS LINE
+// ======================================================================
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  function notifyRiseHeight(){
+    var h=document.documentElement.scrollHeight;
+    if(window.parent && window.parent!==window){
+      window.parent.postMessage({type:'setHeight',height:h},'*');
+    }
+  }
+  window.addEventListener('load', notifyRiseHeight);
+  new ResizeObserver(notifyRiseHeight).observe(document.body);
+  var __bi=root.querySelector('[data-t="blockInstruction"]'); if(__bi) __bi.textContent = TEXT.blockInstruction;
+  root.querySelector('[data-t=question]').textContent = TEXT.question;
+  root.querySelector('[data-t=submit]').textContent = TEXT.submit;
+  root.querySelector('.sq-retry [data-t=retry]').textContent = TEXT.retry;
+  var note = root.querySelector('.sq-note');
+  var noteText = root.querySelector('.sq-note-text');
+  var noteIconInfo = root.querySelector('.sq-note-icon-info');
+  var noteIconCheck = root.querySelector('.sq-note-icon-check');
+  var optsWrap = root.querySelector('.sq-opts');
+  var submitBtn = root.querySelector('[data-t=submit]');
+  var retryBtn = root.querySelector('.sq-retry');
+  var feedback = root.querySelector('.sq-feedback');
+  var confetti = root.querySelector('.sq-confetti');
+  var CONFETTI_ON = __CONFETTI_ON__;
+  var FEEDBACK_ON = __FEEDBACK_ON__;
+  var RISE_COMPLETE_ON = __RISE_COMPLETE_ON__;
+  var confettiColors=[__CONFETTI_COLORS__];
+  var picked = {};
+
+  function burstConfetti(){
+    if(!CONFETTI_ON) return;
+    for(var i=0;i<18;i++){
+      var s=document.createElement('span');
+      s.style.left=(Math.random()*100)+'%';
+      s.style.background=confettiColors[i%confettiColors.length];
+      s.style.animation='sq-fall '+(600+Math.random()*400)+'ms ease-out forwards';
+      s.style.animationDelay=(Math.random()*150)+'ms';
+      confetti.appendChild(s);
+      (function(el){ setTimeout(function(){ el.remove(); }, 1200); })(s);
+    }
+  }
+
+  function sendRiseCompletion(){
+    if(!RISE_COMPLETE_ON) return;
+    try{
+      if(window.parent && window.parent !== window){
+        window.parent.postMessage({ type: 'complete' }, '*');
+      }
+    }catch(e){}
+  }
+
+  function celebrateNote(){
+    if(!note) return;
+    noteText.textContent = 'Correct!';
+    noteIconInfo.style.display = 'none';
+    noteIconCheck.style.display = 'block';
+    note.classList.remove('celebrate'); void note.offsetWidth; note.classList.add('celebrate');
+  }
+  function resetNote(){
+    if(!note) return;
+    noteText.textContent = TEXT.blockInstruction;
+    noteIconInfo.style.display = 'block';
+    noteIconCheck.style.display = 'none';
+    note.classList.remove('celebrate');
+  }
+
+  function build(){
+    optsWrap.innerHTML=''; picked={};
+    feedback.style.display='none';
+    feedback.classList.remove('correct','wrong','show');
+    retryBtn.style.display='none';
+    submitBtn.style.display='block';
+    resetNote();
+    TEXT.options.forEach(function(opt, i){
+      var btn=document.createElement('button');
+      btn.className='sq-opt';
+      btn.innerHTML='<span class="sq-box">&#10003;</span><span></span>';
+      btn.querySelector('span:last-child').textContent = opt.label;
+      btn.addEventListener('click', function(){
+        // Radio behavior: picking one clears every other pick, unlike
+        // Multi-Select's independent per-option toggle.
+        picked = {}; picked[i] = true;
+        optsWrap.querySelectorAll('.sq-opt').forEach(function(o){ o.classList.remove('picked'); });
+        btn.classList.add('picked');
+      });
+      optsWrap.appendChild(btn);
+    });
+  }
+
+  submitBtn.addEventListener('click', function(){
+    var allCorrect = true;
+    var opts = optsWrap.querySelectorAll('.sq-opt');
+    opts.forEach(function(btn, i){
+      btn.classList.add('disabled');
+      btn.classList.remove('picked');
+      var isPicked = !!picked[i];
+      var isCorrect = TEXT.options[i].correct;
+      if(isCorrect && isPicked) btn.classList.add('reveal-correct');
+      else if(isCorrect && !isPicked){ btn.classList.add('reveal-missed'); allCorrect=false; }
+      else if(!isCorrect && isPicked){
+        btn.classList.add('reveal-wrong');
+        btn.querySelector('.sq-box').innerHTML = '&#10005;';
+        allCorrect=false;
+      }
+    });
+    submitBtn.style.display='none';
+    if(allCorrect){
+      celebrateNote();
+    }
+    if(FEEDBACK_ON){
+      if(allCorrect){
+        feedback.textContent = TEXT.correctFeedback;
+        feedback.classList.add('correct');
+      }else{
+        feedback.textContent = TEXT.incorrectFeedback;
+        feedback.classList.add('wrong');
+      }
+      feedback.style.display='block';
+      void feedback.offsetWidth;
+      feedback.classList.add('show');
+    }
+    // Retry is only useful when something's wrong to fix — once fully
+    // correct, the learner is done, so there's nothing left to reset.
+    retryBtn.style.display = allCorrect ? 'none' : 'flex';
+    if(allCorrect){ burstConfetti(); sendRiseCompletion(); }
+  });
+
+  retryBtn.addEventListener('click', build);
+  build();
+})();
+</script>
+</template>
+
 <template id="src-sentiment-check">
 <!--
 ======================================================================
@@ -4414,11 +4875,11 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="sm-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .sm-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .sm-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .sm-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes sm-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .sm-note.celebrate{background:__COLOR_CORRECT__;animation:sm-note-pop .4s ease;}
-  .sm-panel{background:__PANEL_BG__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;padding:clamp(16px, 5vw, 28px);}
+  .sm-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:sm-note-pop .4s ease;}
+  .sm-panel{background:__PANEL_BG__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;padding:__CARD_PAD__;}
   .sm-question{margin:0 0 __GAP_PROMPT__;font-size:__QUESTION_SIZE__;font-weight:700;color:__COLOR_TEXT__;line-height:1.5;text-align:center;}
   .sm-recall{display:none;margin:0 0 14px;font-size:__FEEDBACK_SIZE__;font-weight:400;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:9px 13px;border-radius:9px;line-height:1.5;text-align:center;}
   .sm-recall b{font-weight:800;}
@@ -4457,8 +4918,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
 </style>
 <div class="sm-note">
-  <svg class="sm-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="sm-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="sm-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="sm-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="sm-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="sm-panel">
@@ -4689,15 +5150,15 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="wu-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;text-align:center;">
 <style>
-  .wu-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .wu-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .wu-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes wu-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .wu-note.celebrate{background:__COLOR_CORRECT__;animation:wu-note-pop .4s ease;}
+  .wu-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:wu-note-pop .4s ease;}
   .wu-clue{font-size:__BODY_SIZE__;color:__COLOR_TEXT__;margin:0 0 __GAP_PROMPT__;}
   .wu-answer{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;min-height:52px;margin-bottom:14px;}
   .wu-slot{width:38px;height:44px;border-bottom:3px solid #c7cbc4;display:flex;align-items:center;justify-content:center;font-size:__H1_SIZE__;font-weight:800;color:__COLOR_TEXT__;text-transform:uppercase;}
   .wu-slot.filled{border-color:__COLOR_PRIMARY__;}
-  .wu-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .wu-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .wu-letters{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;}
   .wu-letter{width:44px;height:44px;border-radius:10px;border:2px solid __COLOR_PRIMARY__;background:#fff;color:__COLOR_PRIMARY__;font-size:__OPTION_BTN_SIZE__;font-weight:400;text-transform:uppercase;cursor:pointer;font-family:inherit;}
   .wu-letter.used{visibility:hidden;}
@@ -4714,8 +5175,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   @keyframes wu-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
 </style>
 <div class="wu-note">
-  <svg class="wu-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="wu-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="wu-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="wu-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="wu-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="wu-confetti"></div>
@@ -4895,10 +5356,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ts-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .ts-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ts-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ts-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes ts-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .ts-note.celebrate{background:__COLOR_CORRECT__;animation:ts-note-pop .4s ease;}
+  .ts-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:ts-note-pop .4s ease;}
   .ts-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;gap:10px;}
   .ts-score{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;}
   .ts-grid{display:flex;flex-direction:column;gap:__GAP_OPTIONS__;background:__PANEL_BG__;padding:clamp(12px, 4vw, 20px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
@@ -4920,8 +5381,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
 </style>
 <div class="ts-note">
-  <svg class="ts-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="ts-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="ts-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="ts-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="ts-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="ts-top">
@@ -5072,6 +5533,496 @@ var TEXT = {
 </script>
 </template>
 
+<template id="src-ripple-effect">
+<!--
+======================================================================
+The Ripple Effect
+v1.0 — BK — built for Bartlett customer service training
+======================================================================
+HOW TO EDIT (everything lives in the TEXT object inside the <script>)
+- Text: change the words between the quote marks only.
+- Add a step: copy one { icon, title, text, hours } line inside
+  badPath.steps or goodPath.steps, paste it where it belongs, and keep
+  the comma between lines. Remove a step by deleting its whole line.
+  Step numbers ("Step 2 of 6") update on their own.
+- Tally: tallyTemplate / summaryUnit / deltaTemplate set the wording,
+  and each bad-path step's "hours" is how much it adds (0 = nothing).
+  The good path never adds hours, so it always ends at 0.
+- New scenario: replace intro*, badPath and goodPath with the new
+  story. Anything safety-related (e.g. overhead power lines) needs
+  SME / safety team review before publishing -- crews always do their
+  own site hazard assessment, and the story must not imply otherwise.
+======================================================================
+-->
+
+<div class="rp-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
+<style>
+  .rp-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .rp-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
+  @keyframes rp-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
+  .rp-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:rp-note-pop .4s ease;}
+  .rp-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:__GAP_SECTION__;gap:10px;}
+  .rp-score{font-size:__BADGE_SIZE__;font-weight:800;color:__COLOR_PRIMARY__;background:__COLOR_PRIMARY_LIGHT__;padding:6px 12px;border-radius:20px;white-space:nowrap;display:inline-block;transition:color .3s ease, background-color .3s ease;}
+  .rp-score.is-bad{color:__COLOR_WRONG__;background:__COLOR_WRONG_LIGHT__;}
+  .rp-score.is-good{color:__COLOR_CORRECT__;background:__COLOR_CORRECT_LIGHT__;}
+  .rp-score.landed,.rp-sum-num.landed{animation:rp-pop .3s ease;}
+  @keyframes rp-pop{0%{transform:scale(1);}40%{transform:scale(1.08);}100%{transform:scale(1);}}
+  .rp-confetti{position:relative;height:0;overflow:visible;}
+  .rp-confetti span{position:absolute;top:0;width:8px;height:8px;border-radius:2px;opacity:0;}
+  @keyframes rp-fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(90px) rotate(360deg);opacity:0;}}
+  .rp-panel{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;--rp-accent:__COLOR_PRIMARY__;--rp-accent-light:__COLOR_PRIMARY_LIGHT__;}
+  .rp-panel.is-bad{--rp-accent:__COLOR_WRONG__;--rp-accent-light:__COLOR_WRONG_LIGHT__;}
+  .rp-panel.is-good{--rp-accent:__COLOR_CORRECT__;--rp-accent-light:__COLOR_CORRECT_LIGHT__;}
+  .rp-intro,.rp-summary{text-align:center;padding:clamp(20px, 5vw, 28px) clamp(14px, 4vw, 24px);border-radius:12px;}
+  .rp-intro{border:2px solid #dcdfda;background:#fff;}
+  .rp-intro-title{margin:0;font-size:__QUESTION_SIZE__;font-weight:700;color:__COLOR_TEXT__;line-height:1.4;}
+  .rp-intro-sub{margin:6px 0 0;font-size:__BODY_SIZE__;font-weight:400;color:__COLOR_TEXT__;line-height:1.5;}
+  .rp-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:__GAP_OPTIONS__;margin-top:__GAP_BTN_TOP__;}
+  .rp-btn{max-width:100%;min-height:__BTN_MIN_H__;padding:__BTN_PAD__;border:0;border-radius:__BTN_RADIUS__;background:__BTN_COLOR_PRIMARY__;color:__BTN_COLOR_PRIMARY_TEXT__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:__BTN_FONT_SIZE__;line-height:1.3;cursor:pointer;font-family:inherit;}
+  .rp-btn-secondary{background:#fff;border:2px solid __BTN_COLOR_SECONDARY_BORDER__;color:__BTN_COLOR_SECONDARY_TEXT__;}
+  .rp-btn:focus-visible,.rp-head:focus-visible{outline:3px solid __COLOR_PRIMARY__;outline-offset:2px;}
+  .rp-path-label{display:flex;align-items:center;gap:6px;margin:0 0 __GAP_PROMPT__;font-size:__CAPTION_SIZE__;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--rp-accent);}
+  .rp-path-label svg{width:14px;height:14px;flex-shrink:0;}
+  .rp-chain{list-style:none;margin:0;padding:0;}
+  .rp-card{position:relative;border:2px solid #dcdfda;background:#fff;border-radius:12px;transition:border-color .25s ease, opacity .25s ease, box-shadow .25s ease;}
+  .rp-head{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 14px;margin:0;background:none;border:0;border-radius:10px;font-family:inherit;text-align:left;color:__COLOR_TEXT__;}
+  button.rp-head{cursor:pointer;}
+  button.rp-head:disabled{cursor:default;}
+  .rp-icon{width:36px;height:36px;border-radius:50%;background:#eceeea;color:#8b948a;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background-color .25s ease, color .25s ease;}
+  .rp-icon svg{width:18px;height:18px;}
+  .rp-titles{flex:1;min-width:0;}
+  .rp-kicker{display:block;font-size:__CAPTION_SIZE__;font-weight:400;color:#6b746d;}
+  .rp-title{display:block;font-size:__PANEL_HEADING_SIZE__;font-weight:700;color:__COLOR_TEXT__;line-height:1.35;}
+  .rp-hint{flex-shrink:0;font-size:__CAPTION_SIZE__;font-weight:700;color:__COLOR_PRIMARY__;white-space:nowrap;}
+  .rp-lock{flex-shrink:0;display:flex;color:#9aa39c;}
+  .rp-lock svg{width:18px;height:18px;}
+  .rp-step.is-locked .rp-card{opacity:.55;background:#f7f8f6;}
+  .rp-step.is-next .rp-card{border-color:__COLOR_PRIMARY__;}
+  .rp-step.is-next .rp-icon{background:__COLOR_PRIMARY_LIGHT__;color:__COLOR_PRIMARY__;}
+  .rp-step.is-next .rp-card::after{content:'';position:absolute;inset:-2px;border-radius:12px;pointer-events:none;box-shadow:0 0 0 0 __COLOR_PRIMARY__;opacity:0;animation:rp-pulse 1.1s ease-out 2;}
+  @keyframes rp-pulse{0%{opacity:.45;box-shadow:0 0 0 0 __COLOR_PRIMARY__;}100%{opacity:0;box-shadow:0 0 0 9px __COLOR_PRIMARY__;}}
+  .rp-step.is-revealed .rp-card{box-shadow:inset 3px 0 0 var(--rp-accent);}
+  .rp-step.is-revealed .rp-icon{background:var(--rp-accent-light);color:var(--rp-accent);}
+  .rp-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease;}
+  .rp-step.is-revealed .rp-body{grid-template-rows:1fr;}
+  .rp-body-inner{overflow:hidden;min-height:0;}
+  .rp-text{margin:0;padding:0 16px 14px 62px;font-size:__BODY_SIZE__;font-weight:400;color:__COLOR_TEXT__;line-height:1.5;opacity:0;transition:opacity .3s ease .1s;}
+  .rp-step.is-revealed .rp-text{opacity:1;}
+  .rp-delta{display:block;margin-top:6px;font-size:__BADGE_SIZE__;font-weight:700;color:var(--rp-accent);}
+  .rp-link{display:block;position:relative;width:3px;height:18px;margin-left:31px;background:#e3e5e1;overflow:hidden;}
+  .rp-link::after{content:'';position:absolute;inset:0;background:var(--rp-accent);transform:scaleY(0);transform-origin:top;transition:transform .35s ease;}
+  .rp-step.is-linked .rp-link::after{transform:scaleY(1);}
+  .rp-summary{margin-top:__GAP_SECTION__;background:var(--rp-accent-light);animation:rp-rise-in .38s cubic-bezier(.22,.68,0,1.2) both;}
+  @keyframes rp-rise-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  .rp-sum-num{display:inline-block;font-size:__HERO_NUMBER_SIZE__;font-weight:800;color:var(--rp-accent);line-height:1;}
+  .rp-sum-unit{margin-top:6px;font-size:__BODY_SIZE__;font-weight:700;color:__COLOR_TEXT__;}
+  .rp-sum-take{margin:14px 0 0;font-size:__BODY_SIZE__;font-weight:400;color:__COLOR_TEXT__;line-height:1.5;white-space:pre-line;}
+  .rp-panel.is-rewinding .rp-step,.rp-panel.is-rewinding .rp-summary{animation:rp-rewind .32s ease-in forwards;}
+  @keyframes rp-rewind{to{opacity:0;transform:translateY(-14px) scale(.97);}}
+  .rp-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+  @media (max-width:400px){
+    .rp-text{padding-left:16px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .rp-note.celebrate,.rp-score.landed,.rp-sum-num.landed,.rp-summary,.rp-step.is-next .rp-card::after,.rp-panel.is-rewinding .rp-step,.rp-panel.is-rewinding .rp-summary{animation:none;}
+    .rp-card,.rp-icon,.rp-score,.rp-body,.rp-text,.rp-link::after{transition:none;}
+  }
+</style>
+<div class="rp-note">
+  <svg class="rp-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="rp-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <span class="rp-note-text" data-t="blockInstruction"></span>
+</div>
+<div class="rp-top">
+  <span class="rp-score"></span>
+</div>
+<div class="rp-confetti"></div>
+<div class="rp-panel"></div>
+<div class="rp-sr" aria-live="polite"></div>
+</div>
+<script>
+// ======================================================================
+// TRANSLATE HERE
+// Only change the text between the quote marks (" " or ' ') below.
+// Do not change the word before each colon (:) -- that is the label
+// the code uses to find the text, not something a learner sees.
+// Do not delete any commas , or brackets { } [ ].
+// {n} and {total} are filled in automatically -- leave them as-is.
+// \n starts a new line.
+//
+// Each step is { icon, title, text, hours }:
+//   icon  -- one of: phone, note, clipboard, truck, clock, calendar,
+//            check, alert
+//   hours -- how much this step adds to the tally (bad path only)
+// See the comment at the very top of this block for adding/removing
+// steps or swapping in a different scenario.
+// ======================================================================
+var TEXT = {
+  blockInstruction: 'Tap each card in order to follow the story.',
+  doneMsg: "Logged right. Day saved.",
+  introTitle: "One call. One missed note.",
+  introSub: "Tap to see where it goes.",
+  startBtn: "Start",
+  stepKicker: "Step {n} of {total}",
+  tapHint: "Tap to reveal",
+  lockedLabel: "Locked",
+  tallyTemplate: "Hours lost: {n}",
+  deltaTemplate: "+{n} hr lost",
+  summaryUnit: "hours lost",
+  rewindBtn: "Rewind: What if it was logged?",
+  replayBtn: "Replay",
+  rewindingMsg: "Rewinding…",
+  badPath: {
+    label: "What happened",
+    takeaway: "The crew can only know what's in the record.",
+    // PLACEHOLDER hours -- SME to confirm before publishing
+    steps: [
+      { icon: "phone",     title: "The Call",       text: "A customer calls to schedule pruning. She mentions the backyard gate is locked, and there's a dog back there.", hours: 0 },
+      { icon: "note",      title: "The Record",     text: "The call gets logged. The gate and dog never make it into the notes.", hours: 0 },
+      { icon: "clipboard", title: "The Work Order", text: "The job goes out to the crew. Nothing looks unusual.", hours: 0 },
+      { icon: "truck",     title: "Arrival",        text: "The crew pulls up. Gate's locked. Dog's barking. No way in.", hours: 0.5 },
+      { icon: "clock",     title: "The Wait",       text: "The crew leader calls the office. Office calls the customer. No answer. The crew sits.", hours: 1 },
+      { icon: "calendar",  title: "The Reschedule", text: "The job gets pushed. The customer is upset the work didn't happen.", hours: 2.5 }
+    ]
+  },
+  goodPath: {
+    label: "What if it was logged?",
+    takeaway: "Thirty seconds of notes.\nA whole day saved.",
+    steps: [
+      { icon: "phone", title: "The Call",   text: "Same call. Same details." },
+      { icon: "note",  title: "The Record", text: "Gate code, dog, and \"call before arrival\" go in the notes." },
+      { icon: "truck", title: "Arrival",    text: "Crew calls ahead. Customer puts the dog inside and opens the gate." },
+      { icon: "check", title: "Job Done",   text: "Work finished on schedule. Happy customer." }
+    ]
+  }
+};
+// ======================================================================
+// DO NOT EDIT BELOW THIS LINE
+// ======================================================================
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  function notifyRiseHeight(){
+    var h=document.documentElement.scrollHeight;
+    if(window.parent && window.parent!==window){
+      window.parent.postMessage({type:'setHeight',height:h},'*');
+    }
+  }
+  window.addEventListener('load', notifyRiseHeight);
+  new ResizeObserver(notifyRiseHeight).observe(document.body);
+  var __bi=root.querySelector('[data-t="blockInstruction"]'); if(__bi) __bi.textContent = TEXT.blockInstruction;
+  var panel = root.querySelector('.rp-panel');
+  var scoreEl = root.querySelector('.rp-score');
+  var srEl = root.querySelector('.rp-sr');
+  var note = root.querySelector('.rp-note');
+  var noteText = root.querySelector('.rp-note-text');
+  var noteIconInfo = root.querySelector('.rp-note-icon-info');
+  var noteIconCheck = root.querySelector('.rp-note-icon-check');
+  var confetti = root.querySelector('.rp-confetti');
+  var CONFETTI_ON = __CONFETTI_ON__;
+  var RISE_COMPLETE_ON = __RISE_COMPLETE_ON__;
+  var confettiColors=[__CONFETTI_COLORS__];
+  var REDUCE = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  var SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">';
+  var ICONS = {
+    phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+    note: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+    clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
+    truck: '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    check: '<polyline points="20 6 9 17 4 12"/>',
+    alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    rewind: '<polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/>'
+  };
+  function icon(name){ return SVG_OPEN + (ICONS[name] || ICONS.note) + '</svg>'; }
+
+  var pathKey = null;   // 'bad' | 'good'
+  var steps = [];
+  var stepEls = [];
+  var tally = 0;        // running total the tally chip is heading toward
+  var shownTally = 0;   // what the tally chip currently displays
+  var tallyAnim = null;
+  var timers = [];
+
+  function later(fn, ms){ timers.push(setTimeout(fn, REDUCE ? 0 : ms)); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+  function fmt(v){
+    var r = Math.round(v * 10) / 10;
+    return (r % 1 === 0) ? String(r) : r.toFixed(1);
+  }
+  function fill(tpl, map){
+    return tpl.replace(/\{(\w+)\}/g, function(m, k){ return map[k] !== undefined ? map[k] : m; });
+  }
+
+  // Same eased count as Animated Counter (cubic ease-out, then a small pop).
+  function animateNumber(from, to, ms, render, done){
+    if(REDUCE || ms <= 0 || from === to){ render(to); if(done) done(); return null; }
+    var start = null, cancelled = false;
+    function step(ts){
+      if(cancelled) return;
+      if(!start) start = ts;
+      var p = Math.min((ts - start) / ms, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      render(from + (to - from) * eased);
+      if(p < 1){ requestAnimationFrame(step); } else if(done){ done(); }
+    }
+    requestAnimationFrame(step);
+    return function(){ cancelled = true; };
+  }
+  function pop(el){ el.classList.remove('landed'); void el.offsetWidth; el.classList.add('landed'); }
+
+  function renderTally(v){
+    shownTally = v;
+    scoreEl.textContent = fill(TEXT.tallyTemplate, { n: fmt(v) });
+  }
+  function setTally(target, ms){
+    if(tallyAnim) tallyAnim();
+    var changed = target !== shownTally;
+    tallyAnim = animateNumber(shownTally, target, ms, renderTally, function(){
+      tallyAnim = null;
+      if(changed) pop(scoreEl);
+    });
+  }
+  function setTone(tone){
+    scoreEl.classList.toggle('is-bad', tone === 'bad');
+    scoreEl.classList.toggle('is-good', tone === 'good');
+  }
+
+  function announce(msg){
+    srEl.textContent = '';
+    setTimeout(function(){ srEl.textContent = msg; }, 60);
+  }
+
+  function burstConfetti(){
+    if(!CONFETTI_ON) return;
+    for(var i=0;i<18;i++){
+      var s=document.createElement('span');
+      s.style.left=(Math.random()*100)+'%';
+      s.style.background=confettiColors[i%confettiColors.length];
+      s.style.animation='rp-fall '+(600+Math.random()*400)+'ms ease-out forwards';
+      s.style.animationDelay=(Math.random()*150)+'ms';
+      confetti.appendChild(s);
+      (function(el){ setTimeout(function(){ el.remove(); }, 1200); })(s);
+    }
+  }
+
+  function sendRiseCompletion(){
+    if(!RISE_COMPLETE_ON) return;
+    try{
+      if(window.parent && window.parent !== window){
+        window.parent.postMessage({ type: 'complete' }, '*');
+      }
+    }catch(e){}
+  }
+
+  function celebrateNote(){
+    if(!note) return;
+    noteText.textContent = TEXT.doneMsg;
+    noteIconInfo.style.display = 'none';
+    noteIconCheck.style.display = 'block';
+    note.classList.remove('celebrate'); void note.offsetWidth; note.classList.add('celebrate');
+  }
+  function resetNote(){
+    if(!note) return;
+    noteText.textContent = TEXT.blockInstruction;
+    noteIconInfo.style.display = 'block';
+    noteIconCheck.style.display = 'none';
+    note.classList.remove('celebrate');
+  }
+
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text !== undefined) e.textContent = text;
+    return e;
+  }
+  function makeBtn(label, secondary, onClick){
+    var b = el('button', 'rp-btn' + (secondary ? ' rp-btn-secondary' : ''), label);
+    b.type = 'button';
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  function setPanelTone(tone){
+    panel.className = 'rp-panel' + (tone ? ' is-' + tone : '');
+  }
+
+  // ---- State A: intro card ------------------------------------------
+  function showIntro(){
+    clearTimers();
+    resetNote();
+    setPanelTone('');
+    setTone('');
+    tally = 0; setTally(0, 0);
+    panel.innerHTML = '';
+    var card = el('div', 'rp-intro');
+    card.appendChild(el('p', 'rp-intro-title', TEXT.introTitle));
+    card.appendChild(el('p', 'rp-intro-sub', TEXT.introSub));
+    var actions = el('div', 'rp-actions');
+    actions.appendChild(makeBtn(TEXT.startBtn, false, function(){ startPath('bad'); }));
+    card.appendChild(actions);
+    panel.appendChild(card);
+  }
+
+  // ---- States B / D: the chain --------------------------------------
+  // Each step's header is a real <button> only while it's the next one
+  // to tap -- locked steps are disabled buttons (skipped by Tab), and a
+  // revealed step's header is swapped for a plain div so there's never a
+  // focusable control left that does nothing.
+  function makeHead(i, status){
+    var s = steps[i];
+    var head = el(status === 'done' ? 'div' : 'button', 'rp-head');
+    if(head.tagName === 'BUTTON'){
+      head.type = 'button';
+      if(status === 'locked') head.disabled = true;
+      else head.addEventListener('click', function(){ reveal(i); });
+    }
+    var ic = el('span', 'rp-icon'); ic.innerHTML = icon(s.icon);
+    var titles = el('span', 'rp-titles');
+    titles.appendChild(el('span', 'rp-kicker', fill(TEXT.stepKicker, { n: i + 1, total: steps.length })));
+    titles.appendChild(el('span', 'rp-title', s.title));
+    head.appendChild(ic);
+    head.appendChild(titles);
+    if(status === 'next') head.appendChild(el('span', 'rp-hint', TEXT.tapHint));
+    if(status === 'locked'){
+      var lock = el('span', 'rp-lock'); lock.innerHTML = icon('lock');
+      lock.appendChild(el('span', 'rp-sr', TEXT.lockedLabel));
+      head.appendChild(lock);
+    }
+    return head;
+  }
+  function setHead(i, status){
+    var card = stepEls[i].querySelector('.rp-card');
+    var old = card.querySelector('.rp-head');
+    var head = makeHead(i, status);
+    card.replaceChild(head, old);
+    stepEls[i].classList.toggle('is-locked', status === 'locked');
+    stepEls[i].classList.toggle('is-next', status === 'next');
+    return head;
+  }
+
+  function startPath(key){
+    clearTimers();
+    resetNote();
+    pathKey = key;
+    var path = key === 'bad' ? TEXT.badPath : TEXT.goodPath;
+    steps = path.steps;
+    stepEls = [];
+    tally = 0; setTally(0, 0);
+    setPanelTone(key);
+    setTone(key === 'good' ? 'good' : '');
+    panel.innerHTML = '';
+
+    var label = el('p', 'rp-path-label');
+    label.appendChild(el('span', '', path.label));
+    panel.appendChild(label);
+
+    var chain = el('ol', 'rp-chain');
+    steps.forEach(function(s, i){
+      var li = el('li', 'rp-step');
+      var card = el('div', 'rp-card');
+      card.appendChild(el('span', 'rp-head'));
+      var body = el('div', 'rp-body');
+      body.appendChild(el('div', 'rp-body-inner'));
+      card.appendChild(body);
+      li.appendChild(card);
+      if(i < steps.length - 1){
+        var link = el('span', 'rp-link'); link.setAttribute('aria-hidden', 'true');
+        li.appendChild(link);
+      }
+      chain.appendChild(li);
+      stepEls.push(li);
+    });
+    panel.appendChild(chain);
+    steps.forEach(function(s, i){ setHead(i, i === 0 ? 'next' : 'locked'); });
+    stepEls[0].querySelector('.rp-head').focus({ preventScroll: true });
+  }
+
+  function reveal(i){
+    var s = steps[i];
+    var li = stepEls[i];
+    setHead(i, 'done');
+    var inner = li.querySelector('.rp-body-inner');
+    var p = el('p', 'rp-text', s.text);
+    var hours = pathKey === 'bad' ? (Number(s.hours) || 0) : 0;
+    if(hours > 0) p.appendChild(el('span', 'rp-delta', fill(TEXT.deltaTemplate, { n: fmt(hours) })));
+    inner.appendChild(p);
+    void li.offsetWidth;
+    li.classList.add('is-revealed');
+
+    if(hours > 0){
+      tally += hours;
+      later(function(){ setTone('bad'); setTally(tally, 700); }, 200);
+    }
+    announce(fill(TEXT.stepKicker, { n: i + 1, total: steps.length }) + '. ' + s.title + '. ' + s.text +
+      (pathKey === 'bad' ? ' ' + fill(TEXT.tallyTemplate, { n: fmt(tally) }) + '.' : ''));
+
+    if(i < steps.length - 1){
+      later(function(){ li.classList.add('is-linked'); }, 250);
+      later(function(){
+        var next = setHead(i + 1, 'next');
+        next.focus({ preventScroll: true });
+      }, 600);
+    }else{
+      later(showSummary, 450);
+    }
+  }
+
+  // ---- States C / D-end: summary card -------------------------------
+  function showSummary(){
+    var path = pathKey === 'bad' ? TEXT.badPath : TEXT.goodPath;
+    var total = pathKey === 'bad' ? tally : 0;
+    var card = el('div', 'rp-summary');
+    var num = el('div', 'rp-sum-num', '0');
+    card.appendChild(num);
+    card.appendChild(el('div', 'rp-sum-unit', TEXT.summaryUnit));
+    card.appendChild(el('p', 'rp-sum-take', path.takeaway));
+    var actions = el('div', 'rp-actions');
+    var first;
+    if(pathKey === 'bad'){
+      first = makeBtn(TEXT.rewindBtn, false, rewind);
+      actions.appendChild(first);
+      actions.appendChild(makeBtn(TEXT.replayBtn, true, function(){ startPath('bad'); }));
+    }else{
+      first = makeBtn(TEXT.replayBtn, true, function(){ startPath('bad'); });
+      actions.appendChild(first);
+    }
+    card.appendChild(actions);
+    panel.appendChild(card);
+    animateNumber(0, total, 900, function(v){ num.textContent = fmt(v); }, function(){ if(total > 0) pop(num); });
+    announce(fmt(total) + ' ' + TEXT.summaryUnit + '. ' + path.takeaway.replace(/\n/g, ' '));
+    first.focus({ preventScroll: true });
+
+    if(pathKey === 'good'){
+      celebrateNote();
+      burstConfetti();
+      sendRiseCompletion();
+    }
+  }
+
+  // ---- Rewind: bad chain folds back up in reverse, tally runs to 0 --
+  function rewind(){
+    clearTimers();
+    var label = panel.querySelector('.rp-path-label');
+    label.innerHTML = icon('rewind');
+    label.appendChild(el('span', '', TEXT.rewindingMsg));
+    var n = stepEls.length;
+    stepEls.forEach(function(li, i){ li.style.animationDelay = ((n - 1 - i) * 60) + 'ms'; });
+    panel.querySelectorAll('.rp-actions button').forEach(function(b){ b.disabled = true; });
+    panel.classList.add('is-rewinding');
+    announce(TEXT.rewindingMsg);
+    tally = 0;
+    setTally(0, 600);
+    later(function(){ startPath('good'); }, n * 60 + 380);
+  }
+
+  showIntro();
+})();
+</script>
+</template>
+
 <template id="src-horizontal-timeline">
 <!--
 ======================================================================
@@ -5082,9 +6033,9 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ht-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .ht-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ht-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ht-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
-  .ht-panel{background:__PANEL_BG__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;padding:clamp(16px, 5vw, 28px);}
+  .ht-panel{background:__PANEL_BG__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;padding:__CARD_PAD__;}
   .ht-rail{position:relative;display:flex;justify-content:space-between;margin:10px 0 18px;padding:0 4px;}
   .ht-rail::before{content:'';position:absolute;top:15px;left:20px;right:20px;height:3px;background:#e3e5e1;}
   .ht-rail-fill{position:absolute;top:15px;height:3px;background:__COLOR_PRIMARY__;transition:left .25s ease, width .25s ease, top .25s ease, height .25s ease;}
@@ -5101,7 +6052,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
     .ht-stop-label{text-align:left;max-width:none;padding-top:6px;}
   }
 </style>
-<div class="ht-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="ht-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="ht-panel">
 <div class="ht-rail"><div class="ht-rail-fill"></div></div>
 <div class="ht-detail"></div>
@@ -5221,7 +6172,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="cd-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .cd-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .cd-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .cd-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .cd-stage{position:relative;height:200px;}
   .cd-card{position:absolute;inset:0;border-radius:16px;padding:22px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:__BODY_SIZE__;font-weight:700;color:__COLOR_TEXT__;background:__COLOR_PRIMARY_LIGHT__;box-shadow:none;transition:transform .3s ease, opacity .3s ease;}
@@ -5236,7 +6187,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .cd-dot{width:8px;height:8px;border-radius:50%;background:#dcdfda;}
   .cd-dot.active{background:__COLOR_PRIMARY__;}
 </style>
-<div class="cd-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="cd-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="cd-stage"></div>
 <div class="cd-controls">
   <button class="cd-btn" data-dir="-1">&larr;</button>
@@ -5337,9 +6288,9 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="gw-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .gw-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .gw-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .gw-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
-  .gw-card{background:__PANEL_BG__;padding:clamp(16px, 5vw, 28px);border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
+  .gw-card{background:__PANEL_BG__;padding:__CARD_PAD__;border-radius:__BLOCK_RADIUS__;box-shadow:__BLOCK_SHADOW__;}
   .gw-search{width:100%;border:1px solid #dcdfda;border-radius:10px;padding:11px 14px;font-size:__FIELD_TEXT_SIZE__;font-family:inherit;margin-bottom:12px;min-height:44px;}
   .gw-terms{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
   .gw-term{border:2px solid __COLOR_PRIMARY__;background:#fff;color:__COLOR_PRIMARY__;padding:9px 14px;border-radius:20px;font-size:__OPTION_BTN_SIZE__;font-weight:400;cursor:pointer;font-family:inherit;min-height:44px;transition:background-color .15s ease,color .15s ease,transform .1s ease;}
@@ -5355,7 +6306,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   }
   .gw-empty{font-size:__CAPTION_SIZE__;color:#8b948a;padding:8px 4px;}
 </style>
-<div class="gw-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="gw-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="gw-card">
   <input class="gw-search" type="text">
   <div class="gw-terms"></div>
@@ -5459,7 +6410,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ct-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;">
 <style>
-  .ct-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ct-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ct-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .ct-tabs{display:flex;gap:6px;margin-bottom:12px;background:#f2f3f1;border-radius:12px;padding:4px;}
   .ct-tab{flex:1;border:0;background:transparent;padding:11px 10px;border-radius:9px;font-weight:400;font-size:__OPTION_BTN_SIZE__;color:#69756e;cursor:pointer;font-family:inherit;min-height:44px;transition:background-color .2s ease,color .2s ease;}
@@ -5473,7 +6424,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .ct-panel h4{margin:0 0 8px;font-size:__PANEL_HEADING_SIZE__;font-weight:400;color:__COLOR_TEXT__;}
   .ct-panel ul{margin:0;padding-left:18px;color:__COLOR_TEXT__;font-size:__BODY_SIZE__;line-height:1.6;}
 </style>
-<div class="ct-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="ct-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="ct-tabs"></div>
 <div class="ct-panels"></div>
 </div>
@@ -5947,10 +6898,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="ak-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .ak-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ak-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ak-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes ak-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .ak-note.celebrate{background:__COLOR_CORRECT__;animation:ak-note-pop .4s ease;}
+  .ak-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:ak-note-pop .4s ease;}
   .ak-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(16px, 4vw, 24px);margin-bottom:16px;}
   .ak-statement{margin:0;font-size:__BODY_SIZE__;line-height:1.6;color:__COLOR_TEXT__;}
   .ak-check-row{display:flex;align-items:flex-start;gap:10px;font-size:__FIELD_TEXT_SIZE__;font-weight:400;color:__COLOR_TEXT__;cursor:pointer;margin-bottom:14px;line-height:1.4;}
@@ -5962,12 +6913,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .ak-signed{display:none;}
   .ak-done-msg{display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-weight:800;color:__COLOR_PRIMARY__;font-size:__BODY_SIZE__;margin:0;}
   .ak-done-icon{width:24px;height:24px;border-radius:50%;background:__COLOR_PRIMARY__;color:#fff;display:flex;align-items:center;justify-content:center;font-size:__ICON_CHECK_SIZE__;flex-shrink:0;}
-  .ak-clear-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:__GAP_BTN_TOP__ auto 0;min-height:__BTN_MIN_H__;padding:__BTN_PAD__;border:2px solid __BTN_COLOR_SECONDARY_BORDER__;background:#fff;border-radius:__BTN_RADIUS__;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:__BTN_FONT_SIZE__;cursor:pointer;font-family:inherit;color:__BTN_COLOR_SECONDARY_TEXT__;}
-  .ak-clear-btn svg{flex-shrink:0;}
 </style>
 <div class="ak-note">
-  <svg class="ak-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="ak-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="ak-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="ak-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="ak-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="ak-panel"><p class="ak-statement" data-t="statement"></p></div>
@@ -5978,10 +6927,6 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 </div>
 <div class="ak-signed">
   <p class="ak-done-msg"><span class="ak-done-icon">&#10003;</span><span class="ak-done-text"></span></p>
-  <button class="ak-clear-btn">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-    <span data-t="clearBtn"></span>
-  </button>
 </div>
 </div>
 <script>
@@ -5998,8 +6943,7 @@ var TEXT = {
   checkboxLabel: "I have read and understood this statement.",
   signBtn: "Sign",
   signedNoteMsg: "Signed & confirmed.",
-  signedTemplate: "Signed by {name} on {date}",
-  clearBtn: "Try Again"
+  signedTemplate: "Signed by {name} on {date}"
 };
 // ======================================================================
 // DO NOT EDIT BELOW THIS LINE
@@ -6054,13 +6998,6 @@ var TEXT = {
     noteIconCheck.style.display = 'block';
     note.classList.remove('celebrate'); void note.offsetWidth; note.classList.add('celebrate');
   }
-  function resetNote(){
-    if(!note) return;
-    noteText.textContent = TEXT.blockInstruction;
-    noteIconInfo.style.display = 'block';
-    noteIconCheck.style.display = 'none';
-    note.classList.remove('celebrate');
-  }
 
   signBtn.addEventListener('click', function(){
     if(signBtn.disabled) return;
@@ -6070,18 +7007,10 @@ var TEXT = {
     signed.style.display = 'block';
     // The instruction told them how to sign — once signed, it repurposes
     // itself in place instead of disappearing, so nothing below it shifts.
-    // Restored on Clear, since the form comes back too.
+    // Signing is final: there's no Clear/Try Again to undo it, matching a
+    // real paper sign-off.
     celebrateNote();
     sendRiseCompletion();
-  });
-
-  root.querySelector('.ak-clear-btn').addEventListener('click', function(){
-    checkbox.checked = false;
-    nameInput.value = '';
-    updateBtn();
-    signed.style.display = 'none';
-    form.style.display = 'block';
-    resetNote();
   });
 
   updateBtn();
@@ -6099,7 +7028,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
 
 <div class="bc-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
 <style>
-  .bc-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .bc-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .bc-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   .bc-panel{background:transparent;border-radius:14px;box-shadow:none;padding:clamp(16px, 5vw, 26px);}
   .bc-row{margin-bottom:18px;}
@@ -6110,7 +7039,7 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .bc-track{height:14px;border-radius:7px;background:#eceeea;overflow:hidden;}
   .bc-fill{height:100%;width:0%;border-radius:7px;background:__COLOR_PRIMARY__;transition:width 1s cubic-bezier(.22,1,.36,1);}
 </style>
-<div class="bc-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="bc-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 <div class="bc-panel">
   <div class="bc-row" data-v="34"><div class="bc-row-head"><span class="bc-row-label" data-t="label0"></span><span class="bc-row-value">0%</span></div><div class="bc-track"><div class="bc-fill"></div></div></div>
   <div class="bc-row" data-v="28"><div class="bc-row-head"><span class="bc-row-label" data-t="label1"></span><span class="bc-row-value">0%</span></div><div class="bc-track"><div class="bc-fill"></div></div></div>
@@ -6190,10 +7119,10 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
      panel below -- a plain thread, an iOS-style phone, or a Teams-style app
      window -- via the ch-style-__CHAT_STYLE__ class above; the header,
      bubbles and choices markup is identical in all three, only re-skinned. */
-  .ch-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ch-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ch-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   @keyframes ch-note-pop{0%{transform:scale(1);}35%{transform:scale(1.035);}100%{transform:scale(1);}}
-  .ch-note.celebrate{background:__COLOR_CORRECT__;animation:ch-note-pop .4s ease;}
+  .ch-note.celebrate{background:__COLOR_CORRECT__;color:__COLOR_CORRECT_LIGHT__;animation:ch-note-pop .4s ease;}
   .ch-panel{position:relative;background:transparent;border-radius:14px;box-shadow:none;overflow:hidden;max-width:420px;margin:0 auto;}
   .ch-statusbar{display:none;align-items:center;justify-content:space-between;padding:6px 16px 2px;font-size:11px;font-weight:700;color:__COLOR_TEXT__;}
   .ch-status-battery{width:20px;height:10px;border:1.4px solid currentColor;border-radius:2.5px;position:relative;}
@@ -6299,8 +7228,8 @@ v1.0 — BK — based on Articulate Community (E-Learning Heroes) code
   .ch-style-teams .ch-choice{border-radius:6px;}
 </style>
 <div class="ch-note">
-  <svg class="ch-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-  <svg class="ch-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
+  <svg class="ch-note-icon-info" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <svg class="ch-note-icon-check" style="display:none" width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_CORRECT_LIGHT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7.5,12.5 10.5,15.5 16.5,8.5"/></svg>
   <span class="ch-note-text" data-t="blockInstruction"></span>
 </div>
 <div class="ch-confetti"></div>
@@ -7445,7 +8374,7 @@ v1.0 — BK
      on/off toggle itself (see hideInstrOnOff in buildCard) -- turning the
      whole banner off would just empty this block, since the banner IS the
      whole block, but CC/Left still make sense on their own. */
-  .ib-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:#fff;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:10px 14px;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .ib-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
   .ib-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
   /* This banner is also this block's only element, so the margin-bottom
      above -- there to space every other block's note from whatever
@@ -7455,7 +8384,7 @@ v1.0 — BK
      keep working unaffected and this stays flush regardless of state. */
   .ib-wrap .ib-note{margin-bottom:0;}
 </style>
-<div class="ib-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="ib-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
 </div>
 <script>
 // ======================================================================
@@ -7505,7 +8434,7 @@ var TEXT = {
   .td-subheader{font-size:__SUBHEADER_SIZE__; font-weight:800; line-height:1.25; margin:0 0 10px; color:__COLOR_PRIMARY__;}
   .td-body{font-size:__BODY_SIZE__; line-height:1.5; margin:0 0 16px;}
   .td-question{font-size:__QUESTION_SIZE__; font-weight:700; color:__COLOR_TEXT__; margin:0 0 12px;}
-  .td-note{display:flex; align-items:center; gap:8px; background:__COLOR_INSTRUCTION__; color:#fff; font-weight:400; font-size:__INSTR_FONT_SIZE__; line-height:1.3; padding:9px 13px; border-radius:9px; margin:0 0 12px;}
+  .td-note{display:flex; align-items:center; gap:8px; background:__COLOR_INSTRUCTION__; color:__COLOR_INSTRUCTION_TEXT__; font-weight:400; font-size:__INSTR_FONT_SIZE__; line-height:1.3; padding:9px 13px; border-radius:9px; margin:0 0 12px;}
   .td-note svg{flex-shrink:0;}
   .td-options-row{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 10px;}
   .td-option{font-size:__OPTION_BTN_SIZE__; font-weight:400; border:2px solid #dcdfda; color:__COLOR_TEXT__; background:#fff; border-radius:10px; padding:8px 14px; font-family:inherit; cursor:default;}
@@ -7541,7 +8470,7 @@ var TEXT = {
 <div class="td-header" title="Header title">Pruning Fundamentals</div>
 <div class="td-subheader" title="Subheader (reserved, not yet used)">When to Make the Cut</div>
 <p class="td-body" title="Body text">Proper pruning starts by identifying the branch collar — the slightly swollen area where a branch meets the trunk. Cutting outside it lets the tree seal the wound correctly.</p>
-<div class="td-note" title="Instruction banner text"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Tap the correct technique below.</div>
+<div class="td-note" title="Instruction banner text"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Tap the correct technique below.</div>
 <p class="td-question" title="Question / prompt text">Which cut avoids damaging the branch collar?</p>
 <div class="td-options-row">
   <button type="button" class="td-option" title="Small UI text">Flush cut</button>
@@ -7595,6 +8524,7 @@ const BLOCKS = [
   {id:'animated-counter', name:'Animated Counter', cat:'data', img:false, desc:'Number counts up on scroll into view.', verified:false},
   {id:'expanding-stat', name:'Expanding Detail Cards', cat:'data', img:false, desc:'Tap a card to reveal the story behind it — a stat, a term, a claim, whatever heading fits.', verified:false},
   {id:'progress-ring', name:'Progress Ring', cat:'data', img:false, desc:'Circular progress animates in on scroll.', verified:false},
+  {id:'progress-icon', name:'Progress Icon', cat:'data', img:false, desc:"Theme's icon fills in from the bottom on scroll, up to a set %.", verified:false},
   {id:'glossary-tooltip', name:'Tap-to-Define Term', cat:'micro', img:false, desc:'Inline term reveals a plain-language definition.', verified:false},
   {id:'flip-card-grid', name:'Flip Card Grid', cat:'micro', img:false, desc:'Grid of term / definition flip cards.', verified:false},
   {id:'interactive-checklist', name:'Interactive Checklist', cat:'gamified', img:false, desc:'Tap items off a list, with a confetti burst on 100% complete.', verified:false},
@@ -7603,9 +8533,11 @@ const BLOCKS = [
   {id:'scratch-card', name:'Scratch Card Reveal', cat:'gamified', img:false, desc:'Scratch off a card to reveal a hidden tip.', verified:false},
   {id:'sentence-builder', name:'Sentence Builder', cat:'quiz', img:false, desc:'Tap word chips in order to build the correct definition.', verified:false},
   {id:'multi-select-check', name:'Multi-Select Knowledge Check', cat:'quiz', img:false, desc:'Select all correct answers, then review right/wrong highlights.', verified:false},
+  {id:'single-choice-check', name:'Single Choice Knowledge Check', cat:'quiz', img:false, desc:'Pick the one correct answer with round radio buttons, then review right/wrong highlights.', verified:false},
   {id:'sentiment-check', name:'Sentiment Check', cat:'data', img:false, desc:'Self-rate on a 5-point scale; a second placement later in the course recalls your first answer and shows how it moved. Ported from a real, tested standalone block.', verified:false},
   {id:'word-unscramble', name:'Word Unscramble', cat:'quiz', img:false, desc:'Tap scrambled letters in order to spell the term.', verified:false},
   {id:'tap-sequence', name:'Tap-in-Sequence Process', cat:'process', img:false, desc:'Tap shuffled steps in the correct order with instant feedback.', verified:false},
+  {id:'ripple-effect', name:'The Ripple Effect', cat:'process', img:false, desc:'Tap through a chain of consequences from one missed detail, with a running tally — then rewind to replay it done right.', verified:false},
   {id:'horizontal-timeline', name:'Horizontal Timeline Stepper', cat:'process', img:false, desc:'Tap along a horizontal rail to reveal each stage.', verified:false},
   {id:'card-deck', name:'Swipe Card Deck', cat:'micro', img:false, desc:'Browse a stacked deck of quick facts, one at a time.', verified:false},
   {id:'glossary-wall', name:'Glossary Wall', cat:'micro', img:false, desc:'Searchable wall of terms that reveal definitions on tap.', verified:false},
@@ -7663,7 +8595,13 @@ let THEME = {
   // — always derived in onThemeChange(), never a separate field to set.
   colorSelectLight: "#eceeea",
   colorText: "#000000",
-  colorInstruction: "#855932", // instruction banner's own background — a muted clay/terracotta, chosen as colorPrimary's near-complement (primary is H153° sage-green; terracotta sits ~H28°, the warm side of the wheel) at matching saturation/lightness (S45/L36 vs primary's S37/L34) so the banner reads as a deliberately different, equally-weighted surface rather than a paler/brighter version of the same green. Previously Navy Blue (#2F455C) — same cool family as primary (only 58° apart on the wheel), which read as same-temperature-different-shade rather than a genuine complement; also avoids the existing Maroon/red already used for wrong-answer feedback and for Harbor preset's instruction color, so this doesn't read as an error state
+  colorInstruction: "#e8f2ec", // instruction banner's own background — the same pale sage tint as colorPrimaryLight/iconBg/blockBgColor, paired with a dark colorInstructionText below instead of the earlier terracotta-with-white-text combo
+  // The instruction banner's text + icon color. Was hardcoded #fff in every
+  // block's CSS until broken out into its own token, and used to stay white
+  // as a no-op default alongside a dark terracotta background; now that
+  // colorInstruction defaults to a pale tint, this pairs with a dark
+  // readable color instead of going illegibly white-on-white.
+  colorInstructionText: "#186e61",
   // The "wrong answer" text color -- Drag & Reorder's progress line, Sentence
   // Builder / Multi-Select's incorrect feedback, Word Unscramble's wrong
   // message, and the wrong-item text color in Correct/Incorrect Sort's chips
@@ -7713,6 +8651,31 @@ let THEME = {
   // comment for why sizes are the thing shared across blocks).
   questionSize: "17px",
   instrFontSize: "14px",
+  // Inner padding of the instruction banner itself -- shared across all 36
+  // blocks that have one (see instrAnimOn below for the same "one token,
+  // every template" treatment). Deliberately its own token rather than
+  // reusing gapInstr, which is the *margin* after the banner, not the
+  // padding inside it -- a different role that happens to default to a
+  // visually similar 10-14px range today.
+  instrPad: "15px 15px",
+  // Subtle "look here" cue on the instruction banner, plays once on load
+  // and settles -- not an infinite loop, so it catches the eye without
+  // nagging someone who's already reading. Off switches it everywhere in
+  // one flip. On by default. Every block's `.XX-note.celebrate` rule
+  // already has higher selector specificity than plain `.XX-note`, so if
+  // a block's instructions finish (celebrate state) before this one-shot
+  // animation would even start, its own pop animation still wins -- see
+  // substitute() for where this actually gets injected (one regex per
+  // style, not 36 hand-edits) and INSTR_ANIM_STYLES for what each option
+  // actually does.
+  instrAnimOn: true,
+  // Which one-shot animation instrAnimOn plays: 'border' (a soft outline
+  // breathes in and back out, framing the box -- the default), 'pulse' (a
+  // ring in the banner's own text color breathes outward from its edge and
+  // fades), or 'shimmer' (a diagonal highlight sweeps across once, tinted
+  // from the text color rather than plain white so it stays visible on a
+  // pale instruction color too). See INSTR_ANIM_STYLES for the actual CSS.
+  instrAnimStyle: "border",
   headerTitleSize: "30px", // the 5 header blocks' big hero title
   subheaderSize: "23px", // reserved for a future sub-heading role inside block content — not wired into any of the 39 blocks yet (none currently need one), but scales with body size like every other role below so it's ready the moment a block does
   // The 7 repeated small-text roles found across every block's own CSS
@@ -7764,7 +8727,7 @@ let THEME = {
   gapBtnTop: "25px",
   gapSection: "25px",
   gapOptions: "10px",
-  gapInstr: "14px",
+  gapInstr: "25px",
   iconColor: "#37775a",
   iconBg: "#e8f2ec",
   iconA: "test-photo",
@@ -7779,6 +8742,14 @@ let THEME = {
   // question/answer sheet regardless of what tint the theme's general
   // Block background happens to be set to.
   cardBgColor: "#ffffff",
+  // Padding of that same Card surface -- shared across all 13 blocks that
+  // have one (background/radius/shadow were already theme tokens; padding
+  // was the one property still hardcoded per template). Kept as the exact
+  // clamp() the templates already used rather than a flat px value, so the
+  // default still scales down on narrow viewports the same way it always
+  // did -- a plain "20px" here would be a behavior change, not just a
+  // default value change. Any valid CSS padding value works if overridden.
+  cardPad: "clamp(16px, 5vw, 28px)",
   listIcons: ["tree-pine", "conifers-2", "conifers-3", "conifers-4", "conifers-5"], // kept in sync with LIST_ICON_DEFAULTS below — a "growing forest" sequence, meaningful default for any 5-position scale (Sentiment Check's 1-5 rating; Scroll Reveal Timeline's steps), fully overridable per slot in Theme settings
   // Shared by every CONFETTI_BLOCKS block's burst -- a plain hex list, not
   // auto-derived from colorPrimary, so customizing it doesn't get silently
@@ -7806,6 +8777,10 @@ const COLOR_PALETTE = [
   {n:'Dark Gray', v:'#424241'}, {n:'Light Blue', v:'#DCF1F7'}, {n:'Dark Blue', v:'#022C44'},
   {n:'Medium Blue', v:'#1DCDFE'}, {n:'Navy Blue', v:'#2F455C'}, {n:'Dark Bluegreen', v:'#21D0B3'},
   {n:'Light Bluegreen', v:'#34F5C6'}, {n:'Orange', v:'#FE901D'}, {n:'Golden Yellow', v:'#FFCC00'},
+  {n:'Pale Sage', v:'#e8f2ec'}, {n:'Sage Green', v:'#37775a'}, {n:'Pure Black', v:'#000000'},
+  {n:'White', v:'#ffffff'}, {n:'Terracotta', v:'#855932'}, {n:'Red', v:'#de1d1d'},
+  {n:'Slate Green', v:'#4a534d'}, {n:'Mist Gray', v:'#dcdfda'}, {n:'Deep Forest', v:'#1a2e24'},
+  {n:'Deep Green', v:'#1B5C28'}, {n:'Amber', v:'#E8961E'},
 ];
 
 // Mixes a hex color toward white by `amount` (0-1) — used to derive a pale
@@ -7863,7 +8838,7 @@ const THEME_PRESETS = {
   // preset system and are only off by a rounding hair from what the formula
   // would produce, but "Default" should reproduce the current look exactly,
   // byte for byte, not an approximation of it.
-  default: { name: 'Default (Forest Green)', primary: '#37775a', text: '#000000', instruction: '#855932', light: '#e8f2ec', border: '#dcdfda', bg: '#e8f2ec' },
+  default: { name: 'Default (Forest Green)', primary: '#37775a', text: '#000000', instruction: '#e8f2ec', instructionText: '#186e61', light: '#e8f2ec', border: '#dcdfda', bg: '#e8f2ec' },
   harbor:  { name: 'Harbor (Navy + Maroon)', primary: '#2F455C', text: '#23140C', instruction: '#8F0605' },
   canopy:  { name: 'Canopy (Deep Green + Navy)', primary: '#114E51', text: '#23140C', instruction: '#2F455C' },
   signal:  { name: 'Signal (Maroon + Dark Blue)', primary: '#8F0605', text: '#424241', instruction: '#022C44' },
@@ -7884,6 +8859,13 @@ function applyPreset(key){
   document.getElementById('t-primary-light').value = light;
   document.getElementById('t-text').value = p.text;
   document.getElementById('t-instruction').value = p.instruction;
+  // Every preset's instruction color was picked from palette entries
+  // verified for ≥4.5:1 contrast against white text (see THEME_PRESETS
+  // comment above), so text resets to white on every preset switch rather
+  // than carrying over a custom color picked for a different background —
+  // except Default, which pins its own dark instructionText to pair with
+  // its pale instruction background instead of going white-on-pale.
+  document.getElementById('t-instruction-text').value = p.instructionText || '#ffffff';
   document.getElementById('t-icon-color').value = p.primary;
   document.getElementById('t-icon-bg').value = light;
   document.getElementById('t-bg-color').value = bg;
@@ -8153,11 +9135,14 @@ const BLOCK_DEFAULTS = {
   'choice-branch':         { instrLeft: true, width: 520 },
   'animated-counter':      { instrOn: false, width: 520 },
   'expanding-stat':        { width: 520, stepCount: 4 },
-  'progress-ring':         { instrOn: false, bg: true, width: 520 },
+  'progress-ring':         { instrOn: false, bg: false, width: 520 },
+  'progress-icon':         { instrOn: false, bg: false, width: 520 },
   'glossary-tooltip':      { instrLeft: true },
   'sentence-builder':      { instrLeft: true, width: 760 },
   'multi-select-check':    { instrLeft: true, width: 760, card: true, shadow: true, square: true },
+  'single-choice-check':   { instrLeft: true, width: 760, card: true, shadow: true, square: true },
   'tap-sequence':          { width: 520 },
+  'ripple-effect':         { width: 520 },
   'glossary-wall':         { instrLeft: true },
   'comparison-tabs':       { instrLeft: true },
   'header-gradient':       { square: true },
@@ -8208,7 +9193,8 @@ let instructionAlignLeft = {}; // block.id -> boolean ("Instructions Left" toggl
 // one row" out of the box instead of requiring the learner's course author
 // to find and flip CC off themselves on every one of these blocks.
 const COUNTER_ROW_BLOCKS = new Set([
-  'drag-drop-sort', 'match-pairs', 'memory-match', 'tap-sequence', 'interactive-checklist'
+  'drag-drop-sort', 'match-pairs', 'memory-match', 'tap-sequence', 'interactive-checklist',
+  'ripple-effect'
 ]);
 // Every one of these X_On()/isXOn() pairs follows the same shape:
 // X_On(block) resolves what the toggle's default *would* be for this
@@ -8475,8 +9461,8 @@ const REVISIT_MODE_BLOCKS = new Set(['sentiment-check']);
 const RISE_COMPLETION_BLOCKS = new Set([
   'sentiment-check', 'drag-drop-sort', 'drag-reorder', 'choice-branch',
   'match-pairs', 'interactive-checklist', 'memory-match', 'sentence-builder',
-  'multi-select-check', 'word-unscramble', 'tap-sequence',
-  'acknowledge-signoff', 'chat-scenario',
+  'multi-select-check', 'single-choice-check', 'word-unscramble', 'tap-sequence',
+  'acknowledge-signoff', 'chat-scenario', 'ripple-effect',
   // "Fully viewed" completions — no right/wrong state, so this fires once
   // every card/term/stop/marker in the block has been seen at least once.
   'hotspot-id', 'scroll-timeline', 'step-accordion',
@@ -8505,6 +9491,29 @@ const SCALE_ICON_BLOCKS = new Set(['sentiment-check']);
 // own PALETTE_COLORS (see Flip Card Grid) so the copied code stays
 // self-contained — this Set only decides which blocks show the toggle.
 const CARD_PALETTE_BLOCKS = new Set(['flip-card-grid']);
+
+// Blocks with a scroll-triggered fill animation (Progress Ring's stroke,
+// Progress Icon's clip-path) that animates up to a fixed target percentage
+// baked into the copied code — a real number input on the card instead of
+// the old pattern of hand-editing TEXT.target in the copied code. One
+// shared map/getter since both blocks want the exact same "block.id ->
+// integer 0-100, missing key = this block's own default" shape; the
+// per-block default (not one shared number) matches each block's own
+// original example value.
+const PROGRESS_TARGET_DEFAULTS = { 'progress-ring': 82, 'progress-icon': 80 };
+let progressTarget = {};
+function getProgressTarget(block){
+  const v = progressTarget[block.id];
+  return v !== undefined ? v : (PROGRESS_TARGET_DEFAULTS[block.id] !== undefined ? PROGRESS_TARGET_DEFAULTS[block.id] : 80);
+}
+
+// Progress Icon only: whether the % label sits beside the icon instead of
+// below it. Off (below) by default — matches Progress Ring's own
+// icon-above-caption stack, so the two blocks read as a matched pair until
+// an author opts into the more compact side-by-side layout.
+const PERCENT_POSITION_BLOCKS = new Set(['progress-icon']);
+let percentBeside = {};
+function isPercentBesideOn(block){ return !!percentBeside[block.id]; }
 
 // Chat Scenario Simulator's visual chrome -- same header/bubbles/choices
 // markup and logic for all three, just re-skinned via a ch-style-<value>
@@ -8581,8 +9590,8 @@ function hexToRgba(hex, alpha){
 // membership here, not just whether the block *could* render one).
 const CONFETTI_BLOCKS = new Set([
   'interactive-checklist', 'choice-branch', 'drag-drop-sort', 'drag-reorder',
-  'match-pairs', 'multi-select-check', 'word-unscramble', 'tap-sequence',
-  'memory-match', 'sentence-builder', 'chat-scenario', 'spin-wheel'
+  'match-pairs', 'multi-select-check', 'single-choice-check', 'word-unscramble', 'tap-sequence',
+  'memory-match', 'sentence-builder', 'chat-scenario', 'spin-wheel', 'ripple-effect'
 ]);
 
 // Blocks with a below-content feedback box (correct-path, wrong-path, or
@@ -8593,7 +9602,7 @@ const CONFETTI_BLOCKS = new Set([
 const FEEDBACK_TOGGLE_BLOCKS = new Set([
   'drag-drop-sort', 'drag-reorder', 'choice-branch', 'match-pairs',
   'flip-card-grid', 'interactive-checklist', 'memory-match', 'spin-wheel',
-  'sentence-builder', 'multi-select-check', 'sentiment-check',
+  'sentence-builder', 'multi-select-check', 'single-choice-check', 'sentiment-check',
   'word-unscramble', 'tap-sequence'
 ]);
 
@@ -8611,8 +9620,8 @@ const FEEDBACK_TOGGLE_BLOCKS = new Set([
 const FULL_CARD_BLOCKS = new Set([
   'drag-drop-sort', 'drag-reorder', 'choice-branch', 'match-pairs',
   'flip-card-grid', 'interactive-checklist', 'memory-match', 'spin-wheel',
-  'sentence-builder', 'multi-select-check', 'sentiment-check',
-  'word-unscramble', 'tap-sequence', 'horizontal-timeline', 'glossary-wall'
+  'sentence-builder', 'multi-select-check', 'single-choice-check', 'sentiment-check',
+  'word-unscramble', 'tap-sequence', 'horizontal-timeline', 'glossary-wall', 'ripple-effect'
 ]);
 
 // Blocks whose Card toggle controls an image/media stage, not a quiz-style
@@ -8648,8 +9657,10 @@ const CARD_STYLE_DEFAULTS = {
   'horizontal-timeline':    { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'match-pairs':            { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'multi-select-check':     { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
+  'single-choice-check':    { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'choice-branch':          { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'tap-sequence':           { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
+  'ripple-effect':          { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'interactive-checklist':  { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'glossary-wall':          { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
   'word-unscramble':        { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '14px' },
@@ -8658,6 +9669,90 @@ const CARD_STYLE_DEFAULTS = {
   'header-bold':            { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '20px' },
   'header-bold-corner':     { shadowShape: RISE_SHADOW_SHAPE, shadowAlpha: RISE_SHADOW_ALPHA, radius: '20px' },
 };
+
+// One-shot "look here" animations for the instruction banner (THEME.
+// instrAnimStyle picks one) -- each function takes the block's already-
+// substituted HTML and its note class prefix (e.g. 'ic' for .ic-note),
+// and returns the HTML with that style's CSS spliced in. Every style plays
+// exactly once (no `infinite`) and reads its color from colorInstructionText
+// rather than the banner's own background, so it stays visible even when a
+// preset's instruction color is pale. All three are no-ops on their own if
+// the note rule they target isn't found, so calling one unconditionally
+// from substitute() is safe.
+//
+// Every style's `animation` shorthand ends in `paused` -- fired at parse
+// time it could finish before anyone scrolls to it on a block that starts
+// below the fold. INSTR_ANIM_OBSERVER_SCRIPT (appended once per block,
+// after whichever style ran) adds `.iv` to the note the first time it
+// actually enters the viewport, and each style below pairs that with a
+// `.XX-note.iv{animation-play-state:running;}` rule to start it for real.
+const INSTR_ANIM_STYLES = {
+  // A ring in the banner's own text color breathes outward from its edge
+  // and fades once.
+  pulse: function(out, prefix){
+    const ring = hexToRgba(THEME.colorInstructionText, .4);
+    const ringFaded = hexToRgba(THEME.colorInstructionText, 0);
+    return out.replace(new RegExp('( {2}\\.' + prefix + '-note\\{[^}]*)(\\})'), function(_m, head, tail){
+      return head + 'animation:' + prefix + '-note-pulse 1.8s ease-out 1 paused;' + tail
+        + '\n  @keyframes ' + prefix + '-note-pulse{0%{box-shadow:0 0 0 0 ' + ring + ';}70%{box-shadow:0 0 0 8px ' + ringFaded + ';}100%{box-shadow:0 0 0 0 ' + ringFaded + ';}}'
+        + '\n  .' + prefix + '-note.iv{animation-play-state:running;}'
+        + '\n  @media (prefers-reduced-motion: reduce){.' + prefix + '-note{animation:none;}}';
+    });
+  },
+  // The default. A soft outline breathes in and back out once, framing the
+  // box -- interior stays static, nothing gets covered or shifted. `outline`
+  // rather than `border`, so it draws outside the box without touching
+  // the box model (no interaction with the padding field above it).
+  border: function(out, prefix){
+    const ring = hexToRgba(THEME.colorInstructionText, .55);
+    return out.replace(new RegExp('( {2}\\.' + prefix + '-note\\{[^}]*)(\\})'), function(_m, head, tail){
+      return head + 'animation:' + prefix + '-note-border 1.6s ease-in-out 1 paused;outline:2px solid transparent;outline-offset:2px;' + tail
+        + '\n  @keyframes ' + prefix + '-note-border{0%,100%{outline-color:transparent;}50%{outline-color:' + ring + ';}}'
+        + '\n  .' + prefix + '-note.iv{animation-play-state:running;}'
+        + '\n  @media (prefers-reduced-motion: reduce){.' + prefix + '-note{animation:none;}}';
+    });
+  },
+  // A diagonal highlight sweeps across the box once, like a quick polish
+  // pass. Needs its own `::after` overlay (a plain gradient can't be
+  // animated across a background), so this is the one style that also adds
+  // two static properties (position/overflow) to the note rule itself,
+  // strictly to contain that overlay -- everything else about the rule is
+  // untouched. The `.iv` play-state trigger still lands on the note div
+  // itself (that's what the observer actually sees enter the viewport), so
+  // it's paired against `::after` here rather than the note rule directly.
+  shimmer: function(out, prefix){
+    const sweep = hexToRgba(THEME.colorInstructionText, .22);
+    return out.replace(new RegExp('( {2}\\.' + prefix + '-note\\{[^}]*)(\\})'), function(_m, head, tail){
+      return head + 'position:relative;overflow:hidden;' + tail
+        + '\n  @keyframes ' + prefix + '-note-shimmer{from{transform:translateX(-120%);}to{transform:translateX(220%);}}'
+        + '\n  .' + prefix + '-note::after{content:"";position:absolute;top:0;left:0;width:35%;height:100%;background:linear-gradient(115deg,transparent,' + sweep + ',transparent);animation:' + prefix + '-note-shimmer 1.3s ease-in-out 1 paused;pointer-events:none;}'
+        + '\n  .' + prefix + '-note.iv::after{animation-play-state:running;}'
+        + '\n  @media (prefers-reduced-motion: reduce){.' + prefix + '-note::after{display:none;}}';
+    });
+  },
+};
+
+// Appended once per block (after whichever INSTR_ANIM_STYLES function ran)
+// so the `paused` animation above actually starts the first time the note
+// scrolls into view, instead of at parse time where it could finish before
+// anyone ever sees it on a block that starts below the fold. Deliberately
+// unprefixed/block-agnostic (`.js-iv-note`, added to the note div itself
+// alongside its own `XX-note` class) so this exact same script works for
+// every block without needing to know its class prefix -- same "one shared
+// snippet, not 36 near-duplicates" reasoning as INSTR_ANIM_STYLES itself.
+// No IntersectionObserver support -> just show it immediately rather than
+// leaving the animation permanently paused.
+const INSTR_ANIM_OBSERVER_SCRIPT = '\n<scr' + 'ipt>(function(){\n'
+  + '  var els = document.querySelectorAll(".js-iv-note");\n'
+  + '  if(!els.length) return;\n'
+  + '  if(!("IntersectionObserver" in window)){ els.forEach(function(el){ el.classList.add("iv"); }); return; }\n'
+  + '  var obs = new IntersectionObserver(function(entries){\n'
+  + '    entries.forEach(function(en){\n'
+  + '      if(en.isIntersecting){ en.target.classList.add("iv"); obs.unobserve(en.target); }\n'
+  + '    });\n'
+  + '  },{threshold:.4});\n'
+  + '  els.forEach(function(el){ obs.observe(el); });\n'
+  + '})();<\/scr' + 'ipt>\n';
 
 function substitute(raw, block){
   const preset = widthPreset[block.id] || defaultPresetFor(block);
@@ -8673,6 +9768,12 @@ function substitute(raw, block){
   }
   const blockRadius = isSquareOn(block) ? '0' : (cardStyle.radius || '0');
   const panelBg = isCardBgOn(block) ? (FULL_CARD_BLOCKS.has(block.id) ? THEME.cardBgColor : THEME.blockBgColor) : 'transparent';
+  // Same on/off switch as panelBg -- with Card off there's no visible
+  // surface to pad, so the padding collapses to 0 instead of leaving
+  // invisible empty space between the (already themeable) instruction-box
+  // gap above and the content below. Same reasoning as __BLOCK_PAD__'s own
+  // blockBgActive gate a few lines up.
+  const panelPad = isCardBgOn(block) ? THEME.cardPad : '0';
 
   // Header "Card" toggle: only meaningful for blocks in HEADER_CARD_BLOCKS
   // (a solid/tinted surface behind the title). __HEADER_SURFACE__ resolves
@@ -8690,9 +9791,17 @@ function substitute(raw, block){
   let out = raw
     .replaceAll('__ICON_A__', getSlotMarkup('A', iconBg))
     .replaceAll('__ICON_B__', getSlotMarkup('B', iconBg))
+    // Always transparent regardless of this block's own Background toggle —
+    // Progress Icon rasterizes this hidden copy at runtime to measure the
+    // icon glyph's own ink, so a solid __ICON_A__ backdrop (Background on)
+    // would defeat that: the whole square would read as "ink" and the
+    // measurement would degenerate back into plain height. See Progress
+    // Icon's own script for why that measurement exists at all.
+    .replaceAll('__ICON_A_TRANSPARENT__', getSlotMarkup('A', 'none'))
     .replaceAll('__FONT_FAMILY__', THEME.fontFamily)
     .replaceAll('__COLOR_PRIMARY_LIGHT__', THEME.colorPrimaryLight)
     .replaceAll('__COLOR_INSTRUCTION__', THEME.colorInstruction)
+    .replaceAll('__COLOR_INSTRUCTION_TEXT__', THEME.colorInstructionText)
     .replaceAll('__COLOR_PRIMARY__', THEME.colorPrimary)
     .replaceAll('__COLOR_TEXT__', THEME.colorText)
     .replaceAll('__COLOR_WRONG__', THEME.colorWrong)
@@ -8707,6 +9816,8 @@ function substitute(raw, block){
     .replaceAll('__BODY_SIZE__', THEME.bodySize)
     .replaceAll('__QUESTION_SIZE__', THEME.questionSize)
     .replaceAll('__INSTR_FONT_SIZE__', THEME.instrFontSize)
+    .replaceAll('__INSTR_PAD__', THEME.instrPad)
+    .replaceAll('__CARD_PAD__', panelPad)
     .replaceAll('__HEADER_TITLE_SIZE__', THEME.headerTitleSize)
     .replaceAll('__SUBHEADER_SIZE__', THEME.subheaderSize)
     .replaceAll('__CAPTION_SIZE__', THEME.captionSize)
@@ -8763,6 +9874,13 @@ function substitute(raw, block){
     .replaceAll('__SA_STEP_COUNT__', String(isStepCountFor(block)))
     .replaceAll('__ES_STEP_COUNT__', String(isStepCountFor(block)))
     .replaceAll('__FG_STEP_COUNT__', String(isStepCountFor(block)))
+    // A plain fraction literal (e.g. "0.8"), not a quoted string — it's
+    // substituted straight into `target:__PROGRESS_TARGET__` inside each
+    // block's own TEXT object, so it has to parse as the same kind of
+    // number TEXT.target always held, for the existing eased*TEXT.target
+    // animation math to keep working unchanged.
+    .replaceAll('__PROGRESS_TARGET__', String(getProgressTarget(block) / 100))
+    .replaceAll('__PI_LAYOUT_CLASS__', isPercentBesideOn(block) ? 'is-beside' : '')
     .replaceAll('__ICON_ON__', headerIconOn[block.id] === false ? 'false' : 'true')
     .replaceAll('__SUBTITLE_ON__', isHeaderSubtitleOn(block) ? 'true' : 'false')
     .replaceAll('__HEADER_SURFACE__', headerSurface)
@@ -8811,14 +9929,43 @@ function substitute(raw, block){
     // no effect while CC is off, since an uncropped full-width banner has
     // nothing to align.
     const noteMargin = isInstrAlignLeftOn(block) ? 'margin:0 0 '+THEME.gapInstr+';' : 'margin:0 auto '+THEME.gapInstr+';';
-    // The literal '14px' in this regex would only ever match the *default*
-    // gapInstr value -- by the time this runs, __GAP_INSTR__ has already
-    // been substituted to THEME.gapInstr's current value elsewhere in the
-    // same replaceAll() chain, so this match target has to track that same
-    // live value or it silently stops matching (and this whole CC-crop
-    // transform silently stops applying) the moment gapInstr is edited
-    // away from its default — same class of bug as the note-row merge fix.
+    // A hardcoded literal here would only ever match gapInstr's *default*
+    // value -- by the time this runs, __GAP_INSTR__ has already been
+    // substituted to THEME.gapInstr's current value elsewhere in the same
+    // replaceAll() chain, so this match target has to track that same live
+    // value or it silently stops matching (and this whole CC-crop transform
+    // silently stops applying) the moment gapInstr is edited away from its
+    // default — same class of bug as the note-row merge fix.
     out = out.replace(new RegExp('( {2}\\.[a-z]+-note\\{[^}]*)margin:0 0 ' + THEME.gapInstr + ';(\\})'), '$1width:fit-content;' + noteMargin + '$2');
+  }
+
+  // Subtle "catch your eye" cue for the instruction banner, one-shot on
+  // load — see instrAnimOn/instrAnimStyle's own comments on THEME for the
+  // full rationale. Same "byte-identical note CSS, one regex covers every
+  // block" trick as the CC-crop transform above, fanned out per style in
+  // INSTR_ANIM_STYLES. `.XX-note.celebrate` is a higher-specificity
+  // selector that already sets its own `animation` for the one-shot "done"
+  // pop, so it silently wins over any of these if a block finishes first.
+  if(THEME.instrAnimOn && isInstrOnFor(block)){
+    // Guarded by isInstrOnFor: when instructions are off, the note markup
+    // and this exact CSS rule get stripped a few lines down by a regex that
+    // expects `.XX-note{...}` to be immediately followed by `.XX-note svg{
+    // ...}` with nothing in between — injecting anything here unconditionally
+    // would sit between them and silently break that removal, leaving dead
+    // CSS behind. Skipping the injection when there's no banner to animate
+    // avoids that without touching the removal regex.
+    const noteMatch = out.match(/ {2}\.([a-z]+)-note\{/);
+    if(noteMatch){
+      const prefix = noteMatch[1];
+      const styleFn = INSTR_ANIM_STYLES[THEME.instrAnimStyle] || INSTR_ANIM_STYLES.border;
+      out = styleFn(out, prefix);
+      // Marks the note div itself so INSTR_ANIM_OBSERVER_SCRIPT can find it
+      // without knowing this block's own class prefix, then appends that
+      // one shared script (harmless to add once per block -- see its own
+      // comment for why it exists at all).
+      out = out.replace('<div class="' + prefix + '-note">', '<div class="' + prefix + '-note js-iv-note">');
+      out += INSTR_ANIM_OBSERVER_SCRIPT;
+    }
   }
 
   // A left-aligned banner with a centered action button below it reads as
@@ -8847,8 +9994,14 @@ function substitute(raw, block){
   // Every entry here is a no-op on a block that doesn't contain it, so this
   // loop can safely run unconditionally rather than needing a per-block
   // gate — same reasoning as the CONFETTI_BLOCKS-style manifests elsewhere.
+  // Being a hand-maintained list rather than a structural detection, it can
+  // drift: sq-submit/sq-retry (Single Choice) and sc-reveal-btn (Scratch
+  // Card) all use the exact same `margin:__GAP_BTN_TOP__ auto 0` shape as
+  // ms-submit/ms-retry but had been left out, so their buttons stayed
+  // centered even with Instructions Left on -- found by re-grepping every
+  // template for that literal margin pattern and diffing against this list.
   if(isInstrOnFor(block) && isInstrCCOn(block) && isInstrAlignLeftOn(block)){
-    const marginAutoButtons = ['tt-btn', 'dd-reset', 'dr-check', 'ms-submit', 'ms-retry', 'ak-sign-btn', 'ak-clear-btn', 'sm-submit'];
+    const marginAutoButtons = ['tt-btn', 'dd-reset', 'dr-check', 'ms-submit', 'ms-retry', 'ak-sign-btn', 'sm-submit', 'sq-submit', 'sq-retry', 'sc-reveal-btn'];
     const ancestorCenteredButtons = ['sw-btn'];
     const flexCenterRows = ['sn-actions', 'wu-actions', 'ak-done-msg'];
     const textAlignLeftTargets = ['dr-feedback', 'ms-feedback', 'ak-done-msg'];
@@ -8886,7 +10039,11 @@ function substitute(raw, block){
   // rather than touching the banner or counter markup themselves, so it's
   // one small, targeted transform instead of a rewrite of either.
   if(isInstrOnFor(block) && !isInstrCCOn(block)){
-    const topMatch = out.match(/<div class="([a-z]+)-note">[\s\S]*?<\/div>\n<div class="\1-top">[\s\S]*?<\/div>/);
+    // class="XX-note[^"]*" rather than an exact "XX-note" -- the instruction-
+    // animation injection above may have already added "js-iv-note" as an
+    // extra class on this same div when instrAnimOn is on, and this match
+    // still needs to find it either way.
+    const topMatch = out.match(/<div class="([a-z]+)-note[^"]*">[\s\S]*?<\/div>\n<div class="\1-top">[\s\S]*?<\/div>/);
     if(topMatch){
       const prefix = topMatch[1];
       out = out.replace(topMatch[0], '<div class="' + prefix + '-note-row">' + topMatch[0] + '</div>');
@@ -8957,6 +10114,13 @@ const THEME_FIELD_PREVIEWS = {
   'spacing-section-btn-group': { block: 'drag-reorder', reveal:
     "function dvMark(afterEl,beforeEl,label,color){if(!afterEl||!beforeEl)return;var a=afterEl.getBoundingClientRect(),b=beforeEl.getBoundingClientRect();var top=a.bottom,h=b.top-a.bottom;if(h<=1)return;var m=document.createElement('div');m.className='dv-gap-marker';m.style.cssText='position:absolute;left:0;width:100%;top:'+top+'px;height:'+h+'px;background:'+color+';border-top:2px dashed rgba(0,0,0,.4);border-bottom:2px dashed rgba(0,0,0,.4);pointer-events:none;z-index:999;box-sizing:border-box;';var lbl=document.createElement('span');lbl.textContent=label;lbl.style.cssText='position:absolute;left:8px;top:50%;transform:translateY(-50%);background:#1a2e24;color:#fff;font:800 10px sans-serif;padding:2px 6px;border-radius:5px;white-space:nowrap;';m.appendChild(lbl);document.body.appendChild(m);} function dvDrawAll(){document.querySelectorAll('.dv-gap-marker').forEach(function(el){el.remove();}); var f=document.querySelector('.dr-feedback'); if(f) f.textContent='2 items need reordering'; var list=document.querySelector('.dr-list'); var check=document.querySelector('.dr-check'); dvMark(list,f,'AROUND CALLOUT/FEEDBACK PANEL','rgba(55,119,90,.16)'); dvMark(f,check,'ABOVE ACTION BUTTON','rgba(201,138,31,.18)');} dvDrawAll(); new ResizeObserver(dvDrawAll).observe(document.body);"
   },
+  // No reveal script -- the instruction banner's idle state (padding +
+  // pulse, when on) is exactly what's already showing, nothing to trigger.
+  'instruction-box-demo': { block: 'choice-branch' },
+  // multi-select-check has Card on by default (BLOCK_DEFAULTS), so the
+  // padding this field controls is visible without needing to first flip
+  // a toggle inside the preview itself.
+  'card-pad-demo': { block: 'multi-select-check' },
 };
 
 function buildMiniPreview(blockId, revealScript){
@@ -9155,6 +10319,10 @@ function buildCard(b){
   const isMemoryIconOn = !!memoryIconOn[b.id];
   const hasStepCount = STEP_COUNT_BLOCKS.has(b.id);
   const stepCountVal = isStepCountFor(b);
+  const hasProgressTarget = Object.prototype.hasOwnProperty.call(PROGRESS_TARGET_DEFAULTS, b.id);
+  const curProgressTarget = getProgressTarget(b);
+  const hasPercentPosition = PERCENT_POSITION_BLOCKS.has(b.id);
+  const isPercentBeside = isPercentBesideOn(b);
   // Header blocks have no instruction banner to include/crop — there's
   // nothing for the learner to be instructed to do — so both toggles are
   // gated on the block actually having one, the same "no dead toggle" rule
@@ -9249,6 +10417,8 @@ function buildCard(b){
         </div>` : ''}
         ${hasConfetti ? `<button class="mini-toggle${isConfettiOn ? ' on' : ''}" data-role="confetti" title="Play a confetti burst when the learner gets it fully correct (baked into the copied code, on by default)">Confetti</button>` : ''}
         ${hasFeedback ? `<button class="mini-toggle${isFeedbackOn ? ' on' : ''}" data-role="feedback" title="Show the below-content feedback message on submit (baked into the copied code, on by default) — turn off to rely on the instruction banner's brief Correct!/highlight-only treatment instead">Feedback</button>` : ''}
+        ${hasProgressTarget ? `<label class="mini-number-label">Target<input type="number" class="mini-number-input" data-role="progress-target" min="0" max="100" step="1" value="${curProgressTarget}" title="The % this block animates up to when it scrolls into view (baked into the copied code)">%</label>` : ''}
+        ${hasPercentPosition ? `<button class="mini-toggle${isPercentBeside ? ' on' : ''}" data-role="percent-position" title="Show the % label beside the icon instead of stacked below it (baked into the copied code)">Beside</button>` : ''}
         ${hasDividerControls ? `
         <select class="mini-select" data-role="divider-shape" title="Base shape (baked into the copied code)">
           ${dividerOptionsHTML(DIVIDER_SHAPES, curDividerShape)}
@@ -9395,6 +10565,21 @@ function buildCard(b){
   if(hasFeedback){
     card.querySelector('[data-role="feedback"]').addEventListener('click', ()=>{
       feedbackOn[b.id] = !(feedbackOn[b.id] !== false);
+      card.replaceWith(buildCard(b));
+    });
+  }
+
+  if(hasProgressTarget){
+    card.querySelector('[data-role="progress-target"]').addEventListener('change', (e)=>{
+      const v = parseInt(e.target.value, 10);
+      progressTarget[b.id] = isNaN(v) ? 0 : Math.min(100, Math.max(0, v));
+      card.replaceWith(buildCard(b));
+    });
+  }
+
+  if(hasPercentPosition){
+    card.querySelector('[data-role="percent-position"]').addEventListener('click', ()=>{
+      percentBeside[b.id] = !isPercentBesideOn(b);
       card.replaceWith(buildCard(b));
     });
   }
@@ -9714,6 +10899,7 @@ function onThemeChange(){
   THEME.colorPrimaryLight = document.getElementById('t-primary-light').value;
   THEME.colorText = document.getElementById('t-text').value;
   THEME.colorInstruction = document.getElementById('t-instruction').value;
+  THEME.colorInstructionText = document.getElementById('t-instruction-text').value;
   THEME.colorCorrect = document.getElementById('t-correct').value;
   // Same 0.88 mix ratio THEME_PRESETS uses for colorPrimaryLight — a light
   // background tint to pair with colorCorrect's border/text so a "correct"
@@ -9767,6 +10953,9 @@ function onThemeChange(){
   THEME.gapSection = document.getElementById('t-gap-section').value;
   THEME.gapOptions = document.getElementById('t-gap-options').value;
   THEME.gapInstr = document.getElementById('t-gap-instr').value;
+  THEME.cardPad = document.getElementById('t-card-pad').value;
+  THEME.instrPad = document.getElementById('t-instr-pad').value;
+  THEME.instrAnimStyle = document.getElementById('t-instr-anim-style').value;
   THEME.iconColor = document.getElementById('t-icon-color').value;
   THEME.iconBg = document.getElementById('t-icon-bg').value;
   THEME.blockBgColor = document.getElementById('t-bg-color').value;
@@ -9779,6 +10968,17 @@ function onThemeChange(){
   renderGrid();
   renderThemeFieldPreviews();
   renderTypographyDemo();
+}
+
+// The instruction-box pulse is theme-wide, not per-block, so it doesn't fit
+// the gallery's own per-card mini-toggle pattern (confettiOn/feedbackOn/etc,
+// keyed by block.id) — this is the one on/off switch that lives directly in
+// the Theme panel itself and flips a single THEME flag. Reuses onThemeChange()
+// for the actual re-render so it stays in lockstep with every other field.
+function toggleInstrAnim(){
+  THEME.instrAnimOn = !THEME.instrAnimOn;
+  document.getElementById('t-instr-anim-toggle').classList.toggle('on', THEME.instrAnimOn);
+  onThemeChange();
 }
 
 // Every native color picker gets a paired hex text field next to it, so the
@@ -9891,6 +11091,7 @@ function updatePreviewVars(){
   panel.style.setProperty('--pv-primary-light', THEME.colorPrimaryLight);
   panel.style.setProperty('--pv-text', THEME.colorText);
   panel.style.setProperty('--pv-instruction', THEME.colorInstruction);
+  panel.style.setProperty('--pv-instruction-text', THEME.colorInstructionText);
   panel.style.setProperty('--pv-correct', THEME.colorCorrect);
   panel.style.setProperty('--pv-wrong', THEME.colorWrong);
   panel.style.setProperty('--pv-icon-color', THEME.iconColor);
@@ -9978,7 +11179,12 @@ function resetTheme(){
   document.getElementById('t-gap-btn-top').value = "25px";
   document.getElementById('t-gap-section').value = "25px";
   document.getElementById('t-gap-options').value = "10px";
-  document.getElementById('t-gap-instr').value = "14px";
+  document.getElementById('t-gap-instr').value = "25px";
+  document.getElementById('t-card-pad').value = "clamp(16px, 5vw, 28px)";
+  document.getElementById('t-instr-pad').value = "15px 15px";
+  document.getElementById('t-instr-anim-style').value = "border";
+  THEME.instrAnimOn = true;
+  document.getElementById('t-instr-anim-toggle').classList.add('on');
   THEME.iconA = 'test-photo';
   THEME.iconB = 'test-photo';
   THEME.customImageAUrl = '';
