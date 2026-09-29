@@ -8089,8 +8089,15 @@ others; stack as many as you like on top of any shape. All default off.
     loop continuously for as long as the divider is on screen.
 
   Icon (CONFIG.ICON + CONFIG.ICON_ANIM)
-    ICON: none (default) | video | quiz | idea | warning | activity |
-          audio | custom
+    ICON (46 built-in, grouped in the gallery picker):
+      none (default) | video | audio | podcast | headphones | demo |
+      image | book | document | download | link | info | idea | key |
+      bookmark | explore | quiz | assessment | checklist | activity |
+      practice | click | scenario | review | objective | complete |
+      milestone | path | start | clock | calendar | star | trophy |
+      award | graduation | locked | learner | group | discussion |
+      feedback | globe | warning | safety | hard-hat | first-aid |
+      wellbeing | on-the-job | custom
     ICON_ANIM: none (default) | pulse | bounce | spin | wiggle | breathe
 
   Chevron (CONFIG.CHEVRON_VARIANT) -- a scroll-hint arrow
@@ -8326,6 +8333,16 @@ automatically.
   .dv-icon-wrap     { width: var(--iconSize); height: var(--iconSize); order: var(--orderIcon); transform-origin: center; }
   .dv-icon-wrap svg { width: 100%; height: 100%; display: block; }
 
+  /* Line + icon together (ICON_ON_LINE): the icon sits ON the line instead
+     of stacked below it. The line runs through the middle of this box,
+     behind the icon, and the icon is a filled badge whose ring matches the
+     line's thickness, so the line reads as flowing into the icon's circle.
+     The line is positioned with top (not transform) so its own
+     slide/draw/pulse animations still work untouched. */
+  .dv-line-icon { position: relative; width: var(--lineWidth); min-width: var(--iconSize); height: var(--iconSize); display: flex; align-items: center; justify-content: center; }
+  .dv-line-icon .dv-line-wrap { position: absolute; left: 0; width: 100%; top: calc(50% - var(--lineThickness) / 2); }
+  .dv-line-icon .dv-icon-wrap { position: relative; z-index: 1; }
+
   .dv-anim-none    { animation: none !important; }
   .dv-anim-pulse   { animation: dv-icon-pulse   var(--iconAnimDur) var(--iconAnimEase) infinite; }
   .dv-anim-bounce  { animation: dv-icon-bounce  var(--iconAnimDur) var(--iconAnimEase) infinite; }
@@ -8432,11 +8449,23 @@ const DV_CONFIG = {
 
   // --- Icon overlay ---
   // ICON: none turns it off (default).
-  // Options: none | video | quiz | idea | warning | activity | audio | custom
+  // Options:
+  //   none | video | audio | podcast | headphones | demo | image |
+  //   book | document | download | link | info | idea | key |
+  //   bookmark | explore | quiz | assessment | checklist |
+  //   activity | practice | click | scenario | review | objective |
+  //   complete | milestone | path | start | clock | calendar |
+  //   star | trophy | award | graduation | locked | learner |
+  //   group | discussion | feedback | globe | warning | safety |
+  //   hard-hat | first-aid | wellbeing | on-the-job | custom
   ICON:       '__DIVIDER_ICON__',
   ICON_SIZE:  '56px',
   // Options: none | pulse | bounce | spin | wiggle | breathe
   ICON_ANIM:  '__DIVIDER_ICON_ANIM__',
+  // When a Line AND an Icon are both on: true puts the icon on the middle
+  // of the line, in a filled circle the line runs behind (the line looks
+  // like it flows into the circle). false stacks the icon below the line.
+  ICON_ON_LINE: true,
 
   // --- Chevron overlay --- (a scroll-hint arrow)
   // Options: none | static | bounce | pulse
@@ -8635,16 +8664,114 @@ const DV_CONFIG = {
       return svg;
     }
 
-    switch (k) {
-      case 'video':    { var rim = s('circle'); set(rim, common); set(rim, nsVec); set(rim, { cx: '12', cy: '12', r: '9' }); var tri = s('polygon'); set(tri, { fill: color, stroke: 'none', points: '10,8.8 16,12 10,15.2' }); svg.appendChild(rim); svg.appendChild(tri); break; }
-      case 'quiz':     { var qm = s('path'); set(qm, common); set(qm, nsVec); qm.setAttribute('d', 'M9 9a3 3 0 1 1 6 1.2c0 1.3-1 2-1.9 2.6-1 .6-1.6 1.2-1.6 2.2'); var dot = s('circle'); set(dot, { cx: '12', cy: '18', r: '1.3', fill: color, stroke: 'none' }); svg.appendChild(qm); svg.appendChild(dot); break; }
-      case 'idea':     { var bulb = s('path'); set(bulb, common); set(bulb, nsVec); bulb.setAttribute('d', 'M12 3 a 6 6 0 0 0 -6 6 c 0 2.3 1.2 4.2 3 5.5'); svg.appendChild(bulb); break; }
-      case 'warning':  { var wtri = s('polygon'); set(wtri, common); set(wtri, nsVec); wtri.setAttribute('points', '12 3 22 20 2 20'); var ex = s('path'); set(ex, common); set(ex, nsVec); ex.setAttribute('d', 'M12 9v4M12 17h.01'); svg.appendChild(wtri); svg.appendChild(ex); break; }
-      case 'activity': { var ap = s('path'); set(ap, common); set(ap, nsVec); ap.setAttribute('d', 'M3 16l7-7 4 4 7-7'); svg.appendChild(ap); break; }
-      case 'audio':    { var au = s('path'); set(au, common); set(au, nsVec); au.setAttribute('d', 'M11 5L6 9H3v6h3l5 4V5z'); svg.appendChild(au); break; }
-      default:         { var dc = s('circle'); set(dc, common); set(dc, nsVec); set(dc, { cx: '12', cy: '12', r: '9' }); svg.appendChild(dc); }
+    // Every built-in icon, drawn on a 24x24 grid. Stroke color/width/caps
+    // come from the parent <svg>; solid bits use currentColor.
+    var DV_ICONS = {
+      // Media
+      'video': '<circle cx="12" cy="12" r="9"/><polygon points="10,8.8 16,12 10,15.2" fill="currentColor" stroke="none"/>',
+      'audio': '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
+      'podcast': '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4M8 22h8"/>',
+      'headphones': '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-7h3z"/><path d="M3 19a2 2 0 0 0 2 2h1v-7H3z"/>',
+      'demo': '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,7.5 14.5,10 10,12.5" fill="currentColor" stroke="none"/>',
+      'image': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
+      // Content & resources
+      'book': '<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
+      'document': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/>',
+      'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+      'link': '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+      'info': '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/>',
+      'idea': '<path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>',
+      'key': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 20 3"/><path d="m16 7 3 3M14 9l2 2"/>',
+      'bookmark': '<path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
+      'explore': '<circle cx="11" cy="11" r="7"/><path d="m21 21-5-5"/>',
+      // Activities & assessment
+      'quiz': '<path d="M9 9a3 3 0 1 1 6 1.2c0 1.3-1 2-1.9 2.6-1 .6-1.6 1.2-1.6 2.2"/><circle cx="12" cy="18" r="1.3" fill="currentColor" stroke="none"/>',
+      'assessment': '<rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 2h6v4H9z"/><path d="m9 14 2 2 4-4"/>',
+      'checklist': '<path d="M10 6h10M10 12h10M10 18h10"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/>',
+      'activity': '<path d="M3 16l7-7 4 4 7-7"/>',
+      'practice': '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+      'click': '<path d="M4 3l7 17 2.5-7.5L21 10z"/>',
+      'scenario': '<path d="M12 22v-8"/><path d="m12 14-6-6M12 14l6-6"/><path d="M5 3v5h5M19 3v5h-5"/>',
+      'review': '<path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/>',
+      // Progress & achievement
+      'objective': '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>',
+      'complete': '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.7 2.7L16 9.8"/>',
+      'milestone': '<path d="M5 22V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+      'path': '<circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H17a3.5 3.5 0 0 0 0-7H7a3.5 3.5 0 0 1 0-7h8.5"/>',
+      'start': '<path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1z"/><path d="m12 15-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/>',
+      'clock': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      'calendar': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      'star': '<path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"/>',
+      'trophy': '<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/>',
+      'award': '<circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/>',
+      'graduation': '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/>',
+      'locked': '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+      // People & communication
+      'learner': '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+      'group': '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/>',
+      'discussion': '<path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8 8h8M8 12h5"/>',
+      'feedback': '<path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/><path d="m7 10 4-8a3 3 0 0 1 3 3v4h5.5a2 2 0 0 1 2 2.3l-1.4 8A2 2 0 0 1 18.1 21H7"/>',
+      'globe': '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>',
+      // Safety & workplace
+      'warning': '<polygon points="12 3 22 20 2 20"/><path d="M12 9v4M12 17h.01"/>',
+      'safety': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
+      'hard-hat': '<path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M14 6a6 6 0 0 1 6 6v3"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><rect x="2" y="15" width="20" height="4" rx="1"/>',
+      'first-aid': '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/>',
+      'wellbeing': '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
+      'on-the-job': '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 13h20"/>'
+    };
+    set(svg, { fill: 'none', stroke: color, 'stroke-width': String(strokeW), 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+    svg.style.color = color;
+    svg.innerHTML = DV_ICONS[k] || '<circle cx="12" cy="12" r="9"/>';
+    if (nonScaling) {
+      svg.querySelectorAll('*').forEach(function(el){ el.setAttribute('vector-effect', 'non-scaling-stroke'); });
     }
     return svg;
+  }
+
+  // The icon as a filled circle badge, for ICON_ON_LINE: a disc filled
+  // with the background color (so the line disappears behind it), ringed
+  // in the line's own thickness and color (so the line reads as flowing
+  // into the circle), with the icon glyph inside. Video already IS a
+  // circle, so its own circle is dropped and the ring replaces it at full
+  // size; every other icon is shrunk to fit inside the ring.
+  function dvIconBadgeSVG(kind, color, fillColor, ringW){
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.overflow = 'visible';
+    var disc = document.createElementNS(NS, 'circle');
+    disc.setAttribute('cx', '12'); disc.setAttribute('cy', '12');
+    disc.setAttribute('r', String(12 - ringW / 2));
+    disc.setAttribute('fill', fillColor);
+    disc.setAttribute('stroke', color);
+    disc.setAttribute('stroke-width', String(ringW));
+    svg.appendChild(disc);
+    var isVideo = (kind || '').toLowerCase() === 'video';
+    var scale = isVideo ? 1 : 0.6;
+    // Slightly thicker source stroke so the shrunken glyph doesn't look
+    // spindly -- but not fully compensated (x0.75): a small glyph at full
+    // normal-size weight reads heavy and blobby inside the ring.
+    var glyph = dvIconSVG(kind, color, (parseFloat(dvCss('--iconStroke')) || 2) / scale * 0.75, false);
+    if (isVideo && glyph.firstChild) glyph.removeChild(glyph.firstChild);
+    var size = 24 * scale, off = (24 - size) / 2;
+    glyph.setAttribute('x', String(off)); glyph.setAttribute('y', String(off));
+    glyph.setAttribute('width', String(size)); glyph.setAttribute('height', String(size));
+    svg.appendChild(glyph);
+    return svg;
+  }
+
+  // What the badge's disc is filled with, so it matches whatever sits
+  // behind the divider: the shape's own color on filled shapes (overlays
+  // are white on those), else the block background, else white (the Rise
+  // page) when the block background is off/transparent.
+  function dvBadgeFill(shape, fg){
+    var dvFilled = ['multi-wave-bottom','multi-wave-top','wave-top','wave-bottom','top-bottom-waves','zig-zag-bottom','zig-zag-top','angle-top','angle-bottom','triangle-cut'];
+    if (dvFilled.indexOf(shape) !== -1) return fg;
+    var bg = getComputedStyle(root).backgroundColor;
+    if (!bg || bg === 'transparent' || /rgba\(.*,\s*0\)$/.test(bg)) return '#ffffff';
+    return bg;
   }
 
   function renderDivider(){
@@ -8852,20 +8979,41 @@ const DV_CONFIG = {
       if (dash !== 'none') lineEl.setAttribute('stroke-dasharray', dash);
       lineSvg.appendChild(lineEl);
       lineWrap.appendChild(lineSvg);
-      overlay.appendChild(lineWrap);
     }
 
     var wantIcon = dvAsBool('--showIcon') || shape === 'icon';
+    var iconOnLine = wantLine && wantIcon && DV_CONFIG.ICON_ON_LINE !== false;
     if (wantIcon) {
       var iWrap = document.createElement('div');
       iWrap.className  = 'dv-icon-wrap';
       iWrap.style.order = dvCss('--orderIcon') || 2;
-      var iconEl = dvIconSVG(dvCss('--icon') || 'video', dvNormalizeColor(dvCss('--overlayIconColor') || dvCss('--fg') || fg, fg), parseFloat(dvCss('--iconStroke')) || 2, dvAsBool('--iconNonScaling'));
+      var iconColor = dvNormalizeColor(dvCss('--overlayIconColor') || dvCss('--fg') || fg, fg);
+      var iconEl;
+      if (iconOnLine) {
+        // Ring thickness = the line's pixel thickness, converted into the
+        // icon's own 24-unit viewBox, so ring and line are the same weight.
+        var ringW = (parseFloat(dvCss('--lineThickness')) || 3) * 24 / (parseFloat(dvCss('--iconSize')) || 56);
+        iconEl = dvIconBadgeSVG(dvCss('--icon') || 'video', iconColor, dvBadgeFill(shape, fg), ringW);
+      } else {
+        iconEl = dvIconSVG(dvCss('--icon') || 'video', iconColor, parseFloat(dvCss('--iconStroke')) || 2, dvAsBool('--iconNonScaling'));
+      }
       var iAnim = (dvCss('--iconAnim') || 'none').toLowerCase();
       var iAnims = ['none', 'pulse', 'bounce', 'spin', 'wiggle', 'breathe'];
       iWrap.classList.add(iAnims.indexOf(iAnim) !== -1 ? ('dv-anim-' + iAnim) : 'dv-anim-none');
       iWrap.appendChild(iconEl);
-      overlay.appendChild(iWrap);
+    }
+
+    if (iconOnLine) {
+      // One combined row in the line's slot: line behind, icon on top.
+      var lineIcon = document.createElement('div');
+      lineIcon.className = 'dv-line-icon';
+      lineIcon.style.order = dvCss('--orderLine') || 1;
+      lineIcon.appendChild(lineWrap);
+      lineIcon.appendChild(iWrap);
+      overlay.appendChild(lineIcon);
+    } else {
+      if (wantLine) overlay.appendChild(lineWrap);
+      if (wantIcon) overlay.appendChild(iWrap);
     }
 
     var wantChevron = dvAsBool('--showChevron') || shape === 'chevron';
@@ -9936,8 +10084,25 @@ function dividerOptionsHTML(list, current){
 }
 const DIVIDER_ICONS = [
   {v:'none', l:'No icon'},
-  {v:'video', l:'Video'}, {v:'quiz', l:'Quiz'}, {v:'idea', l:'Idea'},
-  {v:'warning', l:'Warning'}, {v:'activity', l:'Activity'}, {v:'audio', l:'Audio'}, {v:'custom', l:'Custom'},
+  {group:'Media', options:[
+    {v:'video', l:'Video'}, {v:'audio', l:'Audio'}, {v:'podcast', l:'Podcast / mic'}, {v:'headphones', l:'Listen'}, {v:'demo', l:'Demo / screen'}, {v:'image', l:'Image / gallery'},
+  ]},
+  {group:'Content &amp; resources', options:[
+    {v:'book', l:'Reading'}, {v:'document', l:'Document / handout'}, {v:'download', l:'Download'}, {v:'link', l:'Link / resource'}, {v:'info', l:'Info / note'}, {v:'idea', l:'Idea / tip'}, {v:'key', l:'Key takeaway'}, {v:'bookmark', l:'Bookmark'}, {v:'explore', l:'Explore / search'},
+  ]},
+  {group:'Activities &amp; assessment', options:[
+    {v:'quiz', l:'Quiz'}, {v:'assessment', l:'Assessment'}, {v:'checklist', l:'Checklist'}, {v:'activity', l:'Activity'}, {v:'practice', l:'Practice / write'}, {v:'click', l:'Interact / click'}, {v:'scenario', l:'Scenario / choice'}, {v:'review', l:'Review / recap'},
+  ]},
+  {group:'Progress &amp; achievement', options:[
+    {v:'objective', l:'Objective / target'}, {v:'complete', l:'Complete'}, {v:'milestone', l:'Milestone / flag'}, {v:'path', l:'Learning path'}, {v:'start', l:'Get started'}, {v:'clock', l:'Time / duration'}, {v:'calendar', l:'Schedule / due date'}, {v:'star', l:'Star / highlight'}, {v:'trophy', l:'Achievement'}, {v:'award', l:'Certificate / award'}, {v:'graduation', l:'Graduation / course'}, {v:'locked', l:'Locked content'},
+  ]},
+  {group:'People &amp; communication', options:[
+    {v:'learner', l:'Learner'}, {v:'group', l:'Group / team'}, {v:'discussion', l:'Discussion'}, {v:'feedback', l:'Feedback'}, {v:'globe', l:'Global / language'},
+  ]},
+  {group:'Safety &amp; workplace', options:[
+    {v:'warning', l:'Warning'}, {v:'safety', l:'Safety / compliance'}, {v:'hard-hat', l:'PPE / hard hat'}, {v:'first-aid', l:'First aid'}, {v:'wellbeing', l:'Wellbeing'}, {v:'on-the-job', l:'On the job'},
+  ]},
+  {v:'custom', l:'Custom (your own SVG)'},
 ];
 const DIVIDER_ICON_ANIMS = [
   {v:'none', l:'No animation'},
