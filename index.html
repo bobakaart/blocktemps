@@ -7517,15 +7517,22 @@ Change CONFIG.youAreHere below to light up a different area per course.
      flow, so it sits below the map as a full-width box with the same
      weight as the boxes above. */
   .yah-extra{
-    position:relative; display:flex; align-items:center; gap:12px;
+    position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:14px;
     border:1.5px solid var(--yah-box-line); border-radius:16px; padding:14px 18px; background:#fff;
     box-shadow:var(--yah-box-shadow);
     font-size:__ROW_TEXT_SIZE__; color:var(--yah-muted);
   }
   .yah-extra .yah-icon{width:36px; height:36px;}
-  .yah-extra-text{display:flex; flex-direction:column;}
-  .yah-extra .yah-name{font-size:__BODY_SIZE__;}
-  .yah-extra-text{gap:2px;}
+  .yah-extra-head{display:flex; align-items:center; gap:12px; flex:0 0 auto;}
+  /* One box per Commercial Accounts course, so either can be the lit one. */
+  .yah-pills{flex:1 1 320px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .yah-pill{
+    position:relative; display:flex; align-items:center; justify-content:center; text-align:center;
+    border:1.5px solid var(--yah-box-line); border-radius:12px; padding:12px 14px; background:var(--yah-tint-2);
+    transition:transform .3s var(--yah-ease), box-shadow .3s var(--yah-ease);
+  }
+  .yah-pill .yah-name{font-size:__BODY_SIZE__;}
+  .yah-pill.is-here{transform:translateY(-2px) scale(1.03);}
 
   /* "You are here" highlight, set by CONFIG.youAreHere */
   .yah .is-here{
@@ -7542,7 +7549,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
     border:2px solid var(--yah-primary); opacity:0; animation:yah-pulse 2.6s var(--yah-ease) 1.2s infinite;
   }
   @keyframes yah-pulse{0%{opacity:.7; transform:scale(1);} 100%{opacity:0; transform:scale(1.12);}}
-  .yah-map.has-here .yah-node:not(.is-here), .yah-map.has-here .yah-extra:not(.is-here){opacity:.78;}
+  .yah-map.has-here .yah-node:not(.is-here), .yah-map.has-here .yah-pill:not(.is-here){opacity:.78;}
   /* Not covered in the program (Other ways to pay): shown so learners know
      it exists, but greyed out with a dashed outline and a dashed, still
      line so it reads as "a way money moves" rather than a course. */
@@ -7558,9 +7565,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
     animation:yah-drop .7s var(--yah-ease) .6s both;
   }
   .yah-pin svg{width:13px; height:13px; color:var(--yah-primary);}
-  .yah-extra .yah-pin{left:auto; right:14px; transform:none; animation-name:yah-drop-side;}
   @keyframes yah-drop{0%{opacity:0; transform:translate(-50%,-14px);} 60%{opacity:1; transform:translate(-50%,3px);} 100%{opacity:1; transform:translate(-50%,0);}}
-  @keyframes yah-drop-side{0%{opacity:0; transform:translateY(-14px);} 60%{opacity:1; transform:translateY(3px);} 100%{opacity:1; transform:translateY(0);}}
 
   .yah-in{opacity:0; animation:yah-rise .6s var(--yah-ease) both; animation-delay:var(--d, 0s);}
   @keyframes yah-rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
@@ -7582,7 +7587,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
   }
   @media (prefers-reduced-motion: reduce){
     .yah-in, .yah-pin, .yah .is-here::after, .yah-conn .flow{animation:none !important; opacity:1;}
-    .yah-node.is-here{transform:none;}
+    .yah-node.is-here, .yah-pill.is-here{transform:none;}
     .yah .is-here::after{opacity:0;}
   }
 </style>
@@ -7660,12 +7665,15 @@ Change CONFIG.youAreHere below to light up a different area per course.
       </div>
     </div>
 
-    <div class="yah-extra yah-in" style="--d:.9s" data-area="commercial">
-      <span class="yah-icon" data-icon="office"></span>
-      <span class="yah-extra-text">
-        <span class="yah-name" data-label="commercial"></span>
-        <span class="yah-course" data-course="commercial"></span>
+    <div class="yah-extra yah-in" style="--d:.9s">
+      <span class="yah-extra-head">
+        <span class="yah-icon" data-icon="office"></span>
+        <span class="yah-name" data-t="commercialTitle"></span>
       </span>
+      <div class="yah-pills">
+        <div class="yah-pill" data-area="commercialWhy"><span class="yah-name" data-label="commercialWhy"></span></div>
+        <div class="yah-pill" data-area="commercialDetails"><span class="yah-name" data-label="commercialDetails"></span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -7678,22 +7686,34 @@ Change CONFIG.youAreHere below to light up a different area per course.
 // the code uses to find the text, not something a learner sees.
 // Do not delete any commas , or brackets { } [ ].
 // ======================================================================
-// Which area is lit up as "You are here". One of:
-// "invoice" | "billtrust" | "otherways" | "recorded" | "reports" | "commercial"
-var CONFIG = { youAreHere: "invoice" };
+// ----------------------------------------------------------------------
+// WHICH BOX IS HIGHLIGHTED ("You are here")
+// Set by the picker on this block's card in the library, or change the
+// word in quotes by hand. Pick one of these:
+//   "invoice"            Work order to invoice  (Lifecycle of an Invoice)
+//   "billtrust"          Client pays online     (Billtrust)
+//   "recorded"           Payment recorded       (Oracle - Receipts)
+//   "reports"            Reports                (Power BI)
+//   "commercialWhy"      Commercial Accounts: Why It Matters
+//   "commercialDetails"  Commercial Accounts: Getting the Details Right
+// ----------------------------------------------------------------------
+var CONFIG = { youAreHere: "__YAH_HERE__" };
 var TEXT = {
   pin: "You are here",
+  commercialTitle: "Commercial accounts",
   sr: "Program map. You are here: {area}, covered in {course}. After a work order becomes an invoice, the client pays online in Billtrust or another way (not covered in this program), the payment is recorded in Oracle, and it shows up in Power BI reports. Commercial accounts have their own courses in the program."
 };
-// name = what happens at this point (line 1). course = the course that
-// covers it (line 2). Course titles 2 to 6 are still TBD: update them here.
+// The words in each box. name = what happens at this point (line 1).
+// course = the course that covers it (line 2). The two Commercial boxes
+// show only their name. Course titles 2 to 6 are still TBD: update them here.
 var AREAS = {
   invoice:    { name: "Work order to invoice", course: "Lifecycle of an Invoice" },
   billtrust:  { name: "Client pays online",  course: "Billtrust" },
   otherways:  { name: "Client pays another way", course: "Check, EFT, ACH" },
   recorded:   { name: "Payment recorded",    course: "Oracle – Receipts" },
   reports:    { name: "Reports",             course: "Power BI" },
-  commercial: { name: "Commercial accounts", course: "Commercial Accounts: Why It Matters · Getting the Details Right" }
+  commercialWhy:     { name: "Why It Matters",            course: "Commercial Accounts: Why It Matters" },
+  commercialDetails: { name: "Getting the Details Right", course: "Commercial Accounts: Getting the Details Right" }
 };
 // ======================================================================
 // DO NOT EDIT BELOW THIS LINE
@@ -9594,7 +9614,7 @@ const BLOCKS = [
   {id:'header-split', name:'Split Icon Header', cat:'header', img:true, desc:'Large icon badge beside the title, wraps to a centered stack on narrow widths.', verified:false},
   {id:'header-bold', name:'Bold Diagonal Header', cat:'header', img:true, desc:'Solid color block with a skewed accent panel that slides in on load.', verified:false},
   {id:'header-bold-corner', name:'Bold Corner Header', cat:'header', img:true, desc:'Solid color block with two triangular corner accents that pop in on load.', verified:false},
-  {id:'cs-you-are-here', name:'You Are Here: Program Map Banner', cat:'cs', img:false, desc:'Customer Service Advanced course opener. A compact "Where the Money Goes" map with this course\'s area lit up and pinned. Change one config line to light a different area in each course.', verified:false},
+  {id:'cs-you-are-here', name:'You Are Here: Program Map Banner', cat:'cs', img:false, desc:'Customer Service Advanced course opener. A compact "Where the Money Goes" map with this course\'s box lit up and pinned. Pick the box from the dropdown on the card (or change CONFIG.youAreHere in the code) for each course.', verified:false},
   {id:'acknowledge-signoff', name:'Acknowledgment Sign-off', cat:'compliance', img:false, desc:'Type your name and check a box to sign a statement, with a dated confirmation. A pattern Rise has never offered natively.', verified:false},
   {id:'stat-chart', name:'Stat Comparison Chart', cat:'data', img:false, desc:'Animated horizontal bar chart comparing several data points, values count up as they scroll into view. Rise has no native charting.', verified:false},
   {id:'chat-scenario', name:'Chat Scenario Simulator', cat:'decision', img:false, desc:'Texting-style conversation that reveals on tap, ending in a reply choice with branching feedback. A different feel from Rise\'s static Scenario block.', verified:false},
@@ -10633,6 +10653,22 @@ const CHAT_STYLES = [
   {v:'phone', l:'Phone (SMS-style)'},
   {v:'teams', l:'Teams-style chat window'},
 ];
+// You Are Here banner (Customer Service): which box is lit up and pinned.
+// Picked from a dropdown on the card and baked into the copied code as
+// CONFIG.youAreHere, so each course just picks its own box and copies.
+// "Client pays another way" is left out on purpose: it isn't covered by
+// any course, so it's never "you are here".
+const YAH_HERE_BLOCKS = new Set(['cs-you-are-here']);
+const YAH_HERE_OPTIONS = [
+  {v:'invoice', l:'Here: Work order to invoice'},
+  {v:'billtrust', l:'Here: Client pays online (Billtrust)'},
+  {v:'recorded', l:'Here: Payment recorded (Receipts)'},
+  {v:'reports', l:'Here: Reports (Power BI)'},
+  {v:'commercialWhy', l:'Here: Commercial, Why It Matters'},
+  {v:'commercialDetails', l:'Here: Commercial, Getting the Details Right'},
+];
+let yahHere = {}; // block.id -> area key, default 'invoice'
+function getYahHere(block){ return yahHere[block.id] || 'invoice'; }
 let chatStyle = {}; // block.id -> style string, default 'default'
 function getChatStyle(block){ return chatStyle[block.id] || 'default'; }
 let chatMsgCount = {};    // block.id -> number of opening messages (1-6), default 2
@@ -10965,6 +11001,7 @@ function substitute(raw, block){
     .replaceAll('__SCALE_ICON_ON__', isScaleIconOnFor(block) ? 'true' : 'false')
     .replaceAll('__FG_PALETTE_ON__', isCardPaletteOnFor(block) ? 'true' : 'false')
     .replaceAll('__CHAT_STYLE__', getChatStyle(block))
+    .replaceAll('__YAH_HERE__', getYahHere(block))
     .replaceAll('__TIMELINE_ICON_ON__', timelineIconOn[block.id] ? 'true' : 'false')
     .replaceAll('__MEMORY_ICON_ON__', memoryIconOn[block.id] ? 'true' : 'false')
     .replaceAll('__DIVIDER_SHAPE__', getDividerShape(block))
@@ -11435,6 +11472,8 @@ function buildCard(b){
   const isCardPaletteOn = isCardPaletteOnFor(b);
   const hasChatStyle = CHAT_STYLE_BLOCKS.has(b.id);
   const curChatStyle = getChatStyle(b);
+  const hasYahHere = YAH_HERE_BLOCKS.has(b.id);
+  const curYahHere = getYahHere(b);
   const curChatMsgCount = getChatMsgCount(b);
   const curChatChoiceCount = getChatChoiceCount(b);
   const hasTimelineIcon = TIMELINE_ICON_BLOCKS.has(b.id);
@@ -11578,6 +11617,9 @@ function buildCard(b){
         ` : ''}
         ${hasScaleIcon ? `<button class="mini-toggle${isScaleIconOn ? ' on' : ''}" data-role="scale-icon" title="Show the theme's List Icons on the 1-5 scale instead of plain numbers (baked into the copied code). Pick which icon goes in each of the 5 slots in Theme settings">Icon</button>` : ''}
         ${hasCardPalette ? `<button class="mini-toggle${isCardPaletteOn ? ' on' : ''}" data-role="card-palette" title="Each card pulls a different color off the brand palette instead of every card being the same flat primary color (baked into the copied code)">Palette colors</button>` : ''}
+        ${hasYahHere ? `<select class="mini-select" data-role="yah-here" title="Which box is highlighted as &quot;You are here&quot; (baked into the copied code as CONFIG.youAreHere)">
+          ${dividerOptionsHTML(YAH_HERE_OPTIONS, curYahHere)}
+        </select>` : ''}
         ${hasChatStyle ? `<select class="mini-select" data-role="chat-style" title="Visual chrome for this chat: a plain thread, a phone screen, or a Teams-style window (baked into the copied code)">
           ${dividerOptionsHTML(CHAT_STYLES, curChatStyle)}
         </select>
@@ -11784,6 +11826,13 @@ function buildCard(b){
   if(hasCardPalette){
     card.querySelector('[data-role="card-palette"]').addEventListener('click', ()=>{
       cardPaletteOn[b.id] = !isCardPaletteOnFor(b);
+      card.replaceWith(buildCard(b));
+    });
+  }
+
+  if(hasYahHere){
+    card.querySelector('[data-role="yah-here"]').addEventListener('change', (e)=>{
+      yahHere[b.id] = e.target.value;
       card.replaceWith(buildCard(b));
     });
   }
