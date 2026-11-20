@@ -188,12 +188,12 @@ MOVING ON
   <div class="pagehead">
     <span class="loc">GETTING STARTED · Lesson 2</span>
     <h2>Learning outcomes</h2>
-    <p>Same "Welcome!" frame as Basics. This is the first page a learner sees after hitting Start, so it shows right away what the program is and where this course fits: the Program Map Banner sits between the welcome and the outcomes.</p>
+    <p>The first page a learner sees after hitting Start. It moves from the program, to this course's spot on the map, to what this course covers, with each step saying something new.</p>
   </div>
   <div class="stack">
     <article class="block">
-      <div class="bh"><span class="n">B1</span><h3>Welcome</h3><span class="chip c-t1">Tier 1</span></div>
-      <p class="why"><b>Source:</b> the "story of an invoice" framing is bridge text I wrote. It's kept to one sentence because the banner right below says the rest.</p>
+      <div class="bh"><span class="n">B1</span><h3>Welcome: the program</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why"><b>What changed:</b> the program goal moved up here, so the welcome answers "what is this program?" in two sentences. The "story of an invoice" line moved to the header above the map, so it isn't said twice.</p>
       <div class="codewrap"><pre><code>[H1 - Font: TBD - Size: TBD]
 Learning outcomes
 
@@ -206,43 +206,42 @@ courses in the Customer Service Advanced
 program designed for Local and Division
 Administrative Coordinators.
 
-The program follows the story of an invoice,
-from a completed work order to a paid bill and
-the reports behind it.</code></pre></div>
+Together, these courses help you answer
+client billing and payment questions quickly
+and accurately.</code></pre></div>
     </article>
 
     <article class="block">
-      <div class="bh"><span class="n">B2</span><h3>You Are Here: Program Map Banner</h3><span class="chip c-t3">Tier 3 · Library</span></div>
-      <p class="why gfx"><b>Graphic:</b> none needed. The banner is the graphic, with its own icons and highlight. If you want a person in the frame, a small cropped photo of an LAC at a desk could sit above it, but it doesn't need one.</p>
-      <p class="why"><b>Library block:</b> <code>cs-you-are-here</code>. Paste it from the ID Helper and leave it set to <code>youAreHere: "invoice"</code>. It goes here because this page is the first thing learners see after Start: the welcome names the program, the map shows it, and the outcomes say what this course covers. It's a quick-look banner (nothing to click), so it doesn't slow anyone down who has seen it before. <b>Test in Rise:</b> the layout stacks below 720px, so check whether it stacks on desktop too at Rise's content width.</p>
+      <div class="bh"><span class="n">B2</span><h3>Header above the map</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why"><b>Why a header:</b> the banner has a one-line caption and box labels but no title, so without a header it shows up with no lead-in. Use the same header and tagline in all 6 courses so the map is recognizable at a glance. <b>Alternative header:</b> "Where this course fits" (plainer).</p>
+      <div class="codewrap"><pre><code>[H3 - Font: TBD - Size: TBD]
+The story of an invoice
+
+[Tagline - Font: TBD - Size: TBD]
+Here's where this course fits.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B3</span><h3>You Are Here: Program Map Banner</h3><span class="chip c-t3">Tier 3 · Library</span></div>
+      <p class="why gfx"><b>Graphic:</b> none needed. The banner is the graphic.</p>
+      <p class="why"><b>Library block:</b> <code>cs-you-are-here</code>, set to <code>youAreHere: "invoice"</code>. <b>Change the caption (TEXT.body)</b> so it also says "any order." That line then does the job of the separate "You can take the courses in any order" sentence, which was floating between the map and the outcomes. This caption changes in each course. <b>Test in Rise:</b> the layout stacks below 720px, so check desktop.</p>
       <div class="codewrap"><pre><code>[Custom HTML block - library: cs-you-are-here]
 CONFIG
 youAreHere: "invoice"
 
-TEXT (as built)
-body: Each course in the program covers one part
-of the map. This course is where the story
-starts: how a work order becomes an invoice.
-alsoTag: Also in the program
-pin: You are here
+TEXT.body (update for this course)
+Each course covers one part of the map, and
+you can take them in any order. This course
+is where the story starts: how a work order
+becomes an invoice.
 
-AREAS (as built)
-Work order to invoice · Lifecycle of an Invoice  ◀ lit
-Client pays online · Billtrust
-Client pays another way · Check, EFT, ACH (greyed out)
-Payment recorded · Oracle – Receipts
-Reports · Power BI
-Also in the program: Commercial accounts</code></pre></div>
+(Keep alsoTag, pin, and AREAS as built.)</code></pre></div>
     </article>
 
     <article class="block">
-      <div class="bh"><span class="n">B3</span><h3>Learning outcomes</h3><span class="chip c-t1">Tier 1</span></div>
-      <p class="why"><b>Source:</b> outcomes from your outline, unchanged.</p>
+      <div class="bh"><span class="n">B4</span><h3>Learning outcomes</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why"><b>Why no extra header:</b> Basics' own lead-in sentence works as the anchor, and the page H1 already says "Learning outcomes." Add a Rise divider above it only if the map and list feel crowded in preview. <b>Source:</b> outcomes from your outline, unchanged.</p>
       <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
-You can take the courses in any order.
-Together, they help you answer client billing
-and payment questions quickly and accurately.
-
 By the end of this course, you should
 demonstrate these learning outcomes:
 
