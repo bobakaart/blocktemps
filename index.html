@@ -7445,6 +7445,308 @@ var TEXT = {
 </script>
 </template>
 
+<template id="src-cs-you-are-here">
+<!--
+======================================================================
+You Are Here: Program Map Banner (Customer Service Advanced)
+v1.0 - BK
+Shows where this course sits on the "Where the Money Goes" map.
+Change CONFIG.youAreHere below to light up a different area per course.
+======================================================================
+-->
+
+<div class="yah-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
+<style>
+  .yah-wrap{
+    --yah-primary:__COLOR_PRIMARY__;
+    --yah-deep:color-mix(in srgb, __COLOR_PRIMARY__ 72%, #000);
+    --yah-ink-accent:color-mix(in srgb, __COLOR_PRIMARY__ 58%, #000);
+    --yah-tint:__COLOR_PRIMARY_LIGHT__;
+    --yah-tint-2:color-mix(in srgb, __COLOR_PRIMARY__ 5%, #fff);
+    --yah-line:color-mix(in srgb, __COLOR_PRIMARY__ 20%, #fff);
+    --yah-line-strong:color-mix(in srgb, __COLOR_PRIMARY__ 34%, #fff);
+    --yah-box-line:color-mix(in srgb, __COLOR_PRIMARY__ 48%, #fff);
+    --yah-box-shadow:0 1px 2px rgba(0,0,0,.06), 0 3px 8px -4px color-mix(in srgb, __COLOR_PRIMARY__ 40%, transparent);
+    --yah-ink:__COLOR_TEXT__;
+    --yah-muted:color-mix(in srgb, __COLOR_TEXT__ 66%, #fff);
+    --yah-faint:color-mix(in srgb, __COLOR_PRIMARY__ 45%, #fff);
+    --yah-ease:cubic-bezier(.22,.8,.3,1);
+    color:var(--yah-ink); line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .yah-wrap *{box-sizing:border-box;}
+  .yah-sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+  .yah{
+    position:relative; overflow:hidden; border-radius:20px; border:1px solid var(--yah-line);
+    background:
+      radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, __COLOR_PRIMARY__ 18%, transparent) 0%, transparent 55%),
+      radial-gradient(90% 70% at 100% 100%, color-mix(in srgb, __COLOR_PRIMARY__ 12%, transparent) 0%, transparent 60%),
+      #fff;
+    padding:clamp(20px, 5vw, 36px);
+  }
+  .yah-body{font-size:__BODY_SIZE__; color:var(--yah-muted); margin:0 0 26px; max-width:56ch;}
+
+  .yah-map{display:flex; flex-direction:column; gap:18px;}
+
+  .yah-flow{display:grid; grid-template-columns:1fr 40px 1fr 40px 1fr 32px 1fr; align-items:stretch;}
+  .yah-col{display:flex; align-items:center;}
+  .yah-col > .yah-node{width:100%;}
+  .yah-lanes{display:grid; grid-template-rows:1fr 1fr;}
+  /* Padding (not gap) between lanes keeps each lane's center at exactly
+     25% / 75% of the column, which is where the connector curves land. */
+  .yah-lane{display:flex; align-items:center; padding:7px 0;}
+  .yah-lane > .yah-node{width:100%;}
+
+  .yah-conn{width:100%; height:100%; display:block; overflow:visible;}
+  .yah-conn-v{display:none;}
+  .yah-conn path{fill:none; vector-effect:non-scaling-stroke;}
+  .yah-conn .base{stroke:var(--yah-line-strong); stroke-width:2;}
+  .yah-conn .flow{stroke:var(--yah-primary); stroke-width:2.5; stroke-linecap:round; stroke-dasharray:6 10; animation:yah-flow 2.4s linear infinite;}
+  @keyframes yah-flow{to{stroke-dashoffset:-16;}}
+
+  .yah-node{
+    position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;
+    background:#fff; border:1.5px solid var(--yah-box-line); border-radius:16px; padding:16px 12px 14px; color:var(--yah-muted);
+    box-shadow:var(--yah-box-shadow);
+    transition:transform .3s var(--yah-ease), box-shadow .3s var(--yah-ease);
+  }
+  .yah-icon{width:40px; height:40px; color:var(--yah-faint); flex-shrink:0;}
+  .yah-icon svg{width:100%; height:100%; display:block;}
+  .yah-name{font-size:__BODY_SIZE__; font-weight:700; line-height:1.25; color:var(--yah-ink);}
+  .yah-course{font-size:__ROW_TEXT_SIZE__; font-weight:500; line-height:1.3; color:var(--yah-muted);}
+
+  /* Commercial accounts: its own courses, but not a step in the money
+     flow, so it sits below the map as a full-width box with the same
+     weight as the boxes above. */
+  .yah-extra{
+    position:relative; display:flex; align-items:center; gap:12px;
+    border:1.5px solid var(--yah-box-line); border-radius:16px; padding:14px 18px; background:#fff;
+    box-shadow:var(--yah-box-shadow);
+    font-size:__ROW_TEXT_SIZE__; color:var(--yah-muted);
+  }
+  .yah-extra .yah-icon{width:36px; height:36px;}
+  .yah-extra-text{display:flex; flex-direction:column;}
+  .yah-extra .yah-name{font-size:__BODY_SIZE__;}
+  .yah-extra-text{gap:2px;}
+
+  /* "You are here" highlight, set by CONFIG.youAreHere */
+  .yah .is-here{
+    background:linear-gradient(150deg, var(--yah-primary) 0%, var(--yah-deep) 100%);
+    border-color:transparent; color:rgba(255,255,255,.92);
+    box-shadow:0 10px 28px -8px color-mix(in srgb, __COLOR_PRIMARY__ 70%, transparent), 0 0 0 4px color-mix(in srgb, __COLOR_PRIMARY__ 18%, transparent);
+    z-index:2;
+  }
+  .yah .is-here .yah-icon, .yah .is-here .yah-name, .yah .is-here .yah-course{color:#fff;}
+  .yah-node.is-here{transform:translateY(-2px) scale(1.03);}
+  .yah-node.is-here .yah-name{font-size:__H1_SIZE__; font-weight:800;}
+  .yah .is-here::after{
+    content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
+    border:2px solid var(--yah-primary); opacity:0; animation:yah-pulse 2.6s var(--yah-ease) 1.2s infinite;
+  }
+  @keyframes yah-pulse{0%{opacity:.7; transform:scale(1);} 100%{opacity:0; transform:scale(1.12);}}
+  .yah-map.has-here .yah-node:not(.is-here), .yah-map.has-here .yah-extra:not(.is-here){opacity:.78;}
+  /* Not covered in the program (Other ways to pay): shown so learners know
+     it exists, but greyed out with a dashed outline and a dashed, still
+     line so it reads as "a way money moves" rather than a course. */
+  .yah-map .yah-node.is-out{opacity:.55; background:#f6f6f7; border:1.5px dashed #a9acb4; box-shadow:none; filter:grayscale(1);}
+  .yah-conn .base.is-out{stroke:#c4c6cc; stroke-dasharray:3 4;}
+
+  .yah-pin{
+    position:absolute; top:-15px; left:50%; transform:translateX(-50%);
+    display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+    background:#fff; color:var(--yah-ink-accent); border:1px solid var(--yah-line);
+    font-size:__CAPTION_SIZE__; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+    border-radius:999px; padding:5px 10px 5px 8px; box-shadow:0 4px 12px -4px rgba(0,0,0,.25);
+    animation:yah-drop .7s var(--yah-ease) .6s both;
+  }
+  .yah-pin svg{width:13px; height:13px; color:var(--yah-primary);}
+  .yah-extra .yah-pin{left:auto; right:14px; transform:none; animation-name:yah-drop-side;}
+  @keyframes yah-drop{0%{opacity:0; transform:translate(-50%,-14px);} 60%{opacity:1; transform:translate(-50%,3px);} 100%{opacity:1; transform:translate(-50%,0);}}
+  @keyframes yah-drop-side{0%{opacity:0; transform:translateY(-14px);} 60%{opacity:1; transform:translateY(3px);} 100%{opacity:1; transform:translateY(0);}}
+
+  .yah-in{opacity:0; animation:yah-rise .6s var(--yah-ease) both; animation-delay:var(--d, 0s);}
+  @keyframes yah-rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+  .yah-node.is-here.yah-in{animation-name:yah-rise-here;}
+  @keyframes yah-rise-here{from{opacity:0; transform:translateY(10px) scale(1);} to{opacity:1; transform:translateY(-2px) scale(1.03);}}
+
+  /* Narrow: stack top to bottom, the two lanes side by side */
+  @media (max-width:720px){
+    .yah-flow{grid-template-columns:1fr; grid-template-rows:auto 40px auto 40px auto 32px auto;}
+    .yah-col{justify-content:center;}
+    .yah-col > .yah-node{width:auto; min-width:min(260px, 100%);}
+    .yah-lanes{grid-template-rows:none; grid-template-columns:1fr 1fr;}
+    .yah-lane{padding:0 6px; align-items:stretch;}
+    .yah-conn-h{display:none;}
+    .yah-conn-v{display:block;}
+    .yah-node{padding:18px 10px 12px;}
+    .yah-icon{width:34px; height:34px;}
+    .yah-pin{top:-14px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .yah-in, .yah-pin, .yah .is-here::after, .yah-conn .flow{animation:none !important; opacity:1;}
+    .yah-node.is-here{transform:none;}
+    .yah .is-here::after{opacity:0;}
+  }
+</style>
+<div class="yah">
+  <p class="yah-body yah-in" style="--d:0s" data-t="body"></p>
+  <p class="yah-sr" data-sr></p>
+
+  <!-- Hidden from screen readers: the sentence above says the same thing
+       in words, so the boxes and lines aren't read out one by one. -->
+  <div class="yah-map" aria-hidden="true">
+    <div class="yah-flow">
+      <div class="yah-col">
+        <div class="yah-node yah-in" style="--d:.4s" data-area="invoice">
+          <span class="yah-icon" data-icon="clipboard"></span>
+          <span class="yah-name" data-label="invoice"></span>
+          <span class="yah-course" data-course="invoice"></span>
+        </div>
+      </div>
+      <div class="yah-col">
+        <svg class="yah-conn yah-conn-h" viewBox="0 0 60 100" preserveAspectRatio="none">
+          <path class="base" d="M0 50 C30 50 30 25 60 25"/><path class="base is-out" pathLength="100" d="M0 50 C30 50 30 75 60 75"/>
+          <path class="flow" pathLength="100" d="M0 50 C30 50 30 25 60 25"/>
+        </svg>
+        <svg class="yah-conn yah-conn-v" viewBox="0 0 100 40" preserveAspectRatio="none">
+          <path class="base" d="M50 0 C50 20 25 20 25 40"/><path class="base is-out" pathLength="100" d="M50 0 C50 20 75 20 75 40"/>
+          <path class="flow" pathLength="100" d="M50 0 C50 20 25 20 25 40"/>
+        </svg>
+      </div>
+      <div class="yah-lanes">
+        <div class="yah-lane">
+          <div class="yah-node yah-in" style="--d:.52s" data-area="billtrust">
+            <span class="yah-icon" data-icon="phone"></span>
+            <span class="yah-name" data-label="billtrust"></span>
+            <span class="yah-course" data-course="billtrust"></span>
+          </div>
+        </div>
+        <div class="yah-lane">
+          <div class="yah-node yah-in is-out" style="--d:.6s" data-area="otherways">
+            <span class="yah-icon" data-icon="bank"></span>
+            <span class="yah-name" data-label="otherways"></span>
+            <span class="yah-course" data-course="otherways"></span>
+          </div>
+        </div>
+      </div>
+      <div class="yah-col">
+        <svg class="yah-conn yah-conn-h" viewBox="0 0 60 100" preserveAspectRatio="none">
+          <path class="base" d="M0 25 C30 25 30 50 60 50"/><path class="base is-out" pathLength="100" d="M0 75 C30 75 30 50 60 50"/>
+          <path class="flow" pathLength="100" d="M0 25 C30 25 30 50 60 50"/>
+        </svg>
+        <svg class="yah-conn yah-conn-v" viewBox="0 0 100 40" preserveAspectRatio="none">
+          <path class="base" d="M25 0 C25 20 50 20 50 40"/><path class="base is-out" pathLength="100" d="M75 0 C75 20 50 20 50 40"/>
+          <path class="flow" pathLength="100" d="M25 0 C25 20 50 20 50 40"/>
+        </svg>
+      </div>
+      <div class="yah-col">
+        <div class="yah-node yah-in" style="--d:.7s" data-area="recorded">
+          <span class="yah-icon" data-icon="paid"></span>
+          <span class="yah-name" data-label="recorded"></span>
+          <span class="yah-course" data-course="recorded"></span>
+        </div>
+      </div>
+      <div class="yah-col">
+        <svg class="yah-conn yah-conn-h" viewBox="0 0 40 100" preserveAspectRatio="none">
+          <path class="base" d="M0 50 L40 50"/><path class="flow" pathLength="100" d="M0 50 L40 50"/>
+        </svg>
+        <svg class="yah-conn yah-conn-v" viewBox="0 0 100 40" preserveAspectRatio="none">
+          <path class="base" d="M50 0 L50 40"/><path class="flow" pathLength="100" d="M50 0 L50 40"/>
+        </svg>
+      </div>
+      <div class="yah-col">
+        <div class="yah-node yah-in" style="--d:.8s" data-area="reports">
+          <span class="yah-icon" data-icon="chart"></span>
+          <span class="yah-name" data-label="reports"></span>
+          <span class="yah-course" data-course="reports"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="yah-extra yah-in" style="--d:.9s" data-area="commercial">
+      <span class="yah-icon" data-icon="office"></span>
+      <span class="yah-extra-text">
+        <span class="yah-name" data-label="commercial"></span>
+        <span class="yah-course" data-course="commercial"></span>
+      </span>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+// ======================================================================
+// TRANSLATE HERE
+// Only change the text between the quote marks (" " or ' ') below.
+// Do not change the word before each colon (:) -- that is the label
+// the code uses to find the text, not something a learner sees.
+// Do not delete any commas , or brackets { } [ ].
+// ======================================================================
+// Which area is lit up as "You are here". One of:
+// "invoice" | "billtrust" | "otherways" | "recorded" | "reports" | "commercial"
+var CONFIG = { youAreHere: "invoice" };
+var TEXT = {
+  body: "Each course in the program covers one part of the map. This course is where the story starts: how a work order becomes an invoice.",
+  pin: "You are here",
+  sr: "Program map. You are here: {area}, covered in {course}. After a work order becomes an invoice, the client pays online in Billtrust or another way (not covered in this program), the payment is recorded in Oracle, and it shows up in Power BI reports. Commercial accounts have their own courses in the program."
+};
+// name = what happens at this point (line 1). course = the course that
+// covers it (line 2). Course titles 2 to 6 are still TBD: update them here.
+var AREAS = {
+  invoice:    { name: "Work order to invoice", course: "Lifecycle of an Invoice" },
+  billtrust:  { name: "Client pays online",  course: "Billtrust" },
+  otherways:  { name: "Client pays another way", course: "Check, EFT, ACH" },
+  recorded:   { name: "Payment recorded",    course: "Oracle – Receipts" },
+  reports:    { name: "Reports",             course: "Power BI" },
+  commercial: { name: "Commercial accounts", course: "Commercial Accounts: Why It Matters · Getting the Details Right" }
+};
+// ======================================================================
+// DO NOT EDIT BELOW THIS LINE
+// ======================================================================
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  function notifyRiseHeight(){
+    var h=document.documentElement.scrollHeight;
+    if(window.parent && window.parent!==window){
+      window.parent.postMessage({type:'setHeight',height:h},'*');
+    }
+  }
+  window.addEventListener('load', notifyRiseHeight);
+  new ResizeObserver(notifyRiseHeight).observe(document.body);
+
+  var ICONS = {
+    clipboard: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="7" width="22" height="28" rx="3"/><rect x="15" y="4" width="10" height="6" rx="2" fill="currentColor" fill-opacity=".18"/><line x1="14" y1="17" x2="26" y2="17"/><line x1="14" y1="23" x2="26" y2="23"/><line x1="14" y1="29" x2="21" y2="29"/></svg>',
+    phone:     '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="4" width="18" height="32" rx="4"/><line x1="18" y1="8" x2="22" y2="8"/><rect x="14.5" y="21" width="11" height="6" rx="3" fill="currentColor" fill-opacity=".25"/><line x1="15" y1="15" x2="25" y2="15"/></svg>',
+    bank:      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 11 25 5 34 11"/><line x1="18" y1="13" x2="18" y2="19"/><line x1="25" y1="13" x2="25" y2="19"/><line x1="32" y1="13" x2="32" y2="19"/><rect x="5" y="20" width="26" height="14" rx="2.5"/><line x1="9" y1="25" x2="19" y2="25"/><path d="M19 30 c2 -3 3 2 5 -1 s2 1 3 0"/></svg>',
+    paid:      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="28" height="18" rx="2.5"/><line x1="8" y1="16" x2="18" y2="16"/><line x1="8" y1="22" x2="14" y2="22"/><circle cx="28" cy="27" r="8" fill="currentColor" fill-opacity=".18"/><polyline points="24.5 27 27 29.5 31.5 24.5"/></svg>',
+    chart:     '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="34" x2="35" y2="34"/><rect x="8" y="22" width="5" height="12" rx="1"/><rect x="16" y="15" width="5" height="19" rx="1"/><rect x="24" y="19" width="5" height="15" rx="1"/><circle cx="31" cy="10" r="6"/><polyline points="31 7 31 10 33 11.5"/></svg>',
+    office:    '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="6" width="22" height="29" rx="2"/><line x1="14" y1="12" x2="17" y2="12"/><line x1="23" y1="12" x2="26" y2="12"/><line x1="14" y1="18" x2="17" y2="18"/><line x1="23" y1="18" x2="26" y2="18"/><line x1="14" y1="24" x2="17" y2="24"/><line x1="23" y1="24" x2="26" y2="24"/><rect x="17" y="29" width="6" height="6"/></svg>'
+  };
+  var PIN = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
+
+  var here = AREAS[CONFIG.youAreHere] ? CONFIG.youAreHere : 'invoice';
+  function fill(s){ return s.replace('{area}', AREAS[here].name).replace('{course}', AREAS[here].course); }
+  root.querySelectorAll('[data-t]').forEach(function(el){
+    var key=el.getAttribute('data-t');
+    if(TEXT[key]!==undefined) el.textContent = fill(TEXT[key]);
+  });
+  root.querySelectorAll('[data-label]').forEach(function(el){ el.textContent = AREAS[el.getAttribute('data-label')].name; });
+  root.querySelectorAll('[data-course]').forEach(function(el){ el.textContent = AREAS[el.getAttribute('data-course')].course; });
+  root.querySelectorAll('[data-icon]').forEach(function(el){ el.innerHTML = ICONS[el.getAttribute('data-icon')]; });
+  root.querySelector('[data-sr]').textContent = fill(TEXT.sr);
+
+  var target = root.querySelector('[data-area="' + here + '"]');
+  if(target){
+    root.querySelector('.yah-map').classList.add('has-here');
+    target.classList.add('is-here');
+    var pin = document.createElement('span');
+    pin.className = 'yah-pin';
+    pin.innerHTML = PIN + '<span></span>';
+    pin.lastChild.textContent = TEXT.pin;
+    target.appendChild(pin);
+  }
+})();
+</script>
+</template>
+
 <template id="src-acknowledge-signoff">
 <!--
 ======================================================================
@@ -9295,6 +9597,7 @@ const BLOCKS = [
   {id:'header-split', name:'Split Icon Header', cat:'header', img:true, desc:'Large icon badge beside the title, wraps to a centered stack on narrow widths.', verified:false},
   {id:'header-bold', name:'Bold Diagonal Header', cat:'header', img:true, desc:'Solid color block with a skewed accent panel that slides in on load.', verified:false},
   {id:'header-bold-corner', name:'Bold Corner Header', cat:'header', img:true, desc:'Solid color block with two triangular corner accents that pop in on load.', verified:false},
+  {id:'cs-you-are-here', name:'You Are Here: Program Map Banner', cat:'cs', img:false, desc:'Customer Service Advanced course opener. A compact "Where the Money Goes" map with this course\'s area lit up and pinned. Change one config line to light a different area in each course.', verified:false},
   {id:'acknowledge-signoff', name:'Acknowledgment Sign-off', cat:'compliance', img:false, desc:'Type your name and check a box to sign a statement, with a dated confirmation. A pattern Rise has never offered natively.', verified:false},
   {id:'stat-chart', name:'Stat Comparison Chart', cat:'data', img:false, desc:'Animated horizontal bar chart comparing several data points, values count up as they scroll into view. Rise has no native charting.', verified:false},
   {id:'chat-scenario', name:'Chat Scenario Simulator', cat:'decision', img:false, desc:'Texting-style conversation that reveals on tap, ending in a reply choice with branching feedback. A different feel from Rise\'s static Scenario block.', verified:false},
@@ -9316,6 +9619,9 @@ const CATEGORIES = [
   {id:'quiz', label:'Quiz / Knowledge Check'},
   {id:'gamified', label:'Gamified / Reward'},
   {id:'compliance', label:'Compliance / Sign-off'},
+  // Course-specific blocks built for the Customer Service Advanced program,
+  // grouped by program rather than by block type so they're easy to find.
+  {id:'cs', label:'Customer Service'},
 ];
 
 let THEME = {

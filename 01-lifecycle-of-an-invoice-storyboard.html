@@ -188,13 +188,12 @@ MOVING ON
   <div class="pagehead">
     <span class="loc">GETTING STARTED · Lesson 2</span>
     <h2>Learning outcomes</h2>
-    <p>Same "Welcome!" frame as Basics. This is the first page a learner sees after hitting Start, so it says plainly what the program is and where this course fits: the first chapter of an invoice's story.</p>
+    <p>Same "Welcome!" frame as Basics. This is the first page a learner sees after hitting Start, so it shows right away what the program is and where this course fits: the Program Map Banner sits between the welcome and the outcomes.</p>
   </div>
   <div class="stack">
     <article class="block">
-      <div class="bh"><span class="n">B1</span><h3>Welcome and outcomes</h3><span class="chip c-t1">Tier 1</span></div>
-      <p class="why gfx"><b>Program banner (designer):</b> a flat illustration of the "Where the Money Goes" map (same art as the Lesson 3 block), with "Invoice created" lit up. Reuse it at the top of Learning outcomes in every course, lighting a different area each time.</p>
-      <p class="why"><b>Source:</b> outcomes from your outline, unchanged. The program framing ("story of an invoice," "where it starts") is bridge text I wrote so learners know right away what they're looking at.</p>
+      <div class="bh"><span class="n">B1</span><h3>Welcome</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why"><b>Source:</b> the "story of an invoice" framing is bridge text I wrote. It's kept to one sentence because the banner right below says the rest.</p>
       <div class="codewrap"><pre><code>[H1 - Font: TBD - Size: TBD]
 Learning outcomes
 
@@ -207,13 +206,39 @@ courses in the Customer Service Advanced
 program designed for Local and Division
 Administrative Coordinators.
 
-This program follows the story of an invoice,
+The program follows the story of an invoice,
 from a completed work order to a paid bill and
-the reports behind it. Each course covers
-one part of that story. This course is where
-it starts:
-how a work order becomes an invoice.
+the reports behind it.</code></pre></div>
+    </article>
 
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>You Are Here: Program Map Banner</h3><span class="chip c-t3">Tier 3 · Library</span></div>
+      <p class="why gfx"><b>Graphic:</b> none needed. The banner is the graphic, with its own icons and highlight. If you want a person in the frame, a small cropped photo of an LAC at a desk could sit above it, but it doesn't need one.</p>
+      <p class="why"><b>Library block:</b> <code>cs-you-are-here</code>. Paste it from the ID Helper and leave it set to <code>youAreHere: "invoice"</code>. It goes here because this page is the first thing learners see after Start: the welcome names the program, the map shows it, and the outcomes say what this course covers. It's a quick-look banner (nothing to click), so it doesn't slow anyone down who has seen it before. <b>Test in Rise:</b> the layout stacks below 720px, so check whether it stacks on desktop too at Rise's content width.</p>
+      <div class="codewrap"><pre><code>[Custom HTML block - library: cs-you-are-here]
+CONFIG
+youAreHere: "invoice"
+
+TEXT (as built)
+body: Each course in the program covers one part
+of the map. This course is where the story
+starts: how a work order becomes an invoice.
+alsoTag: Also in the program
+pin: You are here
+
+AREAS (as built)
+Work order to invoice · Lifecycle of an Invoice  ◀ lit
+Client pays online · Billtrust
+Client pays another way · Check, EFT, ACH (greyed out)
+Payment recorded · Oracle – Receipts
+Reports · Power BI
+Also in the program: Commercial accounts</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B3</span><h3>Learning outcomes</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why"><b>Source:</b> outcomes from your outline, unchanged.</p>
+      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
 You can take the courses in any order.
 Together, they help you answer client billing
 and payment questions quickly and accurately.
@@ -236,7 +261,7 @@ demonstrate these learning outcomes:
   <div class="pagehead">
     <span class="loc">LIFECYCLE OF AN INVOICE · Lesson 3</span>
     <h2>How does a work order become an invoice?</h2>
-    <p>The opening of the story. Introduce the program map, then meet invoice 456, the invoice learners follow through every course.</p>
+    <p>The opening of the story. Meet invoice 456, the invoice learners follow through every course. (The program map now sits on the Learning outcomes page, so it isn't repeated here.)</p>
   </div>
   <div class="stack">
     <article class="block">
@@ -323,58 +348,7 @@ From there, the system takes over.</code></pre></div>
     </article>
 
     <article class="block">
-      <div class="bh"><span class="n">B3</span><h3>Where the Money Goes: the program map</h3><span class="chip c-t3">Tier 3 · New build</span></div>
-      <p class="why gfx"><b>Built into the HTML (inline SVG):</b> a map that branches, not a straight line. Clipboard (invoice created) → a fork with two lanes, a phone with a pay button (Billtrust) and a check plus bank icon (other ways) → both lanes merge into a check stamped PAID (payment recorded). Above everything, a wide band with a bar chart and a small "1 day behind" clock (Power BI). A small dotted shortcut line from Billtrust labeled "Deposit" curves back before the invoice. The commercial side trail is a dashed branch with an office-building icon. Same art in all 6 courses.</p>
-      <p class="why"><b>Why custom:</b> this is the program map. Each area names the course that covers it, which answers "what am I looking at?" right away. <b>Why branches:</b> Bryan was clear the money doesn't always move in one order. Billtrust is only one of about 10 ways clients pay, checks go straight to Receipts, deposits are paid before an invoice exists, and Power BI looks over everything a day behind. The areas aren't numbered, so the map doesn't suggest a fixed order, which also fits taking the courses in any order. The same block appears in all six courses with a different area highlighted. <b>Build:</b> logged in ID-HELPER-NEW-BLOCKS.md. Tap an area to expand it, and set the highlighted area in one config line per course.</p>
-      <div class="codewrap"><pre><code>[Custom HTML block - Font: TBD - Size: TBD]
-Interaction: Where the Money Goes (new build)
-Title: Where the money goes
-Instruction: Tap each part of the map to
-learn more.
-You are here: Invoice created
-
-INVOICE CREATED
-Course: Lifecycle of an Invoice   ◀ YOU ARE HERE
-The crew completes the work order, the
-Arborist Rep reviews it, and you complete it.
-Oracle turns it into an invoice.
-
-CLIENT PAYS (two lanes)
-  Lane 1 · Billtrust
-  Course: Billtrust
-  Clients pay online by credit card, debit
-  card, or bank account.
-
-  Lane 2 · Other ways
-  Checks, bank bill pay, EFT, and ACH.
-  These skip Billtrust.
-
-PAYMENT RECORDED
-Course: Oracle – Receipts
-Every payment, from any lane, lands here.
-Research any payment and where it was
-applied.
-
-THE BIG PICTURE (band across the top)
-Course: Power BI
-Looks over everything: your office, your
-reps, and what's been billed. It runs a day
-behind Oracle.
-
-SHORTCUT · Deposits
-Some clients pay a deposit in Billtrust
-before the work is done, before there's
-an invoice.
-
-SIDE TRAIL · Commercial accounts
-Courses: Commercial Accounts: Why It Matters
-and Getting the Details Right
-The same map, with commercial rules
-along the way.</code></pre></div>
-    </article>
-
-    <article class="block">
-      <div class="bh"><span class="n">B4</span><h3>Before it reaches you</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="bh"><span class="n">B3</span><h3>Before it reaches you</h3><span class="chip c-t1">Tier 1</span></div>
       <p class="why gfx"><b>Three small icons, or stills cropped from the video:</b> tablet (crew), laptop (Arborist Rep), desk with headset (you).</p>
       <p class="why"><b>Why plain:</b> the video just showed this, so a short numbered list is enough for anyone who skipped the video or watched it muted.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
@@ -390,7 +364,7 @@ Before it reaches you
     </article>
 
     <article class="block bridge">
-      <div class="bh"><span class="n">B5</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="bh"><span class="n">B4</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
       <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
 You've seen the big picture. In the next
 section, you'll learn your part in billing.</code></pre></div>
@@ -536,7 +510,7 @@ scenes.</code></pre></div>
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Day 0 to Day 2 timeline</h3><span class="chip c-t2">Tier 2 · Timeline</span><span class="chip c-must">Must-know</span></div>
       <p class="why gfx"><b>An image on each timeline entry:</b> desk lamp (Day 0) · moon and clock at 2–4 AM · gear (Oracle creates the invoice) · eye icon for the 6 PM "sneak peek" · mail truck (print vendor) · PDF icon · checkered flag (Billtrust, last stop).</p>
-      <p class="why"><b>Why native:</b> the Rise Timeline block is a natural fit and works well on mobile. The library's Horizontal Timeline Stepper is an upgrade option if you want it to match the program map visually.</p>
+      <p class="why"><b>Why native:</b> the Rise Timeline block is a natural fit and works well on mobile. The library's Horizontal Timeline Stepper is an upgrade option if you want something more visual.</p>
       <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
 Scroll down to follow the invoice.
 
@@ -819,7 +793,7 @@ START OVER</code></pre></div>
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Next course</h3><span class="chip c-t1">Tier 1</span></div>
-      <p class="why gfx"><b>Teaser image:</b> the 456 envelope sitting in a mailbox, with the "Where the Money Goes" map below it and the "Client pays" area pulsing.</p>
+      <p class="why gfx"><b>Teaser image:</b> the 456 envelope sitting in a mailbox, with a small crop of the Program Map Banner showing "Client pays online" (Billtrust) next.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Next course
 
@@ -906,8 +880,8 @@ FOR YOU / TEAM
 - Narrator for the intro video
 - Coin graphic for the Billing vs. Receipts
   flashcard
-- Build: "Where the Money Goes" block (new),
-  reused in all 6 courses</code></pre></div>
+- Program Map Banner: built (cs-you-are-here).
+  Test it at Rise content width.</code></pre></div>
     </article>
   </div>
 </section>
