@@ -64,6 +64,11 @@ translation instructions - open a block below to find those.
     transition:background .15s var(--ease), color .15s var(--ease);
   }
   .device-toggle button.active{background:var(--green); color:#fff; box-shadow:0 2px 6px rgba(42,92,70,.25);}
+  .storyboard-link{
+    display:block; width:14px; height:14px; border-radius:3px; flex-shrink:0;
+    background:var(--border); opacity:.6; transition:opacity .15s var(--ease), background .15s var(--ease);
+  }
+  .storyboard-link:hover, .storyboard-link:focus-visible{opacity:1; background:var(--green);}
   .theme-btn{
     border:1px solid var(--border); background:#fff; padding:10px 18px; border-radius:12px;
     font-size:13px; font-weight:700; cursor:pointer; color:var(--ink); font-family:inherit; min-height:44px;
@@ -404,6 +409,9 @@ translation instructions - open a block below to find those.
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
         Theme settings
       </button>
+      <!-- Subtle link to the storyboard page, which sits next to this
+           index.html in the site root (same folder once uploaded). -->
+      <a class="storyboard-link" href="01-lifecycle-of-an-invoice-storyboard.html" title="Lifecycle of an Invoice storyboard" aria-label="Open the Lifecycle of an Invoice storyboard"></a>
     </div>
   </div>
 </header>
@@ -449,7 +457,8 @@ translation instructions - open a block below to find those.
     <div class="theme-preset-row">
       <label for="t-text-preset">Preset</label>
       <select id="t-text-preset" onchange="applyTextSizePreset(this.value)">
-        <option value="17">Body text: 17px (Default)</option>
+        <option value="customerService">Customer Service: 17px body, 32px headers (Default)</option>
+        <option value="17">Body text: 17px</option>
         <option value="18">Body text: 18px</option>
         <option value="20">Body text: 20px</option>
       </select>
@@ -9582,6 +9591,23 @@ const THEME_PRESETS = {
   canopy:  { name: 'Canopy (Deep Green + Navy)', primary: '#114E51', text: '#23140C', instruction: '#2F455C' },
   signal:  { name: 'Signal (Maroon + Dark Blue)', primary: '#8F0605', text: '#424241', instruction: '#022C44' },
   slate:   { name: 'Slate (Gray + Forest Green)', primary: '#424241', text: '#23140C', instruction: '#186E61' },
+  // A full theme preset, not just colors: it also sets the font and text
+  // sizes (see the font/bodyPx/sizes handling in applyPreset). Pale
+  // instruction box with a darker periwinkle text, same pattern as Default,
+  // since #7B89ED itself is too light to carry white instruction text.
+  // Sizes start from the 17px ratio set, then override headers (32),
+  // subheaders (24) and the highlighted result number (20).
+  customerService: { name: 'Customer Service (Periwinkle)', primary: '#7B89ED', text: '#000000', instruction: lightenHex('#7B89ED', 0.88), instructionText: '#3F4DB8',
+    font: 'inter', textPreset: 'customerService' },
+};
+// The preset that loads on startup and that Reset returns to.
+const DEFAULT_THEME_PRESET = 'customerService';
+
+// Named Typography presets, alongside the plain numeric body-size ones
+// (17/18/20) in the Typography dropdown. Each starts from the ratio set for
+// bodyPx, then overrides individual roles by hand.
+const TEXT_SIZE_PRESETS = {
+  customerService: { bodyPx: 17, sizes: { headerTitleSize: 32, subheaderSize: 24, h1Size: 20 } },
 };
 
 function applyPreset(key){
@@ -9616,6 +9642,15 @@ function applyPreset(key){
   // it's set to Bartlett's actual brand colors (see THEME.confettiColors),
   // not a generic accent that should drift with whatever scheme a course
   // happens to use.
+  // Optional typography: only presets that define these touch the font or
+  // sizes, so the plain color presets leave Typography as it was.
+  if(p.font && FONT_OPTIONS[p.font]){
+    document.getElementById('t-font').value = FONT_OPTIONS[p.font].family;
+    document.getElementById('t-google-font-url').value = FONT_OPTIONS[p.font].url;
+    const fontSelect = document.getElementById('t-font-select');
+    if(fontSelect) fontSelect.value = p.font;
+  }
+  if(p.textPreset) setTextSizeFields(p.textPreset);
   const picker = document.getElementById('t-preset');
   if(picker) picker.value = key;
   onThemeChange();
@@ -9650,9 +9685,17 @@ const TEXT_SIZE_FIELD_IDS = {
 // the ratio table since that's exactly where the ratios came from), 18 and
 // 20 are a step and two steps up for courses that want larger type
 // throughout, everything still in the same proportions.
-function applyTextSizePreset(bodyPx){
-  bodyPx = parseInt(bodyPx, 10);
-  if(!bodyPx) return;
+function applyTextSizePreset(value){
+  if(setTextSizeFields(value)) onThemeChange();
+}
+// Writes Body plus every size field for a preset, without triggering
+// onThemeChange - shared by applyTextSizePreset and by full theme presets
+// in applyPreset that also set typography. `value` is either a body size
+// (17/18/20) or a TEXT_SIZE_PRESETS key. Returns false if it's neither.
+function setTextSizeFields(value){
+  const named = TEXT_SIZE_PRESETS[value];
+  const bodyPx = named ? named.bodyPx : parseInt(value, 10);
+  if(!bodyPx) return false;
   document.getElementById('t-body').value = bodyPx + 'px';
   // questionSize tracks bodyPx 1:1 (ratio of 1) rather than living in
   // TEXT_SIZE_RATIOS -- same direct-assignment treatment as bodySize
@@ -9663,9 +9706,14 @@ function applyTextSizePreset(bodyPx){
     const px = Math.round(bodyPx * TEXT_SIZE_RATIOS[key]);
     document.getElementById(TEXT_SIZE_FIELD_IDS[key]).value = px + 'px';
   });
+  if(named && named.sizes){
+    Object.keys(named.sizes).forEach(k=>{
+      document.getElementById(TEXT_SIZE_FIELD_IDS[k]).value = named.sizes[k] + 'px';
+    });
+  }
   const picker = document.getElementById('t-text-preset');
-  if(picker) picker.value = String(bodyPx);
-  onThemeChange();
+  if(picker) picker.value = named ? value : String(bodyPx);
+  return true;
 }
 
 // Shared by the "N Conifers" cluster icons below: draws the exact same
@@ -12055,7 +12103,7 @@ function resetTheme(){
   // exactly what the "default" preset applies - one shared source of truth
   // instead of duplicating the same ~11 values here and in THEME_PRESETS.
   // That includes confetti color 1, which applyPreset() re-seeds to match.
-  applyPreset('default');
+  applyPreset(DEFAULT_THEME_PRESET);
 }
 
 function downloadThemeJson(){
@@ -12076,6 +12124,9 @@ wirePaletteSwatches();
 syncPaletteSwatches();
 wireRiseRecommendCopy();
 initThemeSectionsCollapsed();
+// The hardcoded THEME values above are the Forest Green look; this swaps in
+// the current default preset (colors, font and sizes) on load.
+applyPreset(DEFAULT_THEME_PRESET);
 
 // The filters bar (search + category chips) is sticky right below the
 // header, but the header's own height isn't fixed (it wraps to a second

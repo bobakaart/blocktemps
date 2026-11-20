@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oracle Billing Storyboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a storyboard binder. Sticky tab strip = Rise pages; each page is a stack of block cards with a copy-ready code block. */
+:root{
+  --bg:#eef1ef; --surface:#ffffff; --ink:#18221d; --muted:#56635c; --line:#d5ddd8;
+  --accent:#2c6a4c; --accent-soft:#e1efe7; --code-bg:#f4f7f5;
+  --must:#a8321f; --must-soft:#fbe9e5; --nice:#3d5a80; --nice-soft:#e6edf6;
+  --t1:#5b6670; --t2:#2c6a4c; --t3:#8a4fbf; --vid:#b06a00;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121815; --surface:#1a221e; --ink:#e3ebe6; --muted:#9aa9a1; --line:#2c3832;
+    --accent:#6cc39a; --accent-soft:#1f3329; --code-bg:#141b17;
+    --must:#f08a77; --must-soft:#3a201b; --nice:#8fb1dc; --nice-soft:#1d2733;
+    --t1:#a3aeb7; --t2:#6cc39a; --t3:#c39af0; --vid:#e6a548;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1a221e; --ink:#e3ebe6; --muted:#9aa9a1; --line:#2c3832;
+  --accent:#6cc39a; --accent-soft:#1f3329; --code-bg:#141b17;
+  --must:#f08a77; --must-soft:#3a201b; --nice:#8fb1dc; --nice-soft:#1d2733;
+  --t1:#a3aeb7; --t2:#6cc39a; --t3:#c39af0; --vid:#e6a548;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header.top{padding:28px 0 14px}
+.eyebrow{font:600 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 clamp(26px,5vw,38px)/1.1 var(--display);margin:8px 0 6px;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:65ch}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--muted)}
+.stat b{color:var(--ink);font-weight:600}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tablist{display:flex;gap:4px;overflow-x:auto;padding:10px 0;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:8px 12px;font:500 14px/1.2 var(--body);cursor:pointer;text-align:left}
+.tab small{display:block;font:500 11px/1.2 var(--mono);color:var(--muted);margin-bottom:2px}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab[aria-selected="true"] small{color:rgba(255,255,255,.8)}
+:root[data-theme="dark"] .tab[aria-selected="true"],:root:not([data-theme="light"]) .tab[aria-selected="true"]{color:var(--bg)}
+.tab:focus-visible,.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding:22px 0 60px}
+section.page{display:none}
+section.page.active{display:block}
+.pagehead{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.pagehead .loc{font:500 12px/1 var(--mono);color:var(--muted)}
+.pagehead h2{font:700 clamp(22px,4vw,28px)/1.2 var(--display);margin:0;text-wrap:balance}
+.pagehead p{margin:0;color:var(--muted);max-width:65ch}
+.stack{display:flex;flex-direction:column;gap:14px}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.bh{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.bh .n{font:500 12px/1 var(--mono);color:var(--muted)}
+.bh h3{font:600 16px/1.3 var(--body);margin:0;flex:1 1 220px}
+.chip{font:600 11px/1 var(--body);letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:5px 9px;border:1px solid currentColor;white-space:nowrap}
+.c-t1{color:var(--t1)} .c-t2{color:var(--t2)} .c-t3{color:var(--t3)} .c-vid{color:var(--vid)}
+.c-must{color:var(--must);background:var(--must-soft);border-color:transparent}
+.c-nice{color:var(--nice);background:var(--nice-soft);border-color:transparent}
+.why{margin:0;color:var(--muted);font-size:14px;max-width:70ch}
+.why b{color:var(--ink);font-weight:600}
+.codewrap{position:relative}
+pre{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 14px 14px;overflow-x:auto;font:13.5px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word}
+.copy{position:absolute;top:8px;right:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px 10px;font:500 12px/1.2 var(--body);cursor:pointer}
+.copy.done{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tbc{background:#fff3c4;color:#5a4300;border-radius:4px;padding:0 4px}
+:root[data-theme="dark"] .tbc{background:#4a3d0f;color:#ffe9a3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tbc{background:#4a3d0f;color:#ffe9a3}}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--code-bg)}
+tr:last-child td{border-bottom:0}
+td.sc{font:500 12px/1.4 var(--mono);color:var(--muted);white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-top:10px}
+.gfx{border-left:3px dashed var(--vid);padding-left:10px}
+.bridge{border-left:3px solid var(--accent);padding-left:12px}
+ul.plain{margin:0;padding-left:20px}
+ul.plain li{margin:4px 0}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Customer Service Advanced · Course 1 of 6 · Draft v1</div>
+    <h1>Lifecycle of an Invoice</h1>
+    <p class="sub" style="margin-bottom:6px">System focus: Oracle – Billing (and your part in NBS)</p>
+    <p class="sub">Rise storyboard. Each tab is one Rise lesson page. Copy each code block straight into its Rise block. <span class="tbc">Highlighted</span> items need SME confirmation.</p>
+    <div class="stats">
+      <span class="stat"><b>~15 min</b> course length</span>
+      <span class="stat"><b>1</b> narrated video</span>
+      <span class="stat"><b>3</b> custom moments</span>
+      <span class="stat"><b>5</b> native interactions</span>
+      <span class="stat">SMEs: <b>Bryan</b> (Oracle) · <b>Erin</b> (NBS)</span>
+    </div>
+    <div class="legend">
+      <span class="chip c-t1">Tier 1 · Standard</span>
+      <span class="chip c-t2">Tier 2 · Native Rise</span>
+      <span class="chip c-t3">Tier 3 · Custom</span>
+      <span class="chip c-vid">Video</span>
+      <span class="chip c-must">Must-know</span>
+      <span class="chip c-nice">Nice-to-know</span>
+      <span class="stat" style="border-left:3px dashed var(--vid)">Dashed line = graphic idea</span>
+    </div>
+  </header>
+</div>
+
+<nav class="tabs" aria-label="Rise pages">
+  <div class="wrap"><div class="tablist" role="tablist" id="tablist"></div></div>
+</nav>
+
+<div class="wrap">
+<main>
+
+<!-- ============ COURSE CARD ============ -->
+<section class="page" id="p-card" data-tab="Course card" data-num="LMS">
+  <div class="pagehead">
+    <span class="loc">Acorn Learning · course card + Rise outline</span>
+    <h2>Course card and outline</h2>
+    <p>Basics-style course card and the section and lesson structure. Sections are in all caps, and lesson titles are the learner's own questions.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Course description</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Course thumbnail (AI-generate or designer):</b> an envelope marked "Invoice 456" with a leaf tucked in the flap. Start a thumbnail series: same style for all 6 courses, one object each (envelope, phone with a pay button, check stamped PAID, bar chart, two commercial courses TBD).</p>
+      <p class="why"><b>Pattern:</b> Basics card verbs (Follow / Learn / Find out) plus the standard three closing lines.</p>
+      <div class="codewrap"><pre><code>[Course title - Font: TBD - Size: TBD]
+Lifecycle of an Invoice
+
+[Course description - Font: TBD - Size: TBD]
+Every invoice has a story, and this is where
+it starts. Follow an invoice from a completed
+work order in NBS to the client's mailbox.
+Learn your part in billing and why it matters
+every day. Find out how to answer client
+invoice questions and get invoice copies in
+Oracle.
+
+Select the "Start Course" button above to begin.
+Course length: 15 minutes
+This course has audio.</code></pre></div>
+    </article>
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>Rise outline</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="codewrap"><pre><code>GETTING STARTED
+  Getting started
+  Learning outcomes
+LIFECYCLE OF AN INVOICE
+  How does a work order become an invoice?
+  What is my part in billing?
+  What happens after I complete a work order?
+  How do I answer client questions about invoices?
+MOVING ON
+  Moving on</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ GETTING STARTED ============ -->
+<section class="page" id="p-start" data-tab="Getting started" data-num="1.1">
+  <div class="pagehead">
+    <span class="loc">GETTING STARTED · Lesson 1</span>
+    <h2>Getting started</h2>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Placeholder</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="codewrap"><pre><code>[Copy/paste from existing course — no changes]</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ LEARNING OUTCOMES ============ -->
+<section class="page" id="p-outcomes" data-tab="Learning outcomes" data-num="1.2">
+  <div class="pagehead">
+    <span class="loc">GETTING STARTED · Lesson 2</span>
+    <h2>Learning outcomes</h2>
+    <p>Same "Welcome!" frame as Basics. This is the first page a learner sees after hitting Start, so it says plainly what the program is and where this course fits: the first chapter of an invoice's story.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Welcome and outcomes</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Program banner (designer):</b> a flat illustration of the "Where the Money Goes" map (same art as the Lesson 3 block), with "Invoice created" lit up. Reuse it at the top of Learning outcomes in every course, lighting a different area each time.</p>
+      <p class="why"><b>Source:</b> outcomes from your outline, unchanged. The program framing ("story of an invoice," "where it starts") is bridge text I wrote so learners know right away what they're looking at.</p>
+      <div class="codewrap"><pre><code>[H1 - Font: TBD - Size: TBD]
+Learning outcomes
+
+[H2 - Font: TBD - Size: TBD]
+Welcome!
+
+[Body text - Font: TBD - Size: TBD]
+Lifecycle of an Invoice is the first of 6
+courses in the Customer Service Advanced
+program designed for Local and Division
+Administrative Coordinators.
+
+This program follows the story of an invoice,
+from a completed work order to a paid bill and
+the reports behind it. Each course covers
+one part of that story. This course is where
+it starts:
+how a work order becomes an invoice.
+
+You can take the courses in any order.
+Together, they help you answer client billing
+and payment questions quickly and accurately.
+
+By the end of this course, you should
+demonstrate these learning outcomes:
+
+[Bulleted list - Font: TBD - Size: TBD]
+- Explain the lifecycle of an invoice,
+  from NBS to Oracle
+- Complete work orders in Billing Review daily
+- Answer invoice questions using Oracle Billing
+- Get copies of or reprint invoices from Oracle</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ LESSON: WORK ORDER -> INVOICE ============ -->
+<section class="page" id="p-lifecycle" data-tab="Work order to invoice" data-num="2.1">
+  <div class="pagehead">
+    <span class="loc">LIFECYCLE OF AN INVOICE · Lesson 3</span>
+    <h2>How does a work order become an invoice?</h2>
+    <p>The opening of the story. Introduce the program map, then meet invoice 456, the invoice learners follow through every course.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B0</span><h3>The story starts here</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Hero image (AI-generate, or a real field photo plus a graphic overlay):</b> a pruning job on a residential property with a luggage tag hanging from a branch that reads "456." The luggage tag starts the road-trip motif used in Lesson 5 and later courses. Avoid real faces, trucks or logos if you AI-generate.</p>
+      <p class="why"><b>Why:</b> since there's no intro course, this block does that job: before any content, learners see that they're at the beginning of a story. <b>Recurring thread:</b> invoice 456 (Dana Alvarez) is the same example Bryan used in the brainstorm. She can come back in Billtrust (she pays), Receipts (where her payment went) and Power BI (her invoice in the reports), which ties the program together whatever order learners take it in.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Every invoice has a story
+
+[Tagline - Font: TBD - Size: TBD]
+This is where it starts.
+
+[Body text - Font: TBD - Size: TBD]
+Meet invoice 456. Right now, it isn't an
+invoice at all. It's a pruning job on Dana
+Alvarez's property.
+
+In this program, you'll follow invoice 456
+from start to finish: how it's created, how
+Ms. Alvarez pays it, where her payment goes,
+and how it shows up in your office's reports.
+
+It all starts with how a work order
+becomes an invoice.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Intro video: Lifecycle of an Invoice (~60 sec)</h3><span class="chip c-vid">Video</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Video poster frame:</b> the title card from scene 6, "Lifecycle of an Invoice," with the 456 luggage tag. Also see the Visuals column in the script.</p>
+      <p class="why"><b>Why video:</b> the outline already calls for a short intro video, and this is a story of things moving between people and systems, which motion and voice show better than text. It follows invoice 456 so the story carries straight into the video. Narration is about 120 words, roughly 60 seconds. <b>Narrator:</b> Bryan, Erin, or a voiceover <span class="tbc">TBC</span>.</p>
+      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+Click the play (▶) button to watch the
+1-minute video.
+
+[Video caption - Font: TBD - Size: TBD]
+Lifecycle of an Invoice</code></pre></div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Scene</th><th>Narration</th><th>Visuals</th><th>Ask SME for</th></tr></thead>
+        <tbody>
+          <tr><td class="sc">1 · 0:00</td><td>Every invoice has a story. Invoice 456 starts out on Dana Alvarez's property.</td><td>Crew finishing a job: chipper winding down, crew leader walking to the truck. On-screen tag: "Invoice 456."</td><td>Field footage (any office)</td></tr>
+          <tr><td class="sc">2 · 0:05</td><td>When the job's done, the crew completes the work order on the tablet.</td><td>Close-up of a crew leader tapping through the work order on a tablet.</td><td>Tablet footage or a screen capture</td></tr>
+          <tr><td class="sc">3 · 0:12</td><td>Next, the Arborist Rep reviews it in Work Order Review and pushes it to Billing Review.</td><td>Arborist Rep at a laptop or in a truck. NBS Work Order Review screen.</td><td>Rep footage · NBS screenshot</td></tr>
+          <tr><td class="sc">4 · 0:20</td><td>That's where you come in. You review the work order and complete it in NBS.</td><td>LAC at a desk. NBS Work Orders filtered by Billing Review, cursor on Complete.</td><td>Office footage · NBS screenshot (Erin)</td></tr>
+          <tr><td class="sc">5 · 0:30</td><td>From there, billing is highly automated. Overnight, the work order travels to Oracle and becomes an invoice. The next day, it's printed, mailed, and lands in Billtrust.</td><td>Motion graphic of the billing path: NBS → Oracle → envelope → Billtrust, with "Day 0 / Day 1 / Day 2" labels.</td><td>Oracle and Billtrust screenshots (Bryan)</td></tr>
+          <tr><td class="sc">6 · 0:45</td><td>But none of it happens without you. No completion, no invoice. This course is where the story starts.</td><td>Back to the LAC at the desk. Title card: "Lifecycle of an Invoice."</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+      <div class="codewrap"><pre><code>NARRATION SCRIPT (for recording)
+
+Every invoice has a story. Invoice 456 starts
+out on Dana Alvarez's property.
+
+When the job's done, the crew completes the
+work order on the tablet.
+
+Next, the Arborist Rep reviews it in Work Order
+Review and pushes it to Billing Review.
+
+That's where you come in. You review the work
+order and complete it in NBS.
+
+From there, billing is highly automated.
+Overnight, the work order travels to Oracle and
+becomes an invoice. The next day, it's printed,
+mailed, and lands in Billtrust.
+
+But none of it happens without you.
+No completion, no invoice.
+This course is where the story starts.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>Billing is highly automated</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Spot illustration (AI-generate):</b> a finger pressing a "Complete" button that tips over a row of dominos (NBS → Oracle → envelope → Billtrust). One push, and the rest happens on its own. Quirky but on-message.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Billing is highly automated
+
+[Body text - Font: TBD - Size: TBD]
+You don't do anything in Oracle to create or
+send an invoice. Your part happens in NBS:
+reviewing and completing the work order.
+
+From there, the system takes over.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B3</span><h3>Where the Money Goes: the program map</h3><span class="chip c-t3">Tier 3 · New build</span></div>
+      <p class="why gfx"><b>Built into the HTML (inline SVG):</b> a map that branches, not a straight line. Clipboard (invoice created) → a fork with two lanes, a phone with a pay button (Billtrust) and a check plus bank icon (other ways) → both lanes merge into a check stamped PAID (payment recorded). Above everything, a wide band with a bar chart and a small "1 day behind" clock (Power BI). A small dotted shortcut line from Billtrust labeled "Deposit" curves back before the invoice. The commercial side trail is a dashed branch with an office-building icon. Same art in all 6 courses.</p>
+      <p class="why"><b>Why custom:</b> this is the program map. Each area names the course that covers it, which answers "what am I looking at?" right away. <b>Why branches:</b> Bryan was clear the money doesn't always move in one order. Billtrust is only one of about 10 ways clients pay, checks go straight to Receipts, deposits are paid before an invoice exists, and Power BI looks over everything a day behind. The areas aren't numbered, so the map doesn't suggest a fixed order, which also fits taking the courses in any order. The same block appears in all six courses with a different area highlighted. <b>Build:</b> logged in ID-HELPER-NEW-BLOCKS.md. Tap an area to expand it, and set the highlighted area in one config line per course.</p>
+      <div class="codewrap"><pre><code>[Custom HTML block - Font: TBD - Size: TBD]
+Interaction: Where the Money Goes (new build)
+Title: Where the money goes
+Instruction: Tap each part of the map to
+learn more.
+You are here: Invoice created
+
+INVOICE CREATED
+Course: Lifecycle of an Invoice   ◀ YOU ARE HERE
+The crew completes the work order, the
+Arborist Rep reviews it, and you complete it.
+Oracle turns it into an invoice.
+
+CLIENT PAYS (two lanes)
+  Lane 1 · Billtrust
+  Course: Billtrust
+  Clients pay online by credit card, debit
+  card, or bank account.
+
+  Lane 2 · Other ways
+  Checks, bank bill pay, EFT, and ACH.
+  These skip Billtrust.
+
+PAYMENT RECORDED
+Course: Oracle – Receipts
+Every payment, from any lane, lands here.
+Research any payment and where it was
+applied.
+
+THE BIG PICTURE (band across the top)
+Course: Power BI
+Looks over everything: your office, your
+reps, and what's been billed. It runs a day
+behind Oracle.
+
+SHORTCUT · Deposits
+Some clients pay a deposit in Billtrust
+before the work is done, before there's
+an invoice.
+
+SIDE TRAIL · Commercial accounts
+Courses: Commercial Accounts: Why It Matters
+and Getting the Details Right
+The same map, with commercial rules
+along the way.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B4</span><h3>Before it reaches you</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Three small icons, or stills cropped from the video:</b> tablet (crew), laptop (Arborist Rep), desk with headset (you).</p>
+      <p class="why"><b>Why plain:</b> the video just showed this, so a short numbered list is enough for anyone who skipped the video or watched it muted.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Before it reaches you
+
+[Numbered list - Font: TBD - Size: TBD]
+1. The crew completes the work order
+   on the tablet.
+2. The Arborist Rep reviews it
+   (Work Order Review) and pushes it
+   to Billing Review.
+3. You review and complete it in NBS.</code></pre></div>
+    </article>
+
+    <article class="block bridge">
+      <div class="bh"><span class="n">B5</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+You've seen the big picture. In the next
+section, you'll learn your part in billing.</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ LESSON: MY PART ============ -->
+<section class="page" id="p-mypart" data-tab="My part in billing" data-num="2.2">
+  <div class="pagehead">
+    <span class="loc">LIFECYCLE OF AN INVOICE · Lesson 4</span>
+    <h2>What is my part in billing?</h2>
+    <p>The core of the course: the daily Billing Review routine and "no completion, no invoice."</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Check Billing Review every day</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Check Billing Review every day
+
+[Body text - Font: TBD - Size: TBD]
+Work orders show up in Billing Review
+whenever reps push them. There are no
+notifications, so checking is part of
+your daily routine.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>Quirky beat: same office, same day</h3><span class="chip c-t1">Tier 1 · Statement</span></div>
+      <p class="why gfx"><b>Two-panel image (AI-generate):</b> left, an empty inbox tray and a wall clock at 8:00 with a sunrise in the window. Right, the same tray overflowing with work orders and the clock at 2:00. Sits next to or behind the Statement block.</p>
+      <p class="why"><b>Why:</b> a Rise Statement block makes Erin and Bryan's "0 in the morning, 15 by 2 PM" stick without any extra build. It's a small moment of humor, used once. <b>Option:</b> the library's Animated Counter could count 0 → 15, but plain text is enough here.</p>
+      <div class="codewrap"><pre><code>[Statement block - Font: TBD - Size: TBD]
+Morning: 0 work orders.
+2 PM: 15 work orders.
+Same office. Same day.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B3</span><h3>Review and complete the work order</h3><span class="chip c-t2">Tier 2 · Process</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>SME screenshots (Erin):</b> annotate each with one highlight box and a number badge in the accent color. Crop tightly to the relevant area so they read on a phone. Use a test work order for Dana Alvarez / invoice 456 so the story carries through.</p>
+      <p class="why"><b>Why Process with screenshots, not a screen recording:</b> zoomable screenshots are easier to read than a screen recording on small screens, and learners can move through them at their own pace. Matches the Basics Visual Guide slides.</p>
+      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+Click the side arrows to navigate through
+the steps below. Click to zoom in on the
+visuals.
+
+[Process block - intro]
+Review and complete the work order
+
+[Step 1 - Find it]
+In NBS, go to Work Orders and filter by
+Billing Review.
+(Screenshot: Work Orders, Billing Review filter)
+
+[Step 2 - Review it]
+Open the work order and review it.
+(Screenshot: work order detail)
+
+[Step 3 - Fill it in]
+Enter the hours, equipment, and the foreman.
+(Screenshot: hours/equipment/foreman fields)
+
+[Step 4 - Complete it]
+Select Complete.  [TBC with Erin: Complete or Save?]
+(Screenshot: Complete button)</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B4</span><h3>No completion, no invoice</h3><span class="chip c-t1">Tier 1 · Note</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Icon:</b> an envelope with a red "no" slash, or a "NOT INVOICED" rubber stamp.</p>
+      <div class="codewrap"><pre><code>[Note block - Font: TBD - Size: TBD]
+No completion, no invoice.
+If you don't complete the work order,
+it's never invoiced.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B5</span><h3>Put the statuses in order</h3><span class="chip c-t3">Tier 3 · Library</span></div>
+      <p class="why gfx"><b>Styling:</b> make the drag tiles look like NBS status pills, using the same colors as in NBS (screenshot from Erin), so the activity looks like the real screen.</p>
+      <p class="why"><b>Why:</b> the status order is real sequence knowledge, and the library's <b>Reorder Steps</b> block (drag, with lock-on-retry) already fits. A quick, hands-on check that doesn't count toward a score. All five statuses come from the SME notes.</p>
+      <div class="codewrap"><pre><code>[Custom HTML block - Font: TBD - Size: TBD]
+Interaction: Reorder Steps (library)
+Instruction: Drag the statuses into the
+order a work order moves through them.
+
+Correct order:
+1. Work Order Review
+2. Billing Review
+3. Completed
+4. Pending Invoice
+5. Invoiced
+
+Feedback (correct):
+Nice work! Oracle isn't involved until the
+work order is in Invoiced status.
+
+Feedback (incorrect):
+Try again.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B6</span><h3>Who else can complete?</h3><span class="chip c-t1">Tier 1</span><span class="chip c-nice">Nice-to-know</span></div>
+      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+Arborist Reps and Division Admins can
+complete work orders too, but it's very
+rare. It's almost always you.</code></pre></div>
+    </article>
+
+    <article class="block bridge">
+      <div class="bh"><span class="n">B7</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+You hit Complete. Now what? In the next
+section, follow the invoice on its trip
+from NBS to Billtrust.</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ LESSON: AFTER COMPLETE ============ -->
+<section class="page" id="p-after" data-tab="After I complete" data-num="2.3">
+  <div class="pagehead">
+    <span class="loc">LIFECYCLE OF AN INVOICE · Lesson 5</span>
+    <h2>What happens after I complete a work order?</h2>
+    <p>Bryan's Day 0 to Day 2 timeline, then a quick check on the most common timing question.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>The invoice's overnight road trip</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Hero illustration (AI-generate, the course's signature image):</b> an envelope character wearing the 456 luggage tag, driving through the night under a moon past road signs reading NBS → Oracle → Print vendor → Billtrust. Same road-trip motif as Lesson 3.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Invoice 456's overnight road trip
+
+[Tagline - Font: TBD - Size: TBD]
+From Day 0 to Day 2
+
+[Body text - Font: TBD - Size: TBD]
+You just completed the work order for Dana
+Alvarez's pruning job. From here, the rest is
+automated. Here's what happens behind the
+scenes.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>Day 0 to Day 2 timeline</h3><span class="chip c-t2">Tier 2 · Timeline</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>An image on each timeline entry:</b> desk lamp (Day 0) · moon and clock at 2–4 AM · gear (Oracle creates the invoice) · eye icon for the 6 PM "sneak peek" · mail truck (print vendor) · PDF icon · checkered flag (Billtrust, last stop).</p>
+      <p class="why"><b>Why native:</b> the Rise Timeline block is a natural fit and works well on mobile. The library's Horizontal Timeline Stepper is an upgrade option if you want it to match the program map visually.</p>
+      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+Scroll down to follow the invoice.
+
+[Timeline block]
+Day 0
+You complete the work order in NBS.
+
+Day 1 · Early morning
+Completed work orders go from NBS to Oracle
+(around 2–4 AM).  [TBC with Bryan: exact time]
+
+Day 1 · During the day
+Oracle creates the invoice.
+
+Day 1 · Around 6 PM
+The invoice shows up back in NBS.
+Think of it as a sneak peek.
+
+Day 2 · Early morning
+Oracle batches the prior day's invoices and
+sends them to the print vendor. The vendor
+prints and mails them.
+
+Day 2 · Around 2 PM
+The vendor sends the PDFs back to Oracle.
+
+Day 2 · Around 4–4:30 PM
+Oracle sends the invoices to Billtrust.
+That's the last stop.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B3</span><h3>Why isn't the invoice there yet?</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Mini calendar graphic:</b> Day 0 / Day 1 / Day 2 boxes with the 456 envelope arriving in the Day 2 box at 4–4:30 PM.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Why isn't the invoice in Oracle or
+Billtrust yet?
+
+[Body text - Font: TBD - Size: TBD]
+It takes an extra day. If you complete a
+work order today, the invoice isn't in
+Oracle until tomorrow. It reaches Billtrust
+the day after, around 4–4:30 PM.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B4</span><h3>Quick check: a timing call</h3><span class="chip c-t2">Tier 2 · Knowledge check</span></div>
+      <p class="why gfx"><b>Optional:</b> a phone-call icon above the question. Not required.</p>
+      <p class="why"><b>Why native:</b> a single multiple-choice question with Basics-style feedback (a short headline plus one coaching line). It's an untracked practice question, like Basics.</p>
+      <div class="codewrap"><pre><code>[Multiple choice - Font: TBD - Size: TBD]
+It's Day 1, 10 AM. A client calls:
+"The crew finished yesterday. Can you see my
+invoice in Billtrust?" What do you say?
+
+A) "It's not there yet. It should be in
+   Billtrust tomorrow afternoon."  ✓
+B) "It'll be in Billtrust by tonight."
+C) "Something went wrong. Let me call
+   Home Office."
+
+SUBMIT
+
+Feedback (correct):
+Right on time! Invoices reach Billtrust
+around 4–4:30 PM on Day 2.
+
+Feedback (incorrect):
+Not quite. Oracle is still creating the
+invoice today. It reaches Billtrust on Day 2,
+around 4–4:30 PM. Nothing's wrong. It just
+takes an extra day.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B5</span><h3>Trust the system</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Photo (ask Bryan):</b> a real photo of Bryan's team at work, captioned with the team name. It shows learners that real people are watching the system. If no photo is available, a simple icon of a radar or monitor is enough.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Trust the system
+
+[Body text - Font: TBD - Size: TBD]
+Once you complete a work order, let the
+system do its job. The Billing team monitors
+it and lets offices know if something's wrong.
+[TBC with Bryan: how to name his team for learners]</code></pre></div>
+    </article>
+
+    <article class="block bridge">
+      <div class="bh"><span class="n">B6</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+The invoice is out in the world. In the next
+section, learn how to answer client questions
+about it.</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ LESSON: CLIENT QUESTIONS ============ -->
+<section class="page" id="p-questions" data-tab="Client questions" data-num="2.4">
+  <div class="pagehead">
+    <span class="loc">LIFECYCLE OF AN INVOICE · Lesson 6</span>
+    <h2>How do I answer client questions about invoices?</h2>
+    <p>Where to look in Oracle Billing, two must-know rules, then client scenarios in place of a quiz, as your outline calls for.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Billing vs. Receipts: same coin</h3><span class="chip c-t2">Tier 2 · Flashcard</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Coin art (AI-generate or designer):</b> two faces of the same coin. The "BILLING" side has an invoice icon, the "RECEIPTS" side has a check icon. Brushed metal look. Center it on each side of the flashcard.</p>
+      <p class="why"><b>Quirky moment:</b> Bryan's "same coin, one tab apart" is too good not to show literally. Use one Rise flashcard with a coin image on each side. Learners flip it to see the other side.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Billing vs. Receipts
+
+[Tagline - Font: TBD - Size: TBD]
+Same coin, one tab apart.
+
+[Instruction - Font: TBD - Size: TBD]
+Click the coin to flip it.
+
+[Flashcard - front]
+(Coin image: "Billing" side)
+BILLING
+Start from the invoice.
+
+[Flashcard - back]
+(Coin image: "Receipts" side)
+RECEIPTS
+Start from the payment.
+
+[Body text - Font: TBD - Size: TBD]
+This course covers Billing. To research a
+payment, see the Oracle – Receipts course.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>Go straight to the invoice</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Quirky image (AI-generate):</b> a towering stack of check boxes labeled "20 years of checks" next to a single invoice with a spotlight on it. It reinforces "go straight to the invoice."</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Go straight to the invoice
+
+[Body text - Font: TBD - Size: TBD]
+A client calls and asks, "Is my invoice
+456 paid?"
+
+Go straight to the invoice on the Billing
+screen, instead of digging through 20 years
+of checks.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B3</span><h3>Research an invoice in Oracle Billing</h3><span class="chip c-t2">Tier 2 · Labeled graphic</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>SME screenshot (Bryan):</b> the Oracle Billing screen for a test record. Ask for Dana Alvarez, invoice 456, paid by check 123, so it matches the scenario and the story. Blur anything real.</p>
+      <p class="why"><b>Why native:</b> the same marker pattern as Basics' email best practices. It needs one clean screenshot of an Oracle Billing invoice (fake or anonymized client). The library's Zoom &amp; Inspect is an upgrade option if the screenshot is too dense to read on a phone.</p>
+      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+Click the 5 markers on the image below.
+
+[Labeled graphic - Oracle Billing screenshot]
+Marker 1 · Balance
+What the client still owes on this invoice.
+
+Marker 2 · Payments
+See which check or card payment is attached
+to the invoice.
+
+Marker 3 · Discounts
+Any discounts applied to the invoice.
+
+Marker 4 · View Image
+Open a live, up-to-date copy of the invoice.
+
+Marker 5 · Copies and reprints
+Get copies or reprint the invoice from here.
+[TBC with Bryan: exact field/button names]</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B4</span><h3>Open in NBS, but paid in Oracle?</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Side-by-side graphic:</b> NBS showing invoice 789 as "Open" with a small clock tag reading "updates at 6 PM," next to Oracle showing it "Paid." Could become a Tap Toggle Compare (library) later if this needs more emphasis.</p>
+      <p class="why"><b>Source:</b> the NBS 6 PM update comes from the Power BI notes in the brainstorm. It explains the "why" behind "check Oracle first."</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Open in NBS, but paid in Oracle?
+Check Oracle first.
+
+[Body text - Font: TBD - Size: TBD]
+NBS updates from Oracle once a day, at 6 PM.
+If NBS shows an invoice as open but the client
+says they paid, check Oracle first.</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B5</span><h3>Copies come from Oracle, not NBS</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <p class="why gfx"><b>Screenshot crop (Bryan):</b> the View Image / reprint button in Oracle, with a highlight box.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Copies come from Oracle, not NBS
+
+[Body text - Font: TBD - Size: TBD]
+Need a copy of an invoice, or a reprint?
+Get it from Oracle, not NBS. Use View Image
+for a live, up-to-date invoice.
+[TBC with Bryan: one-line reason why not NBS]</code></pre></div>
+    </article>
+
+    <article class="block">
+      <div class="bh"><span class="n">B6</span><h3>Practice client scenarios</h3><span class="chip c-t3">Tier 3 · Library</span></div>
+      <p class="why gfx"><b>Character avatars (designer or AI-generate, one consistent style):</b> Dana Alvarez and Mr. Dunn as illustrated avatars, plus a "You" avatar for the LAC. Basics used avatars too. Dana comes back in every course, so lock her look now.</p>
+      <p class="why"><b>Why custom:</b> this is the course's capstone, and the outline swaps the quiz for scenarios. The library's <b>Chat Scenario Simulator</b> works like a phone call, and the feedback follows the Mr. Kratz pattern from Basics (a consequence headline plus a coaching line). No branching is deep enough to need Storyline. <b>Dialogue is my draft</b>, built only from SME points, and needs Bryan's review.</p>
+      <div class="codewrap"><pre><code>[Custom HTML block - Font: TBD - Size: TBD]
+Interaction: Chat Scenario Simulator (library)
+Title: Practice client scenarios
+Instruction: Read the client's message, then
+choose your response.
+
+— CALL 1 —
+Ms. Alvarez:
+"Hi, it's Dana Alvarez. Is my invoice
+456 paid?"
+
+  A) "Let me pull up invoice 456 in
+     Oracle Billing."  ✓
+     Straight to the source
+     Billing starts from the invoice. You'll
+     see its balance and what paid it.
+
+  B) "Let me look through your checks in
+     Oracle Receipts."
+     That's 20 years of checks
+     Receipts starts from the payment. Go
+     straight to the invoice instead.
+
+You: "It shows a $0 balance. Check 123
+paid it."
+
+Ms. Alvarez:
+"Great! Can you send me a copy?"
+
+  A) "Sure. I'll pull a live copy from
+     Oracle using View Image."  ✓
+     Live and up to date
+     View Image gives you the current
+     invoice, straight from Oracle.
+
+  B) "Sure. I'll print one from NBS."
+     Copies come from Oracle
+     Get copies or reprints from Oracle,
+     not NBS.
+
+— CALL 2 —
+(NBS shows invoice 789 as open.)
+Mr. Dunn:
+"I dropped off a check for invoice 789
+yesterday. Can you confirm it's paid?"
+
+  A) "Let me check Oracle for you."  ✓
+     Check Oracle first
+     NBS only updates from Oracle once a
+     day, at 6 PM. Oracle has the latest.
+
+  B) "NBS still shows it as open, so we
+     haven't received it."
+     Mr. Dunn will likely worry his check
+     was lost
+     NBS is a step behind Oracle. Check
+     Oracle before you answer.
+
+— SCENARIO END —
+You went straight to the invoice, pulled
+copies from Oracle, and checked Oracle
+first. Exceptional customer service!
+
+START OVER</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ MOVING ON ============ -->
+<section class="page" id="p-moving" data-tab="Moving on" data-num="3.1">
+  <div class="pagehead">
+    <span class="loc">MOVING ON · Lesson 7</span>
+    <h2>Moving on</h2>
+    <p>The "next course" line works whether learners take the program in order or not. Same Course complete pattern as Basics, with a one-line joke.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><span class="n">B1</span><h3>Next course</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Teaser image:</b> the 456 envelope sitting in a mailbox, with the "Where the Money Goes" map below it and the "Client pays" area pulsing.</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Next course
+
+[Body text - Font: TBD - Size: TBD]
+Invoice 456 is in Ms. Alvarez's mailbox and
+in Billtrust. The next part of the story:
+how she pays it.
+
+If you're taking the program in order, next
+up is Billtrust: helping clients pay online
+and following up on past-due invoices.
+
+Or jump to any course in the program.</code></pre></div>
+    </article>
+    <article class="block">
+      <div class="bh"><span class="n">B2</span><h3>Course complete</h3><span class="chip c-t1">Tier 1</span></div>
+      <p class="why gfx"><b>Fun closer (AI-generate):</b> a coffee mug next to a monitor showing "Billing Review (0)" and the caption "We'll wait."</p>
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Course complete
+
+[Body text - Font: TBD - Size: TBD]
+Nice job! You have completed the course.
+Now go check Billing Review. We'll wait.
+
+Click "Get Credit" button to complete the
+training and return to Acorn Learning!
+
+[Button]
+GET CREDIT!</code></pre></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ SME ASKS ============ -->
+<section class="page" id="p-sme" data-tab="SME asks" data-num="To do">
+  <div class="pagehead">
+    <span class="loc">Not a Rise page · send to SMEs</span>
+    <h2>SME asks and open questions</h2>
+    <p>Everything this storyboard needs from Bryan and Erin, grouped so you can send one message to each.</p>
+  </div>
+  <div class="stack">
+    <article class="block">
+      <div class="bh"><h3>Footage and images</h3></div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Item</th><th>Used in</th><th>Who</th></tr></thead>
+        <tbody>
+          <tr><td>Crew finishing a job and completing a work order on the tablet (short clips)</td><td>2.1 video</td><td>Field office / Erin</td></tr>
+          <tr><td>Arborist Rep reviewing a work order (laptop or truck)</td><td>2.1 video</td><td>Erin</td></tr>
+          <tr><td>LAC at a desk working in NBS</td><td>2.1 video</td><td>Erin</td></tr>
+          <tr><td>NBS: Work Order Review screen</td><td>2.1 video</td><td>Erin</td></tr>
+          <tr><td>NBS: Work Orders filtered by Billing Review</td><td>2.1 video · 2.2 Process</td><td>Erin</td></tr>
+          <tr><td>NBS: work order detail (hours, equipment, foreman) and Complete button</td><td>2.2 Process</td><td>Erin</td></tr>
+          <tr><td>Oracle Billing: invoice screen showing balance, payments, discounts, View Image (fake or anonymized client)</td><td>2.1 video · 2.4 labeled graphic</td><td>Bryan</td></tr>
+          <tr><td>Billtrust: invoice view</td><td>2.1 video</td><td>Bryan</td></tr>
+          <tr><td>Sample printed invoice or envelope</td><td>2.1 video</td><td>Bryan</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+    <article class="block">
+      <div class="bh"><h3>Open questions</h3></div>
+      <div class="codewrap"><pre><code>FOR ERIN
+- Last step in Billing Review: "Complete" or
+  "Save"?
+
+FOR BRYAN
+- Exact time completed work orders go from
+  NBS to Oracle (Day 1, ~2–4 AM?)
+- How should learners refer to your team
+  ("the Billing team"?) in "Trust the system"?
+- Exact Oracle Billing field and button names
+  for balance, payments, discounts, View Image,
+  and reprint
+- One-line reason copies should come from
+  Oracle, not NBS
+- Do LACs email invoice copies to clients
+  from Oracle? (scenario Call 1)
+- Please review the practice scenario dialogue
+- Optional: a short quote for a callout,
+  like the SME quotes in Basics
+
+FOR YOU / TEAM
+- OK to use invoice 456 / Dana Alvarez as the
+  recurring example in all 6 courses?
+- Narrator for the intro video
+- Coin graphic for the Billing vs. Receipts
+  flashcard
+- Build: "Where the Money Goes" block (new),
+  reused in all 6 courses</code></pre></div>
+    </article>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var pages = Array.prototype.slice.call(document.querySelectorAll('section.page'));
+  var list = document.getElementById('tablist');
+  pages.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'tab'; b.type = 'button';
+    b.setAttribute('role','tab'); b.id = 'tab-' + p.id;
+    b.setAttribute('aria-controls', p.id);
+    b.innerHTML = '<small>' + p.dataset.num + '</small>' + p.dataset.tab;
+    b.addEventListener('click', function(){ show(p.id, true); });
+    list.appendChild(b);
+    p.setAttribute('role','tabpanel');
+  });
+  function show(id, push){
+    var found = pages.some(function(p){ return p.id === id; });
+    if (!found) id = pages[0].id;
+    pages.forEach(function(p){
+      var on = p.id === id;
+      p.classList.toggle('active', on);
+      var t = document.getElementById('tab-' + p.id);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on && t.scrollIntoView) { try { t.scrollIntoView({block:'nearest', inline:'nearest'}); } catch(e){} }
+    });
+    if (push) { try { history.replaceState(null, '', '#' + id); } catch(e){} window.scrollTo(0,0); }
+  }
+  window.addEventListener('hashchange', function(){ show(location.hash.slice(1), false); });
+  show(location.hash.slice(1), false);
+
+  document.querySelectorAll('.codewrap').forEach(function(w){
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'copy'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function(){
+      var text = w.querySelector('code').innerText;
+      var done = function(){ btn.textContent = 'Copied'; btn.classList.add('done');
+        setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1400); };
+      try {
+        navigator.clipboard.writeText(text).then(done, function(){ btn.textContent = 'Select & copy'; });
+      } catch(e){ btn.textContent = 'Select & copy'; }
+    });
+    w.appendChild(btn);
+  });
+})();
+</script>
+</body>
+</html>
