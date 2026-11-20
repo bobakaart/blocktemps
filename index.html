@@ -7483,9 +7483,8 @@ Change CONFIG.youAreHere below to light up a different area per course.
       #fff;
     padding:clamp(20px, 5vw, 36px);
   }
-  .yah-body{font-size:__BODY_SIZE__; color:var(--yah-muted); margin:0 0 26px; max-width:56ch;}
 
-  .yah-map{display:flex; flex-direction:column; gap:18px;}
+  .yah-map{display:flex; flex-direction:column; gap:18px; padding-top:12px;}
 
   .yah-flow{display:grid; grid-template-columns:1fr 40px 1fr 40px 1fr 32px 1fr; align-items:stretch;}
   .yah-col{display:flex; align-items:center;}
@@ -7588,7 +7587,6 @@ Change CONFIG.youAreHere below to light up a different area per course.
   }
 </style>
 <div class="yah">
-  <p class="yah-body yah-in" style="--d:0s" data-t="body"></p>
   <p class="yah-sr" data-sr></p>
 
   <!-- Hidden from screen readers: the sentence above says the same thing
@@ -7684,7 +7682,6 @@ Change CONFIG.youAreHere below to light up a different area per course.
 // "invoice" | "billtrust" | "otherways" | "recorded" | "reports" | "commercial"
 var CONFIG = { youAreHere: "invoice" };
 var TEXT = {
-  body: "Each course in the program covers one part of the map. This course is where the story starts: how a work order becomes an invoice.",
   pin: "You are here",
   sr: "Program map. You are here: {area}, covered in {course}. After a work order becomes an invoice, the client pays online in Billtrust or another way (not covered in this program), the payment is recorded in Oracle, and it shows up in Power BI reports. Commercial accounts have their own courses in the program."
 };
