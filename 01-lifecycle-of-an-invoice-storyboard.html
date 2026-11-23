@@ -65,6 +65,7 @@ section.page.active{display:block}
 .bh{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .bh .n{font:500 12px/1 var(--mono);color:var(--muted)}
 .bh h3{font:600 16px/1.3 var(--body);margin:0;flex:1 1 220px}
+.bh h3::after{content:"label · not shown";display:inline-block;margin-left:8px;font:500 10.5px/1 var(--mono);letter-spacing:.03em;color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:3px 5px;vertical-align:2px}
 .chip{font:600 11px/1 var(--body);letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:5px 9px;border:1px solid currentColor;white-space:nowrap}
 .c-t1{color:var(--t1)} .c-t2{color:var(--t2)} .c-t3{color:var(--t3)} .c-vid{color:var(--vid)}
 .c-must{color:var(--must);background:var(--must-soft);border-color:transparent}
@@ -85,6 +86,9 @@ th{font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.04em;c
 tr:last-child td{border-bottom:0}
 td.sc{font:500 12px/1.4 var(--mono);color:var(--muted);white-space:nowrap}
 .legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-top:10px}
+.concept{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;background:var(--accent-soft);display:flex;flex-direction:column;gap:6px}
+.concept-h{font:600 12px/1.2 var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.concept pre{background:var(--surface)}
 .gfx{border-left:3px dashed var(--vid);padding-left:10px}
 .bridge{border-left:3px solid var(--accent);padding-left:12px}
 ul.plain{margin:0;padding-left:20px}
@@ -102,8 +106,8 @@ ul.plain li{margin:4px 0}
     <div class="stats">
       <span class="stat"><b>~15 min</b> course length</span>
       <span class="stat"><b>1</b> narrated video</span>
-      <span class="stat"><b>3</b> custom moments</span>
-      <span class="stat"><b>5</b> native interactions</span>
+      <span class="stat"><b>4</b> custom moments</span>
+      <span class="stat"><b>4</b> native interactions</span>
       <span class="stat">SMEs: <b>Bryan</b> (Oracle) · <b>Erin</b> (NBS)</span>
     </div>
     <div class="legend">
@@ -114,6 +118,9 @@ ul.plain li{margin:4px 0}
       <span class="chip c-must">Must-know</span>
       <span class="chip c-nice">Nice-to-know</span>
       <span class="stat" style="border-left:3px dashed var(--vid)">Dashed line = graphic idea</span>
+    </div>
+    <p class="sub" style="margin-top:10px;font-size:14px"><b>Reading this storyboard:</b> the bold card titles are labels for you and aren't shown to learners. Only the text inside the code blocks goes into Rise. Every block starts with its own heading. Headings marked <b>(optional)</b> can be skipped. Each block also has a green <b>Concept blurb</b>: a plain description of the idea you can paste into Rise in place of the full block, so reviewers can comment on the direction before it's built. Interactions with right/wrong answers use the heading <b>Knowledge Check</b>; explore interactions use a short descriptive heading.</p>
+    <div style="display:none">
     </div>
   </header>
 </div>
@@ -135,6 +142,8 @@ ul.plain li{margin:4px 0}
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Course description</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Course card in Acorn Learning: the course title, a short description of what learners will do, and the course length (15 minutes, with audio).</code></pre></div></div>
       <p class="why gfx"><b>Course thumbnail (AI-generate or designer):</b> an envelope marked "Invoice" with a leaf tucked in the flap. Start a thumbnail series: same style for all 6 courses, one object each (envelope, phone with a pay button, check stamped PAID, bar chart, two commercial courses TBD).</p>
       <p class="why"><b>Pattern:</b> Basics card verbs (Follow / Learn / Find out) plus the standard three closing lines.</p>
       <div class="codewrap"><pre><code>[Course title - Font: TBD - Size: TBD]
@@ -155,6 +164,8 @@ This course has audio.</code></pre></div>
     </article>
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Rise outline</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+The course has 3 sections: Getting Started, Lifecycle of an Invoice (4 lessons, each named as a question an Admin would ask), and Moving On.</code></pre></div></div>
       <div class="codewrap"><pre><code>GETTING STARTED
   Getting started
   Learning outcomes
@@ -178,6 +189,8 @@ MOVING ON
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Placeholder</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Standard Getting Started lesson, the same as our other courses (navigation, interruptions, credit, time sheet).</code></pre></div></div>
       <div class="codewrap"><pre><code>[Copy/paste from existing course — no changes]</code></pre></div>
     </article>
   </div>
@@ -193,6 +206,8 @@ MOVING ON
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Welcome: the program</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Welcome text. It names this as the first of 6 courses in the Customer Service Advanced program for LACs and DACs, and states the program goal: answer client billing and payment questions quickly and accurately.</code></pre></div></div>
       <p class="why"><b>What changed:</b> the program goal moved up here, so the welcome answers "what is this program?" in two sentences. The "story of an invoice" line moved to the header above the map, so it isn't said twice.</p>
       <div class="codewrap"><pre><code>[H1 - Font: TBD - Size: TBD]
 Learning outcomes
@@ -213,8 +228,10 @@ and accurately.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Header above the map</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Heading that introduces the program map: "The story of an invoice. Here's where this course fits." The same heading appears in every course.</code></pre></div></div>
       <p class="why"><b>Why a header:</b> the banner has a one-line caption and box labels but no title, so without a header it shows up with no lead-in. Use the same header and tagline in all 6 courses so the map is recognizable at a glance. <b>Alternative header:</b> "Where this course fits" (plainer).</p>
-      <div class="codewrap"><pre><code>[H3 - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 The story of an invoice
 
 [Tagline - Font: TBD - Size: TBD]
@@ -223,25 +240,31 @@ Here's where this course fits.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B3</span><h3>You Are Here: Program Map Banner</h3><span class="chip c-t3">Tier 3 · Library</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Program map graphic showing the whole path of an invoice: work order to invoice, the client pays, the payment is recorded, and reports, plus commercial accounts. This course's step is highlighted as "You are here." A short caption says each course covers one part and can be taken in any order.</code></pre></div></div>
       <p class="why gfx"><b>Graphic:</b> none needed. The banner is the graphic.</p>
-      <p class="why"><b>Library block:</b> <code>cs-you-are-here</code>, set to <code>youAreHere: "invoice"</code>. <b>Change the caption (TEXT.body)</b> so it also says "any order." That line then does the job of the separate "You can take the courses in any order" sentence, which was floating between the map and the outcomes. This caption changes in each course. <b>Test in Rise:</b> the layout stacks below 720px, so check desktop.</p>
-      <div class="codewrap"><pre><code>[Custom HTML block - library: cs-you-are-here]
-CONFIG
-youAreHere: "invoice"
+      <p class="why"><b>Library block:</b> <code>cs-you-are-here</code>, with "Work order to invoice" picked in the block's dropdown (<code>youAreHere: "invoice"</code>). As built, the graphic has no heading or caption inside it, so the caption is a regular Rise text block right above it. The caption includes "any order," which replaces the separate "You can take the courses in any order" sentence, and it changes in each course. <b>Test in Rise:</b> the layout stacks below 720px, so check desktop.</p>
+      <div class="codewrap"><pre><code>[Heading: uses "The story of an invoice" (B2) above]
 
-TEXT.body (update for this course)
+[Body text - Font: TBD - Size: TBD]
 Each course covers one part of the map, and
 you can take them in any order. This course
 is where the story starts: how a work order
 becomes an invoice.
 
-(Keep alsoTag, pin, and AREAS as built.)</code></pre></div>
+[Custom HTML block - library: cs-you-are-here]
+youAreHere: "invoice"  (Work order to invoice)</code></pre></div>
     </article>
 
     <article class="block">
       <div class="bh"><span class="n">B4</span><h3>Learning outcomes</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+The 4 learning outcomes for this course.</code></pre></div></div>
       <p class="why"><b>Why no extra header:</b> Basics' own lead-in sentence works as the anchor, and the page H1 already says "Learning outcomes." Add a Rise divider above it only if the map and list feel crowded in preview. <b>Source:</b> outcomes from your outline, unchanged.</p>
-      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+What you'll learn
+
+[Body text - Font: TBD - Size: TBD]
 By the end of this course, you should
 demonstrate these learning outcomes:
 
@@ -265,6 +288,8 @@ demonstrate these learning outcomes:
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B0</span><h3>The story starts here</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Story opener: "Every invoice has a story." It introduces following one invoice from a finished pruning job to the client's mailbox, and says this course is where the story starts.</code></pre></div></div>
       <p class="why gfx"><b>Hero image (AI-generate, or a real field photo plus a graphic overlay):</b> a pruning job on a residential property with a luggage tag hanging from a branch that reads "INVOICE." The luggage tag starts the road-trip motif used in Lesson 5 and later courses. Avoid real faces, trucks or logos if you AI-generate.</p>
       <p class="why"><b>Why:</b> since there's no intro course, this block does that job: before any content, learners see that they're at the beginning of a story. <b>Thread:</b> the story follows "an invoice" in general, with no named client, so any course can pick it up without depending on a recurring character.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
@@ -289,9 +314,14 @@ becomes an invoice.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Intro video: Lifecycle of an Invoice (~60 sec)</h3><span class="chip c-vid">Video</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+A narrated video of about 1 minute following one job: the crew finishes on site, the Arborist Rep reviews the work order, the LAC completes it, and the invoice is mailed and lands in Billtrust. Needs short field and office clips plus NBS, Oracle, and Billtrust screenshots.</code></pre></div></div>
       <p class="why gfx"><b>Video poster frame:</b> the title card from scene 6, "Lifecycle of an Invoice," with the "INVOICE" luggage tag. Also see the Visuals column in the script.</p>
       <p class="why"><b>Why video:</b> the outline already calls for a short intro video, and this is a story of things moving between people and systems, which motion and voice show better than text. It picks up the "every invoice has a story" opener, so the story carries straight into the video. Narration is about 120 words, roughly 60 seconds. <b>Narrator:</b> Bryan, Erin, or a voiceover <span class="tbc">TBC</span>.</p>
-      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+From the field to the invoice
+
+[Instruction - Font: TBD - Size: TBD]
 Click the play (▶) button to watch the
 1-minute video.
 
@@ -334,6 +364,8 @@ This course is where the story starts.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Billing is highly automated</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Short text: billing is highly automated. LACs don't create or send invoices in Oracle. Their part happens in NBS.</code></pre></div></div>
       <p class="why gfx"><b>Spot illustration (AI-generate):</b> a finger pressing a "Complete" button that tips over a row of dominos (NBS → Oracle → envelope → Billtrust). One push, and the rest happens on its own. Quirky but on-message.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Billing is highly automated
@@ -348,6 +380,8 @@ From there, the system takes over.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B3</span><h3>Before it reaches you</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+A 3-step list of what happens before the work order reaches the LAC: the crew completes it on the tablet, the Arborist Rep reviews it, and the LAC completes it.</code></pre></div></div>
       <p class="why gfx"><b>Three small icons, or stills cropped from the video:</b> tablet (crew), laptop (Arborist Rep), desk with headset (you).</p>
       <p class="why"><b>Why plain:</b> the video just showed this, so a short numbered list is enough for anyone who skipped the video or watched it muted.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
@@ -364,7 +398,12 @@ Before it reaches you
 
     <article class="block bridge">
       <div class="bh"><span class="n">B4</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
-      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+One-line transition into the next lesson.</code></pre></div></div>
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+Up next
+
+[Body text - Font: TBD - Size: TBD]
 You've seen the big picture. In the next
 section, you'll learn your part in billing.</code></pre></div>
     </article>
@@ -381,6 +420,8 @@ section, you'll learn your part in billing.</code></pre></div>
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Check Billing Review every day</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Text: work orders show up in Billing Review whenever reps push them, with no notifications, so checking Billing Review is part of the daily routine.</code></pre></div></div>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Check Billing Review every day
 
@@ -393,9 +434,14 @@ your daily routine.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Quirky beat: same office, same day</h3><span class="chip c-t1">Tier 1 · Statement</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+A short, bold callout to make the point stick: "Morning: 0 work orders. 2 PM: 15 work orders. Same office. Same day."</code></pre></div></div>
       <p class="why gfx"><b>Two-panel image (AI-generate):</b> left, an empty inbox tray and a wall clock at 8:00 with a sunrise in the window. Right, the same tray overflowing with work orders and the clock at 2:00. Sits next to or behind the Statement block.</p>
       <p class="why"><b>Why:</b> a Rise Statement block makes Erin and Bryan's "0 in the morning, 15 by 2 PM" stick without any extra build. It's a small moment of humor, used once. <b>Option:</b> the library's Animated Counter could count 0 → 15, but plain text is enough here.</p>
-      <div class="codewrap"><pre><code>[Statement block - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+It changes by the hour
+
+[Statement block - Font: TBD - Size: TBD]
 Morning: 0 work orders.
 2 PM: 15 work orders.
 Same office. Same day.</code></pre></div>
@@ -403,15 +449,23 @@ Same office. Same day.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B3</span><h3>Review and complete the work order</h3><span class="chip c-t2">Tier 2 · Process</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Step-by-step slides with annotated NBS screenshots: how to find, review, fill in (hours, equipment, foreman), and complete a work order in Billing Review. Needs screenshots from Erin.</code></pre></div></div>
       <p class="why gfx"><b>SME screenshots (Erin):</b> annotate each with one highlight box and a number badge in the accent color. Crop tightly to the relevant area so they read on a phone. Use a test work order with a fake client so nothing real shows.</p>
       <p class="why"><b>Why Process with screenshots, not a screen recording:</b> zoomable screenshots are easier to read than a screen recording on small screens, and learners can move through them at their own pace. Matches the Basics Visual Guide slides.</p>
-      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Review and complete the work order
+
+[Tagline (optional) - Font: TBD - Size: TBD]
+Four steps in NBS, every day.
+
+[Instruction - Font: TBD - Size: TBD]
 Click the side arrows to navigate through
 the steps below. Click to zoom in on the
 visuals.
 
-[Process block - intro]
-Review and complete the work order
+[Process block - intro card]
+In NBS: Work Orders → Billing Review
 
 [Step 1 - Find it]
 In NBS, go to Work Orders and filter by
@@ -433,8 +487,13 @@ Select Complete.  [TBC with Erin: Complete or Save?]
 
     <article class="block">
       <div class="bh"><span class="n">B4</span><h3>No completion, no invoice</h3><span class="chip c-t1">Tier 1 · Note</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Highlighted note: no completion, no invoice. If the work order isn't completed, it's never invoiced.</code></pre></div></div>
       <p class="why gfx"><b>Icon:</b> an envelope with a red "no" slash, or a "NOT INVOICED" rubber stamp.</p>
-      <div class="codewrap"><pre><code>[Note block - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+The one rule to remember
+
+[Note block - Font: TBD - Size: TBD]
 No completion, no invoice.
 If you don't complete the work order,
 it's never invoiced.</code></pre></div>
@@ -442,12 +501,22 @@ it's never invoiced.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B5</span><h3>Put the statuses in order</h3><span class="chip c-t3">Tier 3 · Library</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Knowledge Check: learners drag the 5 work order statuses into the right order (Work Order Review, Billing Review, Completed, Pending Invoice, Invoiced). Not scored.</code></pre></div></div>
       <p class="why gfx"><b>Styling:</b> make the drag tiles look like NBS status pills, using the same colors as in NBS (screenshot from Erin), so the activity looks like the real screen.</p>
       <p class="why"><b>Why:</b> the status order is real sequence knowledge, and the library's <b>Reorder Steps</b> block (drag, with lock-on-retry) already fits. A quick, hands-on check that doesn't count toward a score. All five statuses come from the SME notes.</p>
-      <div class="codewrap"><pre><code>[Custom HTML block - Font: TBD - Size: TBD]
-Interaction: Reorder Steps (library)
-Instruction: Drag the statuses into the
-order a work order moves through them.
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Knowledge Check
+
+[Body text - Font: TBD - Size: TBD]
+Every work order moves through the same
+statuses before it becomes an invoice.
+
+[Instruction - Font: TBD - Size: TBD]
+Drag the statuses into the order a work
+order moves through them.
+
+[Custom HTML block - library: Reorder Steps]
 
 Correct order:
 1. Work Order Review
@@ -466,7 +535,12 @@ Try again.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B6</span><h3>Who else can complete?</h3><span class="chip c-t1">Tier 1</span><span class="chip c-nice">Nice-to-know</span></div>
-      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Short note: Arborist Reps and Division Admins can complete work orders too, but it's rare. It's almost always the LAC.</code></pre></div></div>
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+Who else can complete a work order?
+
+[Body text - Font: TBD - Size: TBD]
 Arborist Reps and Division Admins can
 complete work orders too, but it's very
 rare. It's almost always you.</code></pre></div>
@@ -474,7 +548,12 @@ rare. It's almost always you.</code></pre></div>
 
     <article class="block bridge">
       <div class="bh"><span class="n">B7</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
-      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+One-line transition into the next lesson.</code></pre></div></div>
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+Up next
+
+[Body text - Font: TBD - Size: TBD]
 You hit Complete. Now what? In the next
 section, follow the invoice on its trip
 from NBS to Billtrust.</code></pre></div>
@@ -492,6 +571,8 @@ from NBS to Billtrust.</code></pre></div>
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>The invoice's overnight road trip</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Opener for the invoice's "overnight road trip": once the LAC completes the work order, everything else is automated.</code></pre></div></div>
       <p class="why gfx"><b>Hero illustration (AI-generate, the course's signature image):</b> an envelope character wearing an "INVOICE" luggage tag, driving through the night under a moon past road signs reading NBS → Oracle → Print vendor → Billtrust. Same road-trip motif as Lesson 3.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 The invoice's overnight road trip
@@ -508,9 +589,14 @@ scenes.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Day 0 to Day 2 timeline</h3><span class="chip c-t2">Tier 2 · Timeline</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Timeline from Day 0 to Day 2 showing what happens behind the scenes: the work order goes to Oracle overnight, the invoice is created, it shows up in NBS around 6 PM, it's printed and mailed, and it's in Billtrust around 4–4:30 PM on Day 2.</code></pre></div></div>
       <p class="why gfx"><b>An image on each timeline entry:</b> desk lamp (Day 0) · moon and clock at 2–4 AM · gear (Oracle creates the invoice) · eye icon for the 6 PM "sneak peek" · mail truck (print vendor) · PDF icon · checkered flag (Billtrust, last stop).</p>
       <p class="why"><b>Why native:</b> the Rise Timeline block is a natural fit and works well on mobile. The library's Horizontal Timeline Stepper is an upgrade option if you want something more visual.</p>
-      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+Day by day
+
+[Instruction - Font: TBD - Size: TBD]
 Scroll down to follow the invoice.
 
 [Timeline block]
@@ -543,6 +629,8 @@ That's the last stop.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B3</span><h3>Why isn't the invoice there yet?</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Text answering a common question, "Why isn't the invoice there yet?" It takes an extra day.</code></pre></div></div>
       <p class="why gfx"><b>Mini calendar graphic:</b> Day 0 / Day 1 / Day 2 boxes with the envelope arriving in the Day 2 box at 4–4:30 PM.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Why isn't the invoice in Oracle or
@@ -557,9 +645,17 @@ the day after, around 4–4:30 PM.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B4</span><h3>Quick check: a timing call</h3><span class="chip c-t2">Tier 2 · Knowledge check</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Knowledge Check: one multiple-choice question. A client calls on Day 1 asking to see their invoice in Billtrust, and learners pick the right answer about timing. Not scored.</code></pre></div></div>
       <p class="why gfx"><b>Optional:</b> a phone-call icon above the question. Not required.</p>
       <p class="why"><b>Why native:</b> a single multiple-choice question with Basics-style feedback (a short headline plus one coaching line). It's an untracked practice question, like Basics.</p>
-      <div class="codewrap"><pre><code>[Multiple choice - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Knowledge Check
+
+[Instruction - Font: TBD - Size: TBD]
+Choose the best answer.
+
+[Multiple choice - Font: TBD - Size: TBD]
 It's Day 1, 10 AM. A client calls:
 "The crew finished yesterday. Can you see my
 invoice in Billtrust?" What do you say?
@@ -585,6 +681,8 @@ takes an extra day.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B5</span><h3>Trust the system</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Text: trust the system. The Billing team monitors it and lets offices know if something's wrong.</code></pre></div></div>
       <p class="why gfx"><b>Photo (ask Bryan):</b> a real photo of Bryan's team at work, captioned with the team name. It shows learners that real people are watching the system. If no photo is available, a simple icon of a radar or monitor is enough.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Trust the system
@@ -598,7 +696,12 @@ it and lets offices know if something's wrong.
 
     <article class="block bridge">
       <div class="bh"><span class="n">B6</span><h3>Bridge line</h3><span class="chip c-t1">Tier 1</span></div>
-      <div class="codewrap"><pre><code>[Body text - Font: TBD - Size: TBD]
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+One-line transition into the next lesson.</code></pre></div></div>
+      <div class="codewrap"><pre><code>[H2 (optional) - Font: TBD - Size: TBD]
+Up next
+
+[Body text - Font: TBD - Size: TBD]
 The invoice is out in the world. In the next
 section, learn how to answer client questions
 about it.</code></pre></div>
@@ -615,27 +718,44 @@ about it.</code></pre></div>
   </div>
   <div class="stack">
     <article class="block">
-      <div class="bh"><span class="n">B1</span><h3>Billing vs. Receipts: same coin</h3><span class="chip c-t2">Tier 2 · Flashcard</span><span class="chip c-must">Must-know</span></div>
-      <p class="why gfx"><b>Coin art (AI-generate or designer):</b> two faces of the same coin. The "BILLING" side has an invoice icon, the "RECEIPTS" side has a check icon. Brushed metal look. Center it on each side of the flashcard.</p>
-      <p class="why"><b>Quirky moment:</b> Bryan's "same coin, one tab apart" is too good not to show literally. Use one Rise flashcard with a coin image on each side. Learners flip it to see the other side.</p>
+      <div class="bh"><span class="n">B1</span><h3>Billing vs. Receipts: same coin</h3><span class="chip c-t3">Tier 3 · New build</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Interactive coin with two sides, Billing and Receipts. Tapping each side explains when to use it (start from the invoice vs. start from the payment) with a quick example, then shows that both sides lead to the same answer.</code></pre></div></div>
+      <p class="why gfx"><b>Graphic:</b> built into the block. One silver coin drawn in CSS/SVG (milled edge, "BARTLETT TREE EXPERTS" engraved along the top of the rim and "★ 1907 ★" along the bottom) that tosses and flips between its two faces. The front says BILLING and the back says RECEIPTS in large embossed letters, each with its tagline underneath. No icons and no image assets needed.</p>
+      <p class="why"><b>Why custom:</b> the flashcard only showed two labels, which hid the actual point: both tabs lead to the same answer from opposite sides. In this block, flipping the coin shows what each side is for plus a worked example (invoice 314, check 1088), and once both sides are seen a "same answer" line connects them: which payment paid which invoice. <b>Library block:</b> <code>coin-sides</code> (Two-Sided Coin, Customer Service category), built 2026-11-20. Once both sides are open, the summary box appears and Rise Complete fires. Per the library rules, the instruction banner stays as is (only graded blocks switch it to a done message).</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Billing vs. Receipts
 
 [Tagline - Font: TBD - Size: TBD]
 Same coin, one tab apart.
 
-[Instruction - Font: TBD - Size: TBD]
-Click the coin to flip it.
+[Custom HTML block - library: coin-sides (Two-Sided Coin)]
+Instruction: Click the coin to flip it and see
+the other side.
 
-[Flashcard - front]
-(Coin image: "Billing" side)
-BILLING
-Start from the invoice.
+Front · BILLING TAB
+Client has an invoice number.
+  Panel title: Billing tab: start from the invoice
+  Use the Billing tab in Oracle when the client
+  gives you an invoice number. Look up the
+  invoice to see its balance, what paid it,
+  and any discounts.
+  Example: "Is invoice 314 paid?"
+  → Look up 314 in Billing → Paid by check 1088
 
-[Flashcard - back]
-(Coin image: "Receipts" side)
-RECEIPTS
-Start from the payment.
+Back · RECEIPTS TAB
+Client has a check or payment number.
+  Panel title: Receipts tab: start from the payment
+  Use the Receipts tab in Oracle when the client
+  gives you a payment, like a check number.
+  Look up the payment to see which invoice
+  it paid.
+  Example: "Did you get my check 1088?"
+  → Look up 1088 in Receipts → Paid invoice 314
+
+After the coin has been flipped once (both sides seen):
+Either side leads to the same answer:
+which payment paid which invoice.
 
 [Body text - Font: TBD - Size: TBD]
 This course covers Billing. To research a
@@ -644,6 +764,8 @@ payment, see the Oracle – Receipts course.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Go straight to the invoice</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Short text with Bryan's example: when a client asks if an invoice is paid, go straight to the invoice instead of digging through years of checks.</code></pre></div></div>
       <p class="why gfx"><b>Quirky image (AI-generate):</b> a towering stack of check boxes labeled "20 years of checks" next to a single invoice with a spotlight on it. It reinforces "go straight to the invoice."</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Go straight to the invoice
@@ -659,9 +781,18 @@ of checks.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B3</span><h3>Research an invoice in Oracle Billing</h3><span class="chip c-t2">Tier 2 · Labeled graphic</span><span class="chip c-must">Must-know</span></div>
-      <p class="why gfx"><b>SME screenshot (Bryan):</b> the Oracle Billing screen for a test record. Ask for a fake client record (Ms. Reyes, invoice 314, paid by check 1088) so it matches the practice scenario. Blur anything real.</p>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Annotated screenshot of the Oracle Billing screen. Learners click 5 markers to see where to find the balance, payments, discounts, View Image, and copies or reprints. Needs a test record from Bryan.</code></pre></div></div>
+      <p class="why gfx"><b>SME screenshot (Bryan):</b> the Oracle Billing screen for a test record. Ask for a fake client record (Ms. Carter, invoice 314, paid by check 1088) so it matches the practice scenario. Blur anything real.</p>
       <p class="why"><b>Why native:</b> the same marker pattern as Basics' email best practices. It needs one clean screenshot of an Oracle Billing invoice (fake or anonymized client). The library's Zoom &amp; Inspect is an upgrade option if the screenshot is too dense to read on a phone.</p>
-      <div class="codewrap"><pre><code>[Instruction - Font: TBD - Size: TBD]
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+What can I see on the Billing screen?
+
+[Body text (optional) - Font: TBD - Size: TBD]
+Most invoice questions are answered right
+here.
+
+[Instruction - Font: TBD - Size: TBD]
 Click the 5 markers on the image below.
 
 [Labeled graphic - Oracle Billing screenshot]
@@ -685,6 +816,8 @@ Get copies or reprint the invoice from here.
 
     <article class="block">
       <div class="bh"><span class="n">B4</span><h3>Open in NBS, but paid in Oracle?</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Text: if NBS shows an invoice as open but the client says they paid, check Oracle first, because NBS only updates from Oracle once a day at 6 PM.</code></pre></div></div>
       <p class="why gfx"><b>Side-by-side graphic:</b> NBS showing invoice 582 as "Open" with a small clock tag reading "updates at 6 PM," next to Oracle showing it "Paid." Could become a Tap Toggle Compare (library) later if this needs more emphasis.</p>
       <p class="why"><b>Source:</b> the NBS 6 PM update comes from the Power BI notes in the brainstorm. It explains the "why" behind "check Oracle first."</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
@@ -699,6 +832,8 @@ says they paid, check Oracle first.</code></pre></div>
 
     <article class="block">
       <div class="bh"><span class="n">B5</span><h3>Copies come from Oracle, not NBS</h3><span class="chip c-t1">Tier 1</span><span class="chip c-must">Must-know</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Text: copies and reprints come from Oracle, not NBS. View Image shows a live, up-to-date invoice.</code></pre></div></div>
       <p class="why gfx"><b>Screenshot crop (Bryan):</b> the View Image / reprint button in Oracle, with a highlight box.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Copies come from Oracle, not NBS
@@ -712,17 +847,26 @@ for a live, up-to-date invoice.
 
     <article class="block">
       <div class="bh"><span class="n">B6</span><h3>Practice client scenarios</h3><span class="chip c-t3">Tier 3 · Library</span></div>
-      <p class="why gfx"><b>Character avatars (designer or AI-generate, one consistent style):</b> Ms. Reyes and Mr. Owens as illustrated avatars, plus a "You" avatar for the LAC. Basics used avatars too. Keep one avatar style for the whole program, and give each course's scenario clients their own faces.</p>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Practice client scenarios, in place of a quiz: two short simulated phone calls where learners choose responses and get feedback. One client asks if an invoice is paid and wants a copy. The other dropped off a check that NBS still shows as open.</code></pre></div></div>
+      <p class="why gfx"><b>Character avatars (designer or AI-generate, one consistent style):</b> Ms. Carter and Mr. Lee as illustrated avatars, plus a "You" avatar for the LAC. Basics used avatars too. Keep one avatar style for the whole program, and give each course's scenario clients their own faces.</p>
       <p class="why"><b>Why custom:</b> this is the course's capstone, and the outline swaps the quiz for scenarios. The library's <b>Chat Scenario Simulator</b> works like a phone call, and the feedback follows the Mr. Kratz pattern from Basics (a consequence headline plus a coaching line). No branching is deep enough to need Storyline. <b>Dialogue is my draft</b>, built only from SME points, and needs Bryan's review.</p>
-      <div class="codewrap"><pre><code>[Custom HTML block - Font: TBD - Size: TBD]
-Interaction: Chat Scenario Simulator (library)
-Title: Practice client scenarios
-Instruction: Read the client's message, then
-choose your response.
+      <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
+Practice client scenarios
+
+[Body text - Font: TBD - Size: TBD]
+Put it all together. Two clients are
+calling about their invoices.
+
+[Instruction - Font: TBD - Size: TBD]
+Read the client's message, then choose
+your response.
+
+[Custom HTML block - library: Chat Scenario Simulator]
 
 — CALL 1 —
-Ms. Reyes:
-"Hi, this is Ms. Reyes. Is my invoice
+Ms. Carter:
+"Hi, this is Ms. Carter. Is my invoice
 314 paid?"
 
   A) "Let me pull up invoice 314 in
@@ -740,7 +884,7 @@ Ms. Reyes:
 You: "It shows a $0 balance. Check 1088
 paid it."
 
-Ms. Reyes:
+Ms. Carter:
 "Great! Can you send me a copy?"
 
   A) "Sure. I'll pull a live copy from
@@ -756,7 +900,7 @@ Ms. Reyes:
 
 — CALL 2 —
 (NBS shows invoice 582 as open.)
-Mr. Owens:
+Mr. Lee:
 "I dropped off a check for invoice 582
 yesterday. Can you confirm it's paid?"
 
@@ -767,7 +911,7 @@ yesterday. Can you confirm it's paid?"
 
   B) "NBS still shows it as open, so we
      haven't received it."
-     Mr. Owens will likely worry his check
+     Mr. Lee will likely worry his check
      was lost
      NBS is a step behind Oracle. Check
      Oracle before you answer.
@@ -792,6 +936,8 @@ START OVER</code></pre></div>
   <div class="stack">
     <article class="block">
       <div class="bh"><span class="n">B1</span><h3>Next course</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Wrap-up that hands off to the next part of the story (Billtrust) and notes learners can take any course next.</code></pre></div></div>
       <p class="why gfx"><b>Teaser image:</b> the envelope sitting in a mailbox, with a small crop of the Program Map Banner showing "Client pays online" (Billtrust) next.</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Next course
@@ -809,6 +955,8 @@ Or jump to any course in the program.</code></pre></div>
     </article>
     <article class="block">
       <div class="bh"><span class="n">B2</span><h3>Course complete</h3><span class="chip c-t1">Tier 1</span></div>
+      <div class="concept"><div class="concept-h">Concept blurb · paste this in place of the block for review</div><div class="codewrap"><pre><code>[Concept note - for review]
+Course complete message with a light joke, and the Get Credit button.</code></pre></div></div>
       <p class="why gfx"><b>Fun closer (AI-generate):</b> a coffee mug next to a monitor showing "Billing Review (0)" and the caption "We'll wait."</p>
       <div class="codewrap"><pre><code>[H2 - Font: TBD - Size: TBD]
 Course complete
@@ -875,8 +1023,8 @@ FOR BRYAN
 
 FOR YOU / TEAM
 - Narrator for the intro video
-- Coin graphic for the Billing vs. Receipts
-  flashcard
+- Two-Sided Coin block: built (coin-sides).
+  Test it at Rise content width.
 - Program Map Banner: built (cs-you-are-here).
   Test it at Rise content width.</code></pre></div>
     </article>
