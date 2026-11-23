@@ -763,7 +763,7 @@ translation instructions - open a block below to find those.
 
   <div class="theme-section" data-section="instruction-box">
     <button type="button" class="theme-section-title" onclick="toggleThemeSection('instruction-box')">Instruction boxes<span class="theme-section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span></button>
-    <p class="theme-section-hint">Shared by the instruction banner on every block (its color lives in the Colors section above): the padding inside it, and a one-time "look here" animation that plays once when the banner loads and settles, rather than looping, so it catches the eye without nagging anyone still reading. Turn it off entirely if it's not wanted. A block's own "done" celebration animation always takes over regardless of this setting.</p>
+    <p class="theme-section-hint">Shared by the instruction banner on every block (its color lives in the Colors section above): the padding inside it, and a one-time "look here" animation that plays once when the banner loads and settles, rather than looping, so it catches the eye without nagging anyone still reading. Turn it off and the banner gets a plain solid border instead. A block's own "done" celebration animation always takes over regardless of this setting.</p>
     <div class="theme-field-row">
       <div class="theme-field-group">
         <div class="theme-field">
@@ -780,7 +780,7 @@ translation instructions - open a block below to find those.
         </div>
         <div class="theme-field">
           <label>Play animation</label>
-          <button type="button" class="mini-toggle on" id="t-instr-anim-toggle" onclick="toggleInstrAnim()">On</button>
+          <button type="button" class="mini-toggle" id="t-instr-anim-toggle" onclick="toggleInstrAnim()">On</button>
         </div>
       </div>
       <div class="tf-preview-col">
@@ -7840,14 +7840,6 @@ both sides lead to the same answer.
   .tsc-coin.is-shining .tsc-sheen{animation:tsc-sheen .8s ease-out;}
   @keyframes tsc-sheen{from{transform:translateX(-120%);}to{transform:translateX(120%);}}
 
-/* Side marker under the coin: which side is up, and a check once seen */
-  .tsc-sides{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:10px;font-size:__CAPTION_SIZE__;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
-  .tsc-sidemark{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;color:color-mix(in srgb,__COLOR_TEXT__ 55%,#fff);border:1.5px solid transparent;transition:color .25s ease,background-color .25s ease,border-color .25s ease;}
-  .tsc-sidemark.is-up{color:color-mix(in srgb,__COLOR_PRIMARY__ 55%,#000);background:__COLOR_PRIMARY_LIGHT__;border-color:color-mix(in srgb,__COLOR_PRIMARY__ 40%,#fff);}
-  .tsc-sidemark-check{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:__COLOR_PRIMARY__;color:#fff;font-size:10px;opacity:0;transition:opacity .2s ease;}
-  .tsc-sidemark.viewed .tsc-sidemark-check{opacity:1;}
-  .tsc-dot{width:4px;height:4px;border-radius:50%;background:color-mix(in srgb,__COLOR_TEXT__ 35%,#fff);}
-
   /* ---- Panel: both sides' content share one grid cell, so flipping
      never changes the panel's height or moves anything below. ---- */
   .tsc-panel{position:relative;background:__COLOR_PRIMARY_LIGHT__;border-radius:14px;padding:18px 20px;}
@@ -7879,7 +7871,7 @@ both sides lead to the same answer.
   .tsc-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 
   @media (prefers-reduced-motion: reduce){
-    .tsc-flipper,.tsc-content,.tsc-sidemark{transition:none;}
+    .tsc-flipper,.tsc-content{transition:none;}
     .tsc-coin.is-tossing .tsc-toss,.tsc-coin.is-tossing .tsc-shadow,.tsc-coin.is-shining .tsc-sheen{animation:none;}
     .tsc-sum.is-in{animation:none;}
   }
@@ -7894,11 +7886,6 @@ both sides lead to the same answer.
         <span class="tsc-face is-back"><svg class="tsc-rim" viewBox="0 0 200 200" xmlns:xlink="http://www.w3.org/1999/xlink"><path id="tsc-arc-1" d="M30,100 A70,70 0 0,1 170,100" fill="none"/><path id="tsc-arc-b1" d="M30,100 A70,70 0 0,0 170,100" fill="none"/><text><textPath href="#tsc-arc-1" xlink:href="#tsc-arc-1" startOffset="50%" text-anchor="middle" data-rim="1"></textPath></text><text class="tsc-rim-year"><textPath href="#tsc-arc-b1" xlink:href="#tsc-arc-b1" startOffset="50%" text-anchor="middle" dominant-baseline="hanging" data-rim-year="1"></textPath></text></svg><span class="tsc-word" data-face-word="1"></span><span class="tsc-tag" data-face-tag="1"></span><span class="tsc-sheen"></span></span>
       </span></span>
     </button>
-    <div class="tsc-sides" aria-hidden="true">
-      <span class="tsc-sidemark" data-mark="0"><span data-mark-label="0"></span><span class="tsc-sidemark-check">&#10003;</span></span>
-      <span class="tsc-dot"></span>
-      <span class="tsc-sidemark" data-mark="1"><span data-mark-label="1"></span><span class="tsc-sidemark-check">&#10003;</span></span>
-    </div>
   </div>
   <div class="tsc-panel" id="tsc-panel" role="region">
     <div class="tsc-stack"></div>
@@ -7931,7 +7918,7 @@ var TEXT = {
   srFlipped: "{side}.",
   summary: "Either side leads to the same answer: which payment paid which invoice.",
   // Front first, then back. word: the big word on the coin face. label:
-  // the side's full name (side marker under the coin, screen readers).
+  // the side's full name (read out to screen readers).
   // steps: the worked example, left to right; the first is the client's
   // question, the last is the answer.
   sides: [
@@ -7988,18 +7975,16 @@ var TEXT = {
   var stack = root.querySelector('.tsc-stack');
   var sum = root.querySelector('.tsc-sum');
   var sr = root.querySelector('.tsc-sr');
-  var marks = [root.querySelector('[data-mark="0"]'), root.querySelector('[data-mark="1"]')];
   var everViewed = {};
   var up = 0;
   var done = false;
 
-  // Coin faces and side marker
+  // Coin faces
   TEXT.sides.forEach(function(s, i){
     root.querySelector('[data-face-word="' + i + '"]').textContent = s.word;
     root.querySelector('[data-rim="' + i + '"]').textContent = TEXT.rimText.toUpperCase();
     root.querySelector('[data-rim-year="' + i + '"]').textContent = '★ ' + TEXT.rimYear + ' ★';
     root.querySelector('[data-face-tag="' + i + '"]').textContent = s.tagline;
-    root.querySelector('[data-mark-label="' + i + '"]').textContent = s.label;
   });
 
   // Both sides' panel content, built up front and stacked in one grid cell
@@ -8044,11 +8029,7 @@ var TEXT = {
       c.classList.toggle('is-shown', k === i);
       c.setAttribute('aria-hidden', k === i ? 'false' : 'true');
     });
-    marks.forEach(function(m, k){ m.classList.toggle('is-up', k === i); });
-    if(!everViewed[i]){
-      everViewed[i] = true;
-      marks[i].classList.add('viewed');
-    }
+    everViewed[i] = true;
     if(announce) sr.textContent = TEXT.srFlipped.replace('{side}', TEXT.sides[i].label);
     // Fully viewed: both sides seen. Exploratory block, so the summary is
     // the payoff and the banner is left as is (README: only graded blocks
@@ -10040,14 +10021,14 @@ let THEME = {
   // Subtle "look here" cue on the instruction banner, plays once on load
   // and settles -- not an infinite loop, so it catches the eye without
   // nagging someone who's already reading. Off switches it everywhere in
-  // one flip. On by default. Every block's `.XX-note.celebrate` rule
+  // one flip. Off by default (banner gets a solid border instead). Every block's `.XX-note.celebrate` rule
   // already has higher selector specificity than plain `.XX-note`, so if
   // a block's instructions finish (celebrate state) before this one-shot
   // animation would even start, its own pop animation still wins -- see
   // substitute() for where this actually gets injected (one regex per
   // style, not 36 hand-edits) and INSTR_ANIM_STYLES for what each option
   // actually does.
-  instrAnimOn: true,
+  instrAnimOn: false,
   // Which one-shot animation instrAnimOn plays: 'border' (a soft outline
   // breathes in and back out, framing the box -- the default), 'pulse' (a
   // ring in the banner's own text color breathes outward from its edge and
@@ -11402,6 +11383,14 @@ function substitute(raw, block){
   // INSTR_ANIM_STYLES. `.XX-note.celebrate` is a higher-specificity
   // selector that already sets its own `animation` for the one-shot "done"
   // pop, so it silently wins over any of these if a block finishes first.
+  if(!THEME.instrAnimOn && isInstrOnFor(block)){
+    // Animation off: a plain solid border instead, same color and weight as
+    // the breathing border's peak, so the banner still reads as framed.
+    // `outline` (not `border`) so the box model and padding stay untouched.
+    // Same isInstrOnFor guard as below, for the same note-removal reason.
+    const ring = hexToRgba(THEME.colorInstructionText, .55);
+    out = out.replace(/( {2}\.[a-z]+-note\{[^}]*)(\})/, '$1outline:2px solid ' + ring + ';outline-offset:0;$2');
+  }
   if(THEME.instrAnimOn && isInstrOnFor(block)){
     // Guarded by isInstrOnFor: when instructions are off, the note markup
     // and this exact CSS rule get stripped a few lines down by a regex that
@@ -12739,8 +12728,8 @@ function resetTheme(){
   document.getElementById('t-card-pad').value = "clamp(16px, 5vw, 28px)";
   document.getElementById('t-instr-pad').value = "15px 15px";
   document.getElementById('t-instr-anim-style').value = "border";
-  THEME.instrAnimOn = true;
-  document.getElementById('t-instr-anim-toggle').classList.add('on');
+  THEME.instrAnimOn = false;
+  document.getElementById('t-instr-anim-toggle').classList.remove('on');
   THEME.iconA = 'test-photo';
   THEME.iconB = 'test-photo';
   THEME.customImageAUrl = '';
