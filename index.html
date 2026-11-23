@@ -7473,7 +7473,6 @@ Change CONFIG.youAreHere below to light up a different area per course.
     --yah-ease:cubic-bezier(.22,.8,.3,1);
     color:var(--yah-ink); line-height:1.5; -webkit-font-smoothing:antialiased;
   }
-  .yah-wrap *{box-sizing:border-box;}
   .yah-sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
   .yah{
     position:relative; overflow:hidden; border-radius:20px; border:1px solid var(--yah-line);
@@ -7532,7 +7531,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
     transition:transform .3s var(--yah-ease), box-shadow .3s var(--yah-ease);
   }
   .yah-pill .yah-name{font-size:__BODY_SIZE__;}
-  .yah-pill.is-here{transform:translateY(-2px) scale(1.03);}
+  .yah-pill.is-here{transform:translateY(-3px); flex-direction:column; gap:6px;}
 
   /* "You are here" highlight, set by CONFIG.youAreHere */
   .yah .is-here{
@@ -7542,7 +7541,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
     z-index:2;
   }
   .yah .is-here .yah-icon, .yah .is-here .yah-name, .yah .is-here .yah-course{color:#fff;}
-  .yah-node.is-here{transform:translateY(-2px) scale(1.03);}
+  .yah-node.is-here{transform:translateY(-3px);}
   .yah-node.is-here .yah-name{font-size:__H1_SIZE__; font-weight:800;}
   .yah .is-here::after{
     content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
@@ -7553,7 +7552,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
   /* Not covered in the program (Other ways to pay): shown so learners know
      it exists, but greyed out with a dashed outline and a dashed, still
      line so it reads as "a way money moves" rather than a course. */
-  .yah-map .yah-node.is-out{opacity:.55; background:#f6f6f7; border:1.5px dashed #a9acb4; box-shadow:none; filter:grayscale(1);}
+  .yah-map .yah-node.is-out, .yah-map.has-here .yah-node.is-out{opacity:.55; background:#f6f6f7; border:1.5px dashed #a9acb4; box-shadow:none; filter:grayscale(1);}
   .yah-conn .base.is-out{stroke:#c4c6cc; stroke-dasharray:3 4;}
 
   .yah-pin{
@@ -7566,11 +7565,16 @@ Change CONFIG.youAreHere below to light up a different area per course.
   }
   .yah-pin svg{width:13px; height:13px; color:var(--yah-primary);}
   @keyframes yah-drop{0%{opacity:0; transform:translate(-50%,-14px);} 60%{opacity:1; transform:translate(-50%,3px);} 100%{opacity:1; transform:translate(-50%,0);}}
+  /* The Commercial boxes are too short for a pin hanging over their top
+     edge (it covered the box text, and the Commercial title when the boxes
+     wrap under it), so there the pin sits inside the box, above the name. */
+  .yah-pill .yah-pin{position:static; transform:none; order:-1; border-color:transparent; box-shadow:none; animation-name:yah-drop-in;}
+  @keyframes yah-drop-in{0%{opacity:0; transform:translateY(-8px);} 60%{opacity:1; transform:translateY(2px);} 100%{opacity:1; transform:none;}}
 
   .yah-in{opacity:0; animation:yah-rise .6s var(--yah-ease) both; animation-delay:var(--d, 0s);}
   @keyframes yah-rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
   .yah-node.is-here.yah-in{animation-name:yah-rise-here;}
-  @keyframes yah-rise-here{from{opacity:0; transform:translateY(10px) scale(1);} to{opacity:1; transform:translateY(-2px) scale(1.03);}}
+  @keyframes yah-rise-here{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(-3px);}}
 
   /* Narrow: stack top to bottom, the two lanes side by side */
   @media (max-width:720px){
@@ -7583,7 +7587,7 @@ Change CONFIG.youAreHere below to light up a different area per course.
     .yah-conn-v{display:block;}
     .yah-node{padding:18px 10px 12px;}
     .yah-icon{width:34px; height:34px;}
-    .yah-pin{top:-14px;}
+    .yah-node .yah-pin{top:-14px;}
   }
   @media (prefers-reduced-motion: reduce){
     .yah-in, .yah-pin, .yah .is-here::after, .yah-conn .flow{animation:none !important; opacity:1;}
@@ -7760,6 +7764,309 @@ var AREAS = {
     pin.lastChild.textContent = TEXT.pin;
     target.appendChild(pin);
   }
+})();
+</script>
+</template>
+
+<template id="src-coin-sides">
+<!--
+======================================================================
+Two-Sided Coin
+v2.0 - BK
+One coin with two faces (e.g. Billing / Receipts). Tap the coin to flip
+it; the panel below shows what the face-up side is for plus a worked
+example. Once both sides have been seen, a summary line connects them:
+both sides lead to the same answer.
+======================================================================
+-->
+
+<div class="tsc-wrap" style="font-family:__FONT_FAMILY__;max-width:__MAX_WIDTH__;margin:0 auto;background:__BLOCK_BG__;padding:__BLOCK_PAD__;">
+<style>
+  .tsc-note{display:flex;align-items:flex-start;gap:8px;background:__COLOR_INSTRUCTION__;color:__COLOR_INSTRUCTION_TEXT__;font-weight:400;font-size:__INSTR_FONT_SIZE__;line-height:1.4;padding:__INSTR_PAD__;border-radius:10px;transition:background-color .5s ease;margin:0 0 __GAP_INSTR__;}
+  .tsc-note svg{flex-shrink:0;margin-top:calc((__INSTR_FONT_SIZE__ * 1.4 - __INSTR_FONT_SIZE__) / 2);}
+  .tsc{color:__COLOR_TEXT__;line-height:1.5;}
+
+  /* ---- The coin: one button, two faces, 3D flip ---- */
+  .tsc-stage{display:flex;flex-direction:column;align-items:center;gap:12px;margin:0 0 __GAP_SECTION__;padding-top:14px;}
+  .tsc-coin{
+    position:relative;width:clamp(150px,42vw,188px);aspect-ratio:1/1;padding:0;margin:0 0 10px;border:0;border-radius:50%;
+    background:none;cursor:pointer;font-family:inherit;color:inherit;perspective:900px;-webkit-tap-highlight-color:transparent;
+  }
+  .tsc-coin:focus{outline:none;}
+  .tsc-coin:focus-visible{box-shadow:0 0 0 4px #fff,0 0 0 7px __COLOR_PRIMARY__;}
+  /* Toss: the coin lifts while it flips, then lands */
+  .tsc-toss{position:absolute;inset:0;}
+  .tsc-coin.is-tossing .tsc-toss{animation:tsc-toss .7s cubic-bezier(.3,.7,.25,1);}
+  @keyframes tsc-toss{0%{transform:translateY(0);}45%{transform:translateY(-26px);}100%{transform:translateY(0);}}
+  .tsc-flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,.7,.25,1);}
+  .tsc-coin.is-flipped .tsc-flipper{transform:rotateY(180deg);}
+  /* Ground shadow: shrinks while the coin is in the air */
+  .tsc-shadow{position:absolute;left:15%;right:15%;bottom:-14px;height:14px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(0,0,0,.28),rgba(0,0,0,0));}
+  .tsc-coin.is-tossing .tsc-shadow{animation:tsc-shadow .7s cubic-bezier(.3,.7,.25,1);}
+  @keyframes tsc-shadow{0%{transform:scaleX(1);opacity:1;}45%{transform:scaleX(.62);opacity:.45;}100%{transform:scaleX(1);opacity:1;}}
+
+  /* Face: a real silver coin. Deliberately not theme-colored: it should
+     read as money, not as a UI element. */
+  .tsc-face{
+    position:absolute;inset:0;border-radius:50%;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16% 14% 16%;container-type:inline-size;
+    background:radial-gradient(circle at 32% 24%,#ffffff 0%,#eef0f3 24%,#d3d6dc 60%,#b4b8c0 85%,#959aa4 100%);
+    box-shadow:inset 0 0 0 9px #c4c8cf,inset 0 0 0 10.5px #8d929c,inset 0 0 0 12px #f4f5f7,inset 0 -10px 18px rgba(0,0,0,.14),0 10px 20px -10px rgba(0,0,0,.45);
+  }
+  .tsc-face.is-back{transform:rotateY(180deg);}
+  /* Brushed-metal grain */
+  .tsc-face::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+    background:repeating-conic-gradient(from 0deg,rgba(255,255,255,0) 0deg 2deg,rgba(0,0,0,.04) 2deg 4deg);}
+  /* Milled (reeded) edge, like a real coin's rim */
+  .tsc-face::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+    background:repeating-conic-gradient(from 0deg,rgba(0,0,0,.08) 0deg 1.2deg,rgba(255,255,255,.28) 1.2deg 2.4deg);
+    -webkit-mask:radial-gradient(circle,transparent calc(50% - 6px),#000 calc(50% - 5px));
+    mask:radial-gradient(circle,transparent calc(50% - 6px),#000 calc(50% - 5px));}
+  /* Inscription curved along the top of the rim */
+  .tsc-rim{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+  .tsc-rim text{font-family:inherit;font-size:11px;font-weight:700;letter-spacing:1.8px;fill:#7a7f89;
+    paint-order:stroke;stroke:rgba(255,255,255,.55);stroke-width:.6px;}
+  .tsc-rim .tsc-rim-year{font-size:11px;letter-spacing:2.4px;fill:#7a7f89;}
+  /* Embossed center: the side's name, big, with its tagline under it.
+     The word sizes to the coin (cqi) so a long word never overflows it. */
+  .tsc-word{position:relative;font-size:min(__QUESTION_SIZE__,11cqi);font-weight:800;letter-spacing:.06em;line-height:1.1;text-transform:uppercase;color:#30343c;
+    text-shadow:0 1px 0 rgba(255,255,255,.9),0 -1px 0 rgba(0,0,0,.18);}
+  .tsc-tag{position:relative;font-size:__CAPTION_SIZE__;font-weight:700;line-height:1.25;text-align:center;color:#3c414a;text-shadow:0 1px 0 rgba(255,255,255,.85);}
+  /* Light sweep across the face as the coin lands */
+  .tsc-sheen{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+    background:linear-gradient(115deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.7) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-120%);}
+  .tsc-coin.is-shining .tsc-sheen{animation:tsc-sheen .8s ease-out;}
+  @keyframes tsc-sheen{from{transform:translateX(-120%);}to{transform:translateX(120%);}}
+
+/* Side marker under the coin: which side is up, and a check once seen */
+  .tsc-sides{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:10px;font-size:__CAPTION_SIZE__;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+  .tsc-sidemark{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;color:color-mix(in srgb,__COLOR_TEXT__ 55%,#fff);border:1.5px solid transparent;transition:color .25s ease,background-color .25s ease,border-color .25s ease;}
+  .tsc-sidemark.is-up{color:color-mix(in srgb,__COLOR_PRIMARY__ 55%,#000);background:__COLOR_PRIMARY_LIGHT__;border-color:color-mix(in srgb,__COLOR_PRIMARY__ 40%,#fff);}
+  .tsc-sidemark-check{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:__COLOR_PRIMARY__;color:#fff;font-size:10px;opacity:0;transition:opacity .2s ease;}
+  .tsc-sidemark.viewed .tsc-sidemark-check{opacity:1;}
+  .tsc-dot{width:4px;height:4px;border-radius:50%;background:color-mix(in srgb,__COLOR_TEXT__ 35%,#fff);}
+
+  /* ---- Panel: both sides' content share one grid cell, so flipping
+     never changes the panel's height or moves anything below. ---- */
+  .tsc-panel{position:relative;background:__COLOR_PRIMARY_LIGHT__;border-radius:14px;padding:18px 20px;}
+  .tsc-panel::before{content:"";position:absolute;top:-9px;left:50%;width:18px;height:18px;margin-left:-9px;background:__COLOR_PRIMARY_LIGHT__;transform:rotate(45deg);border-radius:3px;}
+  .tsc-stack{display:grid;}
+  .tsc-content{grid-area:1/1;visibility:hidden;opacity:0;transition:opacity .3s ease;}
+  .tsc-content.is-shown{visibility:visible;opacity:1;}
+  .tsc-title{margin:0 0 6px;font-size:__QUESTION_SIZE__;font-weight:800;line-height:1.3;}
+  .tsc-body{margin:0 0 14px;font-size:__BODY_SIZE__;}
+  .tsc-ex-label{display:block;margin:0 0 8px;font-size:__CAPTION_SIZE__;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,__COLOR_PRIMARY__ 55%,#000);}
+  .tsc-flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+  .tsc-step{background:#fff;border:1.5px solid color-mix(in srgb,__COLOR_PRIMARY__ 35%,#fff);border-radius:10px;padding:8px 12px;font-size:__ROW_TEXT_SIZE__;line-height:1.35;}
+  .tsc-step.is-ask{font-style:italic;}
+  .tsc-step.is-result{background:__COLOR_PRIMARY__;border-color:__COLOR_PRIMARY__;color:#fff;font-weight:700;}
+  .tsc-arrow{width:18px;height:18px;flex-shrink:0;color:color-mix(in srgb,__COLOR_PRIMARY__ 60%,#000);}
+  @media (max-width:520px){
+    .tsc-flow{flex-direction:column;align-items:flex-start;}
+    .tsc-arrow{transform:rotate(90deg);margin-left:10px;}
+  }
+
+  /* ---- Summary: appears once both sides have been seen ---- */
+  .tsc-sum{display:flex;align-items:flex-start;gap:12px;margin:__GAP_SECTION__ 0 0;padding:16px 18px;border-radius:14px;background:#fff;border:1.5px solid __COLOR_PRIMARY__;}
+  .tsc-sum[hidden]{display:none;}
+  .tsc-sum.is-in{animation:tsc-rise .45s cubic-bezier(.22,.8,.3,1);}
+  .tsc-sum-icon{flex-shrink:0;width:30px;height:30px;color:__COLOR_PRIMARY__;}
+  .tsc-sum-icon svg{width:100%;height:100%;display:block;}
+  .tsc-sum p{margin:0;font-size:__BODY_SIZE__;}
+  @keyframes tsc-rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .tsc-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    .tsc-flipper,.tsc-content,.tsc-sidemark{transition:none;}
+    .tsc-coin.is-tossing .tsc-toss,.tsc-coin.is-tossing .tsc-shadow,.tsc-coin.is-shining .tsc-sheen{animation:none;}
+    .tsc-sum.is-in{animation:none;}
+  }
+</style>
+<div class="tsc-note"><svg width="__INSTR_FONT_SIZE__" height="__INSTR_FONT_SIZE__" viewBox="0 0 24 24" fill="none" stroke="__COLOR_INSTRUCTION_TEXT__" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-t="blockInstruction"></span></div>
+<div class="tsc">
+  <div class="tsc-stage">
+    <button type="button" class="tsc-coin" aria-controls="tsc-panel">
+      <span class="tsc-shadow" aria-hidden="true"></span>
+      <span class="tsc-toss" aria-hidden="true"><span class="tsc-flipper">
+        <span class="tsc-face is-front"><svg class="tsc-rim" viewBox="0 0 200 200" xmlns:xlink="http://www.w3.org/1999/xlink"><path id="tsc-arc-0" d="M30,100 A70,70 0 0,1 170,100" fill="none"/><path id="tsc-arc-b0" d="M30,100 A70,70 0 0,0 170,100" fill="none"/><text><textPath href="#tsc-arc-0" xlink:href="#tsc-arc-0" startOffset="50%" text-anchor="middle" data-rim="0"></textPath></text><text class="tsc-rim-year"><textPath href="#tsc-arc-b0" xlink:href="#tsc-arc-b0" startOffset="50%" text-anchor="middle" dominant-baseline="hanging" data-rim-year="0"></textPath></text></svg><span class="tsc-word" data-face-word="0"></span><span class="tsc-tag" data-face-tag="0"></span><span class="tsc-sheen"></span></span>
+        <span class="tsc-face is-back"><svg class="tsc-rim" viewBox="0 0 200 200" xmlns:xlink="http://www.w3.org/1999/xlink"><path id="tsc-arc-1" d="M30,100 A70,70 0 0,1 170,100" fill="none"/><path id="tsc-arc-b1" d="M30,100 A70,70 0 0,0 170,100" fill="none"/><text><textPath href="#tsc-arc-1" xlink:href="#tsc-arc-1" startOffset="50%" text-anchor="middle" data-rim="1"></textPath></text><text class="tsc-rim-year"><textPath href="#tsc-arc-b1" xlink:href="#tsc-arc-b1" startOffset="50%" text-anchor="middle" dominant-baseline="hanging" data-rim-year="1"></textPath></text></svg><span class="tsc-word" data-face-word="1"></span><span class="tsc-tag" data-face-tag="1"></span><span class="tsc-sheen"></span></span>
+      </span></span>
+    </button>
+    <div class="tsc-sides" aria-hidden="true">
+      <span class="tsc-sidemark" data-mark="0"><span data-mark-label="0"></span><span class="tsc-sidemark-check">&#10003;</span></span>
+      <span class="tsc-dot"></span>
+      <span class="tsc-sidemark" data-mark="1"><span data-mark-label="1"></span><span class="tsc-sidemark-check">&#10003;</span></span>
+    </div>
+  </div>
+  <div class="tsc-panel" id="tsc-panel" role="region">
+    <div class="tsc-stack"></div>
+  </div>
+  <div class="tsc-sum" hidden>
+    <span class="tsc-sum-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="11" stroke-dasharray="2 3"/><polyline points="14 20.5 18 24.5 26 15.5"/></svg></span>
+    <p data-t="summary"></p>
+  </div>
+  <div class="tsc-sr" aria-live="polite"></div>
+</div>
+</div>
+<script>
+// ======================================================================
+// TRANSLATE HERE
+// Only change the text between the quote marks (" " or ' ') below.
+// Do not change the word before each colon (:) -- that is the label
+// the code uses to find the text, not something a learner sees.
+// Do not delete any commas , or brackets { } [ ].
+// ======================================================================
+var TEXT = {
+  // Engraved along the top of the rim, on both faces.
+  rimText: "Bartlett Tree Experts",
+  // Along the bottom of the rim, between two stars: the year BTE was founded.
+  rimYear: "1907",
+  blockInstruction: "Click the coin to flip it and see the other side.",
+  exampleLabel: "Example",
+  // Screen reader label for the coin. {side} is the side facing up now.
+  coinLabel: "Flip the coin. {side} is facing up.",
+  // Read out after each flip. {side} is the side now facing up.
+  srFlipped: "{side}.",
+  summary: "Either side leads to the same answer: which payment paid which invoice.",
+  // Front first, then back. word: the big word on the coin face. label:
+  // the side's full name (side marker under the coin, screen readers).
+  // steps: the worked example, left to right; the first is the client's
+  // question, the last is the answer.
+  sides: [
+    {
+      word: "Billing",
+      label: "Billing tab",
+      tagline: "Client has an invoice number.",
+      title: "Billing tab: start from the invoice",
+      body: "Use the Billing tab in Oracle when the client gives you an invoice number. Look up the invoice to see its balance, what paid it, and any discounts.",
+      steps: ["“Is invoice 314 paid?”", "Look up 314 in Billing", "Paid by check 1088"]
+    },
+    {
+      word: "Receipts",
+      label: "Receipts tab",
+      tagline: "Client has a check or payment number.",
+      title: "Receipts tab: start from the payment",
+      body: "Use the Receipts tab in Oracle when the client gives you a payment, like a check number. Look up the payment to see which invoice it paid.",
+      steps: ["“Did you get my check 1088?”", "Look up 1088 in Receipts", "Paid invoice 314"]
+    }
+  ]
+};
+// ======================================================================
+// DO NOT EDIT BELOW THIS LINE
+// ======================================================================
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  function notifyRiseHeight(){
+    var h=document.documentElement.scrollHeight;
+    if(window.parent && window.parent!==window){
+      window.parent.postMessage({type:'setHeight',height:h},'*');
+    }
+  }
+  window.addEventListener('load', notifyRiseHeight);
+  new ResizeObserver(notifyRiseHeight).observe(document.body);
+  var __bi=root.querySelector('[data-t="blockInstruction"]'); if(__bi) __bi.textContent = TEXT.blockInstruction;
+  root.querySelectorAll('[data-t]').forEach(function(el){
+    var key=el.getAttribute('data-t');
+    if(key!=='blockInstruction' && TEXT[key]!==undefined) el.textContent = TEXT[key];
+  });
+  var RISE_COMPLETE_ON = __RISE_COMPLETE_ON__;
+  function sendRiseCompletion(){
+    if(!RISE_COMPLETE_ON) return;
+    try{
+      if(window.parent && window.parent !== window){
+        window.parent.postMessage({ type: 'complete' }, '*');
+      }
+    }catch(e){}
+  }
+
+  var ARROW = '<svg class="tsc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>';
+
+  var coin = root.querySelector('.tsc-coin');
+  var panel = root.querySelector('.tsc-panel');
+  var stack = root.querySelector('.tsc-stack');
+  var sum = root.querySelector('.tsc-sum');
+  var sr = root.querySelector('.tsc-sr');
+  var marks = [root.querySelector('[data-mark="0"]'), root.querySelector('[data-mark="1"]')];
+  var everViewed = {};
+  var up = 0;
+  var done = false;
+
+  // Coin faces and side marker
+  TEXT.sides.forEach(function(s, i){
+    root.querySelector('[data-face-word="' + i + '"]').textContent = s.word;
+    root.querySelector('[data-rim="' + i + '"]').textContent = TEXT.rimText.toUpperCase();
+    root.querySelector('[data-rim-year="' + i + '"]').textContent = '★ ' + TEXT.rimYear + ' ★';
+    root.querySelector('[data-face-tag="' + i + '"]').textContent = s.tagline;
+    root.querySelector('[data-mark-label="' + i + '"]').textContent = s.label;
+  });
+
+  // Both sides' panel content, built up front and stacked in one grid cell
+  var contents = TEXT.sides.map(function(s, i){
+    var c = document.createElement('div');
+    c.className = 'tsc-content';
+    var t = document.createElement('p'); t.className = 'tsc-title'; t.id = 'tsc-title-' + i; t.textContent = s.title;
+    var b = document.createElement('p'); b.className = 'tsc-body'; b.textContent = s.body;
+    var l = document.createElement('span'); l.className = 'tsc-ex-label'; l.textContent = TEXT.exampleLabel;
+    var flow = document.createElement('div'); flow.className = 'tsc-flow';
+    s.steps.forEach(function(step, k){
+      if(k > 0) flow.insertAdjacentHTML('beforeend', ARROW);
+      var chip = document.createElement('span');
+      chip.className = 'tsc-step' + (k === 0 ? ' is-ask' : '') + (k === s.steps.length - 1 ? ' is-result' : '');
+      chip.textContent = step;
+      flow.appendChild(chip);
+    });
+    c.appendChild(t); c.appendChild(b); c.appendChild(l); c.appendChild(flow);
+    stack.appendChild(c);
+    return c;
+  });
+
+  function toss(){
+    ['is-tossing','is-shining'].forEach(function(c){ coin.classList.remove(c); });
+    void coin.offsetWidth;
+    coin.classList.add('is-tossing');
+    // Sheen starts as the coin comes down
+    setTimeout(function(){ coin.classList.add('is-shining'); }, 380);
+  }
+  coin.addEventListener('animationend', function(e){
+    if(e.animationName === 'tsc-sheen') coin.classList.remove('is-shining');
+    if(e.animationName === 'tsc-toss') coin.classList.remove('is-tossing');
+  });
+
+  function showSide(i, announce){
+    up = i;
+    if(announce) toss();
+    coin.classList.toggle('is-flipped', i === 1);
+    coin.setAttribute('aria-label', TEXT.coinLabel.replace('{side}', TEXT.sides[i].label));
+    panel.setAttribute('aria-labelledby', 'tsc-title-' + i);
+    contents.forEach(function(c, k){
+      c.classList.toggle('is-shown', k === i);
+      c.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+    });
+    marks.forEach(function(m, k){ m.classList.toggle('is-up', k === i); });
+    if(!everViewed[i]){
+      everViewed[i] = true;
+      marks[i].classList.add('viewed');
+    }
+    if(announce) sr.textContent = TEXT.srFlipped.replace('{side}', TEXT.sides[i].label);
+    // Fully viewed: both sides seen. Exploratory block, so the summary is
+    // the payoff and the banner is left as is (README: only graded blocks
+    // repurpose the banner on completion).
+    if(!done && Object.keys(everViewed).length === TEXT.sides.length){
+      done = true;
+      sum.hidden = false;
+      sum.classList.add('is-in');
+      sr.textContent = TEXT.summary;
+      sendRiseCompletion();
+    }
+    notifyRiseHeight();
+  }
+
+  // The front is face up on load, so it counts as seen (same as Comparison
+  // Tabs' pre-active first tab); one flip completes the block.
+  showSide(0, false);
+  coin.addEventListener('click', function(){ showSide(up === 0 ? 1 : 0, true); });
 })();
 </script>
 </template>
@@ -9615,6 +9922,7 @@ const BLOCKS = [
   {id:'header-bold', name:'Bold Diagonal Header', cat:'header', img:true, desc:'Solid color block with a skewed accent panel that slides in on load.', verified:false},
   {id:'header-bold-corner', name:'Bold Corner Header', cat:'header', img:true, desc:'Solid color block with two triangular corner accents that pop in on load.', verified:false},
   {id:'cs-you-are-here', name:'You Are Here: Program Map Banner', cat:'cs', img:false, desc:'Customer Service Advanced course opener. A compact "Where the Money Goes" map with this course\'s box lit up and pinned. Pick the box from the dropdown on the card (or change CONFIG.youAreHere in the code) for each course.', verified:false},
+  {id:'coin-sides', name:'Two-Sided Coin', cat:'cs', img:false, desc:'One coin, two faces, like the Billing and Receipts tabs. Tap to flip it; the panel below shows what the face-up side is for plus a worked example. Once both sides are seen, a summary shows they lead to the same answer.', verified:false},
   {id:'acknowledge-signoff', name:'Acknowledgment Sign-off', cat:'compliance', img:false, desc:'Type your name and check a box to sign a statement, with a dated confirmation. A pattern Rise has never offered natively.', verified:false},
   {id:'stat-chart', name:'Stat Comparison Chart', cat:'data', img:false, desc:'Animated horizontal bar chart comparing several data points, values count up as they scroll into view. Rise has no native charting.', verified:false},
   {id:'chat-scenario', name:'Chat Scenario Simulator', cat:'decision', img:false, desc:'Texting-style conversation that reveals on tap, ending in a reply choice with branching feedback. A different feel from Rise\'s static Scenario block.', verified:false},
@@ -10273,6 +10581,7 @@ const BLOCK_DEFAULTS = {
   'acknowledge-signoff':   { instrLeft: true, width: 520 },
   'stat-chart':            { width: 520 },
   'word-unscramble':       { width: 520 },
+  'coin-sides':            { width: 760 },
 };
 function blockDefault(block, key, fallback){
   const entry = BLOCK_DEFAULTS[block.id];
@@ -10595,7 +10904,8 @@ const RISE_COMPLETION_BLOCKS = new Set([
   // every card/term/stop/marker in the block has been seen at least once.
   'hotspot-id', 'scroll-timeline', 'step-accordion',
   'flip-card-grid', 'horizontal-timeline', 'card-deck', 'glossary-wall', 'glossary-cloud',
-  'comparison-tabs', 'spin-wheel', 'expanding-stat', 'scratch-card'
+  'comparison-tabs', 'spin-wheel', 'expanding-stat', 'scratch-card',
+  'coin-sides'
 ]);
 
 // Blocks whose numbered scale can swap to theme List Icons instead of plain
